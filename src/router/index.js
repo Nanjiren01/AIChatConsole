@@ -7,10 +7,10 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
+// import componentsRouter from './modules/components'
+// import chartsRouter from './modules/charts'
+// import tableRouter from './modules/table'
+// import nestedRouter from './modules/nested'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -78,11 +78,12 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        name: '仪表盘',
+        meta: { title: '仪表盘', icon: 'dashboard', affix: true }
       }
     ]
-  },
+  }
+  /*
   {
     path: '/documentation',
     component: Layout,
@@ -122,6 +123,7 @@ export const constantRoutes = [
       }
     ]
   }
+  // */
 ]
 
 /**
@@ -129,6 +131,7 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  /*
   {
     path: '/permission',
     component: Layout,
@@ -185,6 +188,7 @@ export const asyncRoutes = [
   },
 
   /** when your routing map is too long, you can split it into small modules **/
+  /*
   componentsRouter,
   chartsRouter,
   nestedRouter,
@@ -382,6 +386,8 @@ export const asyncRoutes = [
       }
     ]
   },
+
+  // */
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

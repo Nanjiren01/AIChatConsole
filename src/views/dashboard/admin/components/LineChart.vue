@@ -64,7 +64,7 @@ export default {
     setOptions({ expectedData, actualData } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['2023-05-01', '2023-05-02', '2023-05-03', '2023-05-04', '2023-05-05', '2023-05-06', '2023-05-07'],
           boundaryGap: false,
           axisTick: {
             show: false
@@ -74,7 +74,7 @@ export default {
           left: 10,
           right: 10,
           bottom: 20,
-          top: 30,
+          top: 50,
           containLabel: true
         },
         tooltip: {
@@ -90,10 +90,13 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: ['成员总数', 'VIP数']
+        },
+        title: {
+          text: ''
         },
         series: [{
-          name: 'expected', itemStyle: {
+          name: '成员总数', itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
@@ -109,7 +112,7 @@ export default {
           animationEasing: 'cubicInOut'
         },
         {
-          name: 'actual',
+          name: 'VIP数',
           smooth: true,
           type: 'line',
           itemStyle: {

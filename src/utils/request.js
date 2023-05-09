@@ -25,7 +25,7 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
-    console.log(error) // for debug
+    console.log('error', error) // for debug
     return Promise.reject(error)
   }
 )
@@ -44,9 +44,10 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
+    console.log('res', res)
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    if (res.code !== 0) {
       Message({
         message: res.message || 'Error',
         type: 'error',
@@ -72,7 +73,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log('err', error) // for debug
     Message({
       message: error.message,
       type: 'error',
