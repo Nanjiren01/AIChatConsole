@@ -26,18 +26,31 @@
         {{ getStateName(slotProps.row.state) }}
       </template>
 
+      <template #header>
+        <div style="margin: 5px 0">
+          <el-alert
+            title="只有处于启用状态的key才会被使用"
+            type="info"
+            :closable="false"
+          />
+        </div>
+      </template>
+
     </ai-table>
+
+    <api-key-edit v-if="editShow" :api-key="edit" @close="handleCloseEditDialog" />
   </div>
 </template>
 
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
+import ApiKeyEdit from './edit'
 import { getApiKeys } from '@/api/apiKey.js'
 
 export default {
   name: 'UserIndex',
-  components: { AiTable },
+  components: { AiTable, ApiKeyEdit },
   data() {
     return {
       tableActions: [],
@@ -46,14 +59,14 @@ export default {
         prop: 'id',
         width: 55
       }, {
-        label: '所属平台',
-        prop: 'platform'
+        label: '平台',
+        prop: 'platformName'
       }, {
         label: 'api key',
         prop: 'key'
-      }, {
-        label: '可用模型',
-        prop: 'models'
+      // }, {
+      //   label: '可用模型',
+      //   prop: 'models'
       }, {
         label: '额度',
         prop: 'quota'
@@ -73,28 +86,14 @@ export default {
       tableActionColumn: {
         width: 260
       },
-      tableData: [{
-        id: 1,
-        platform: 'OpenAI',
-        key: 'sk-123456',
-        models: 'gpt-3.5-turbo,gpt4',
-        quota: '$118.20',
-        state: 1,
-        creatorName: '超级管理员(aichat)',
-        createTime: '2023-05-16 17:30:08'
-      }, {
-        id: 2,
-        platform: 'OpenAI',
-        key: 'sk-123456',
-        models: 'gpt-3.5-turbo,gpt4',
-        quota: '$118.20',
-        state: 1,
-        creatorName: '超级管理员(aichat)',
-        createTime: '2023-05-16 17:30:08'
-      }],
+      tableData: [],
       pagination: {
         total: 0
 
+      },
+      editShow: false,
+      edit: {
+        id: 0
       }
     }
   },
@@ -111,7 +110,9 @@ export default {
         this.tableData = keys.map(key => {
           return {
             id: key.id,
-            platform: key.platform,
+            platformId: key.platformId,
+            platformName: key.platformName,
+            key: key.key,
             models: key.models,
             quota: key.quota,
             state: key.state,
@@ -127,10 +128,24 @@ export default {
       this.reload()
     },
     handleCreate() {
-      this.$message.warning('开发中……')
+      // this.$message.warning('开发中……')
+      this.editShow = true
+      this.edit.id = 0
+      this.edit.platformId = 1
+      this.edit.key = null
+      this.edit.state = null
+      this.edit.creatorName = null
+      this.edit.createTime = null
     },
     handleEdit(row) {
-      console.log('edit', row)
+      // console.log('edit', row)
+      this.editShow = true
+      this.edit.id = row.id
+      this.edit.platformId = row.platformId
+      this.edit.key = row.key
+      this.edit.state = row.state
+      this.edit.creatorName = row.creatorName
+      this.edit.createTime = row.createTime
     },
     handleDelete(row) {
       console.log('delete', row)
@@ -143,6 +158,9 @@ export default {
         1: '启用',
         2: '禁用'
       })[state] || '未知'
+    },
+    handleCloseEditDialog() {
+      this.editShow = false
     }
   }
 }

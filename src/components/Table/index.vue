@@ -14,6 +14,8 @@
         <slot name="topActions" />
       </div>
 
+      <slot name="header" />
+
       <el-table
         ref="multipleTable"
         :data="tableData"
