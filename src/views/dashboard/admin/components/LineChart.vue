@@ -90,13 +90,13 @@ export default {
           }
         },
         legend: {
-          data: ['成员总数', 'VIP数']
+          data: ['会员总数', 'VIP数']
         },
         title: {
           text: ''
         },
         series: [{
-          name: '成员总数', itemStyle: {
+          name: '会员总数', itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {

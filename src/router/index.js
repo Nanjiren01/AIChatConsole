@@ -78,7 +78,7 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: '仪表盘',
+        name: 'Dashboard',
         meta: { title: '仪表盘', icon: 'dashboard', affix: true }
       }
     ]
@@ -131,6 +131,64 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/members',
+    component: Layout,
+    redirect: '/members/list',
+    alwaysShow: false, // will always show the root menu
+    name: 'members',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/member/index'),
+        name: 'membersList',
+        meta: { title: '会员列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/ai',
+    component: Layout,
+    // redirect: '/ai/apiKey',
+    alwaysShow: true, // will always show the root menu
+    name: 'ai',
+    meta: { title: 'AI管理', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: 'apiKey',
+        component: () => import('@/views/apiKey/index'),
+        name: 'apiKeyList',
+        meta: { title: 'API Key', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'model',
+        component: () => import('@/views/aiModel/index'),
+        name: 'aiModelList',
+        meta: { title: 'AI模型管理', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'platform',
+        component: () => import('@/views/aiPlatform/index'),
+        name: 'aiPlatformList',
+        meta: { title: 'AI平台列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/users',
+    component: Layout,
+    redirect: '/users/list',
+    alwaysShow: false, // will always show the root menu
+    name: 'users',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/user/index'),
+        name: 'usersList',
+        meta: { title: '管理员列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
   /*
   {
     path: '/permission',

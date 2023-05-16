@@ -8,6 +8,14 @@ export function login(data) {
   })
 }
 
+export function getUsers(params) {
+  return request({
+    url: '/users',
+    method: 'get',
+    params
+  })
+}
+
 export function getInfo(token) {
   return request({
     url: '/users/my',

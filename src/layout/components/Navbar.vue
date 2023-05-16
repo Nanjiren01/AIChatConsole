@@ -13,10 +13,10 @@
         <el-tooltip content="全屏切换" effect="dark" placement="bottom">
           <screenfull id="screenfull" class="right-menu-item hover-effect" />
         </el-tooltip>
-
+        <!--
         <el-tooltip content="全局尺寸" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        </el-tooltip> -->
 
       </template>
 
@@ -53,7 +53,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 // import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
+// import SizeSelect from '@/components/SizeSelect'
 // import Search from '@/components/HeaderSearch'
 
 export default {
@@ -61,8 +61,8 @@ export default {
     Breadcrumb,
     Hamburger,
     // ErrorLog,
-    Screenfull,
-    SizeSelect
+    Screenfull
+    // SizeSelect
     // Search
   },
   computed: {
