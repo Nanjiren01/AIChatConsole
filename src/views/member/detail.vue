@@ -44,7 +44,7 @@
             @refresh="handleRefresh"
           >
             <template v-slot:type="slotProps">
-              <span>{{ getTypeText(slotProps.row.type) }}</span>
+              <span>{{ getTypeText(slotProps.row.typeId) }}</span>
             </template>
           </ai-table>
 
