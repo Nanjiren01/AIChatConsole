@@ -10,8 +10,11 @@
     >
       <template #topActions>
         <!-- <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button> -->
-        <!-- <el-button type="success" icon="el-icon-edit">编辑</el-button> -->
+
         <!-- <el-button type="danger" icon="el-icon-delete" disabled>删除</el-button> -->
+      </template>
+      <template v-slot:rowActions="slotProps">
+        <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
       </template>
       <!-- <template #columns>
         <el-table-column type="selection" width="55" />
@@ -22,6 +25,8 @@
       </template>
 
     </ai-table>
+
+    <detail v-if="showDetail" :member="detail" @close="handleCloseDetail" />
   </div>
 </template>
 
@@ -29,12 +34,14 @@
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
 import { getMembers } from '@/api/member'
+import Detail from './detail'
 
 export default {
   name: 'MemberIndex',
-  components: { AiTable },
+  components: { AiTable, Detail },
   data() {
     return {
+      showDetail: false,
       tableActions: [{
         key: 'increase-tokens',
         label: '添加tokens',
@@ -65,7 +72,20 @@ export default {
         slot: 'state'
       }, {
         label: '剩余tokens',
-        prop: 'tokens'
+        prop: 'tokens',
+        width: 120
+      }, {
+        label: '剩余聊天次数',
+        prop: 'chatCount',
+        width: 120
+      }, {
+        label: '剩余高级聊天次数',
+        prop: 'advancedChatCount',
+        width: 120
+      }, {
+        label: '剩余绘画次数',
+        prop: 'drawCount',
+        width: 120
       }, {
         label: '创建时间',
         prop: 'createTime',
@@ -107,6 +127,9 @@ export default {
             tokens: user.tokens,
             role: user.role,
             state: user.state,
+            chatCount: user.chatCount,
+            advancedChatCount: user.advancedChatCount,
+            drawCount: user.drawCount,
             createTime: user.createTime,
             updateTime: user.updateTime
           }
@@ -119,6 +142,23 @@ export default {
     },
     handleCreate() {
       this.$message.warning('开发中……')
+    },
+    handleEdit(row) {
+      this.showDetail = true
+      this.detail = {
+        id: row.id,
+        name: row.name,
+        username: row.username,
+        state: row.state,
+        role: row.role,
+        tokens: row.tokens,
+        chatCount: row.chatCount,
+        advancedChatCount: row.advancedChatCount,
+        drawCount: row.drawCount
+      }
+    },
+    handleCloseDetail() {
+      this.showDetail = false
     },
     getStateName(state) {
       return ({

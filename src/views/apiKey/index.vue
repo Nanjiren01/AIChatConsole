@@ -68,8 +68,8 @@ export default {
       //   label: '可用模型',
       //   prop: 'models'
       }, {
-        label: '额度',
-        prop: 'quota'
+        label: '使用次数',
+        prop: 'callCount'
       }, {
         label: '状态',
         prop: 'state',
@@ -115,6 +115,7 @@ export default {
             key: key.key,
             models: key.models,
             quota: key.quota,
+            callCount: key.callCount,
             state: key.state,
             creatorName: key.creatorName,
             createTime: key.createTime,
