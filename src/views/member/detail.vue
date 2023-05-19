@@ -2,7 +2,7 @@
   <el-drawer
     :title="title"
     size="60%"
-    :visible.sync="drawer"
+    :visible="show"
     :before-close="handleClose"
   >
     <div style="padding: 20px">
@@ -65,6 +65,10 @@ export default {
     member: {
       type: Object,
       default: () => []
+    },
+    show: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -107,6 +111,9 @@ export default {
   },
   methods: {
     reload() {
+      if (!this.member.id) {
+        return
+      }
       getBalanceRecordByUserId(this.member.id).then(resp => {
         console.log('resp', resp)
         this.tableData = resp.data.map(item => {
@@ -121,7 +128,7 @@ export default {
       })
     },
     handleClose() {
-      this.drawer = false
+      // this.drawer = false
       this.$emit('close')
     },
     handleRefresh() {

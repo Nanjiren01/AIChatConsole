@@ -2,7 +2,7 @@
   <el-drawer
     :title="title"
     size="60%"
-    :visible.sync="drawer"
+    :visible="show"
     :before-close="handleClose"
   >
     <div style="padding: 20px">
@@ -48,6 +48,10 @@ export default {
     model: {
       type: Object,
       default: () => []
+    },
+    show: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -80,8 +84,9 @@ export default {
     //   })
     // },
     handleClose() {
-      this.drawer = false
+      // this.drawer = false
       this.$emit('close')
+      this.$emit('update:show', false)
     }
   }
 }

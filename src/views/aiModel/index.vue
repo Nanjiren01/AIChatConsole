@@ -32,7 +32,7 @@
 
     </ai-table>
 
-    <edit v-if="showEdit" :model="editModel" @close="handleCloseEdit" />
+    <edit :show="showEdit" :model="editModel" @close="handleCloseEdit" />
   </div>
 </template>
 

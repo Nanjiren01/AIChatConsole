@@ -47,7 +47,7 @@
 
     </ai-table>
 
-    <detail v-if="showDetail" :member="detail" @close="handleCloseDetail" />
+    <detail :show="showDetail" :member="detailModel" @close="handleCloseDetail" />
   </div>
 </template>
 
@@ -126,6 +126,17 @@ export default {
       pagination: {
         total: 0
 
+      },
+      detailModel: {
+        id: null,
+        name: null,
+        username: null,
+        state: null,
+        role: null,
+        tokens: null,
+        chatCount: null,
+        advancedChatCount: null,
+        drawCount: null
       }
     }
   },
@@ -170,7 +181,7 @@ export default {
     },
     handleEdit(row) {
       this.showDetail = true
-      this.detail = {
+      this.detailModel = {
         id: row.id,
         name: row.name,
         username: row.username,
