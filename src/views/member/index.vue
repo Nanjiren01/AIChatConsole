@@ -47,7 +47,13 @@
 
     </ai-table>
 
-    <detail :show="showDetail" :member="detailModel" @close="handleCloseDetail" />
+    <detail
+      ref="detail"
+      :show="showDetail"
+      :member="detailModel"
+      @changed="handleChanged"
+      @close="handleCloseDetail"
+    />
   </div>
 </template>
 
@@ -171,16 +177,19 @@ export default {
           }
         })
         this.pagination.total = this.tableData.length
+      }).then(() => {
+        console.log('this.showDetail', this.showDetail)
+        if (this.showDetail) {
+          const row = this.tableData.filter(r => r.id === this.detailModel.id)[0]
+          console.log('row', row)
+          if (row) {
+            this.updateDetail(row)
+          }
+        }
       })
     },
-    handleRefresh() {
-      this.reload()
-    },
-    handleCreate() {
-      this.$message.warning('开发中……')
-    },
-    handleEdit(row) {
-      this.showDetail = true
+    updateDetail(row) {
+      console.log('updateDetail')
       this.detailModel = {
         id: row.id,
         name: row.name,
@@ -192,9 +201,25 @@ export default {
         advancedChatCount: row.advancedChatCount,
         drawCount: row.drawCount
       }
+      this.$nextTick(() => {
+        this.$refs.detail.reload()
+      })
+    },
+    handleRefresh() {
+      this.reload()
+    },
+    handleCreate() {
+      this.$message.warning('开发中……')
+    },
+    handleEdit(row) {
+      this.showDetail = true
+      this.updateDetail(row)
     },
     handleCloseDetail() {
       this.showDetail = false
+    },
+    handleChanged() {
+      this.reload()
     },
     getStateName(state) {
       return ({

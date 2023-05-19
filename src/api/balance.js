@@ -8,3 +8,14 @@ export function getBalanceRecordByUserId(userId) {
     params: {}
   })
 }
+
+export function increaseBalance(userId, type, count) {
+  return request({
+    url: '/balances/increase',
+    method: 'post',
+    params: {},
+    data: {
+      userId, type, count
+    }
+  })
+}
