@@ -20,8 +20,29 @@
         <el-table-column type="selection" width="55" />
       </template> -->
 
+      <template v-slot:tokens="slotProps">
+        <el-tag v-if="slotProps.row.tokens == -1" type="success">无限制</el-tag>
+        <el-tag v-else-if="slotProps.row.tokens < 5" type="warning">{{ slotProps.row.tokens }}</el-tag>
+        <el-tag v-else type="success">{{ slotProps.row.tokens }}</el-tag>
+      </template>
+      <template v-slot:chatCount="slotProps">
+        <el-tag v-if="slotProps.row.chatCount == -1" type="success">无限制</el-tag>
+        <el-tag v-else-if="slotProps.row.chatCount < 5" type="warning">{{ slotProps.row.chatCount }}</el-tag>
+        <el-tag v-else type="success">{{ slotProps.row.chatCount }}</el-tag>
+      </template>
+      <template v-slot:advancedChatCount="slotProps">
+        <el-tag v-if="slotProps.row.advancedChatCount == -1" type="success">无限制</el-tag>
+        <el-tag v-else-if="slotProps.row.advancedChatCount < 5" type="warning">{{ slotProps.row.advancedChatCount }}</el-tag>
+        <el-tag v-else type="success">{{ slotProps.row.advancedChatCount }}</el-tag>
+      </template>
+      <template v-slot:drawCount="slotProps">
+        <el-tag v-if="slotProps.row.drawCount == -1" type="success">无限制</el-tag>
+        <el-tag v-else-if="slotProps.row.drawCount < 5" type="warning">{{ slotProps.row.drawCount }}</el-tag>
+        <el-tag v-else type="success">{{ slotProps.row.drawCount }}</el-tag>
+      </template>
       <template v-slot:state="slotProps">
-        {{ getStateName(slotProps.row.state) }}
+        <el-tag v-if="slotProps.row.state == 1" type="success">正常</el-tag>
+        <el-tag v-else type="danger">停用</el-tag>
       </template>
 
     </ai-table>
@@ -73,18 +94,22 @@ export default {
       }, {
         label: '剩余tokens',
         prop: 'tokens',
+        slot: 'tokens',
         width: 120
       }, {
         label: '剩余聊天次数',
         prop: 'chatCount',
+        slot: 'chatCount',
         width: 120
       }, {
         label: '剩余高级聊天次数',
         prop: 'advancedChatCount',
+        slot: 'advancedChatCount',
         width: 120
       }, {
         label: '剩余绘画次数',
         prop: 'drawCount',
+        slot: 'drawCount',
         width: 120
       }, {
         label: '创建时间',

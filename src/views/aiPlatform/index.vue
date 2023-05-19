@@ -8,9 +8,9 @@
       :pagination="pagination"
       @refresh="handleRefresh"
     >
-      <!-- <template #topActions>
-        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
-      </template> -->
+      <template #topActions>
+        <el-button type="primary" icon="el-icon-plus" disabled @click="handleCreate">新建</el-button>
+      </template>
       <!-- <template v-slot:rowActions="slotProps">
         <el-button type="success" icon="el-icon-edit" @click="handleEdit(slotProps.row)">编辑</el-button>
         <el-button type="warn" icon="el-icon-disabled" @click="toggleEnable(slotProps.row)">
@@ -23,7 +23,8 @@
       </template> -->
 
       <template v-slot:state="slotProps">
-        {{ getStateName(slotProps.row.state) }}
+        <el-tag v-if="slotProps.row.state == 1" type="success">启用</el-tag>
+        <el-tag v-else type="danger">停用</el-tag>
       </template>
 
     </ai-table>
@@ -95,9 +96,9 @@ export default {
     handleRefresh() {
       this.reload()
     },
-    // handleCreate() {
-    //   this.$message.warning('开发中……')
-    // },
+    handleCreate() {
+      this.$message.warning('开发中……')
+    },
     // handleEdit(row) {
     //   console.log('edit', row)
     // },

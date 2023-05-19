@@ -45,6 +45,11 @@
             <el-input v-model="model.createTime" disabled />
           </el-form-item>
         </template>
+        <template>
+          <el-form-item>
+            <el-button type="primary" @click="handleSubmit">提交</el-button>
+          </el-form-item>
+        </template>
 
       </el-form>
     </el-dialog>
@@ -53,6 +58,7 @@
 
 <script>
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
+import { storeApiKey } from '@/api/apiKey.js'
 
 export default {
   name: 'ApiKeyEdit',
@@ -95,8 +101,13 @@ export default {
 
     },
     handleClose() {
-      // console.log('close')
       this.$emit('close')
+    },
+    handleSubmit() {
+      storeApiKey(this.model.id, this.model.key, this.model.state, this.model.platformId).then(resp => {
+        this.$message.success(this.model.id ? '修改成功！' : '添加成功！')
+        this.$emit('created')
+      })
     }
   }
 }

@@ -6,18 +6,16 @@
     :before-close="handleClose"
   >
     <div style="padding: 20px">
-      <el-form ref="form" label-width="160px" style="padding-right: 40px">
+      <el-form ref="form" label-width="260px" style="padding-right: 180px">
         <el-form-item label="用户名（账号）">
           <el-input v-model="member.username" disabled />
         </el-form-item>
         <el-form-item label="昵称">
           <el-input v-model="member.name" disabled />
         </el-form-item>
-        <el-form-item label="启用">
-          <el-switch
-            :value="member.state == 1"
-            disabled
-          />
+        <el-form-item label="状态">
+          <el-tag v-if="member.state == 1" type="success">正常</el-tag>
+          <el-tag v-else type="danger">停用</el-tag>
         </el-form-item>
         <el-form-item label="剩余tokens">
           <el-input v-model="member.tokens" disabled />
@@ -44,7 +42,7 @@
             @refresh="handleRefresh"
           >
             <template v-slot:type="slotProps">
-              <span>{{ getTypeText(slotProps.row.typeId) }}</span>
+              <el-tag>{{ getTypeText(slotProps.row.typeId) }}</el-tag>
             </template>
           </ai-table>
 
@@ -73,7 +71,7 @@ export default {
     return {
       drawer: true,
       activeName: 'balanceRecord',
-      tableActions: [],
+      tableActions: false,
       tableColumns: [{
         label: '#',
         prop: 'id',
@@ -134,9 +132,9 @@ export default {
     },
     getTypeText(typeId) {
       return ({
-        1: '普通询问',
-        2: '高级询问',
-        3: 'Token',
+        1: '普通聊天',
+        2: '高级聊天',
+        3: 'tokens',
         4: '绘图'
       })[typeId] || '未知'
     }

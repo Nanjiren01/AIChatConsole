@@ -12,18 +12,23 @@
         <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
       </template>
       <template v-slot:rowActions="slotProps">
-        <el-button type="success" icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
-        <el-button type="warn" icon="el-icon-disabled" @click.stop="toggleEnable(slotProps.row)">
-          {{ slotProps.row.state == 1 ? '禁用' : '启用' }}
-        </el-button>
-        <el-button type="danger" icon="el-icon-delete" @click.stop="handleDelete(slotProps.row)">删除</el-button>
+        <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
+        <el-button icon="el-icon-delete" disabled @click.stop="handleDelete(slotProps.row)">删除</el-button>
       </template>
       <!-- <template #columns>
         <el-table-column type="selection" width="55" />
       </template> -->
 
       <template v-slot:state="slotProps">
-        {{ getStateName(slotProps.row.state) }}
+        <el-tag v-if="slotProps.row.state == 1" type="success">正常</el-tag>
+        <el-tag v-else type="danger">停用</el-tag>
+        <el-button style="margin-left: 10px" icon="el-icon-disabled" @click.stop="toggleEnable(slotProps.row)">
+          {{ slotProps.row.state == 1 ? '禁用' : '启用' }}
+        </el-button>
+      </template>
+
+      <template v-slot:platformName="slotProps">
+        <el-tag>{{ slotProps.row.platformName }}</el-tag>
       </template>
 
       <template #header>
@@ -38,7 +43,12 @@
 
     </ai-table>
 
-    <api-key-edit v-if="editShow" :api-key="edit" @close="handleCloseEditDialog" />
+    <api-key-edit
+      v-if="editShow"
+      :api-key="edit"
+      @close="handleCloseEditDialog"
+      @created="handleCreated"
+    />
   </div>
 </template>
 
@@ -46,7 +56,7 @@
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
 import ApiKeyEdit from './edit'
-import { getApiKeys } from '@/api/apiKey.js'
+import { getApiKeys, storeApiKey } from '@/api/apiKey.js'
 
 export default {
   name: 'UserIndex',
@@ -60,7 +70,9 @@ export default {
         width: 55
       }, {
         label: '平台',
-        prop: 'platformName'
+        prop: 'platformName',
+        slot: 'platformName',
+        width: 120
       }, {
         label: 'api key',
         prop: 'key'
@@ -69,11 +81,13 @@ export default {
       //   prop: 'models'
       }, {
         label: '使用次数',
-        prop: 'callCount'
+        prop: 'callCount',
+        width: 80
       }, {
         label: '状态',
         prop: 'state',
-        slot: 'state'
+        slot: 'state',
+        width: 150
       }, {
         label: '创建人',
         prop: 'creatorName',
@@ -152,16 +166,34 @@ export default {
       console.log('delete', row)
     },
     toggleEnable(row) {
-      console.log('toggle', row)
+      // console.log('toggle', row)
+      this.$confirm('确定' + (row.state === 1 ? '停用' : '启用') + row.key + '？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        const targetState = row.state === 1 ? 2 : 1
+        storeApiKey(row.id, row.key, targetState, row.platformId).then(resp => {
+          console.log('resp', resp)
+          this.$message.success('操作成功！')
+          this.reload()
+        })
+      })
     },
     getStateName(state) {
       return ({
         1: '启用',
-        2: '禁用'
+        2: '停用'
       })[state] || '未知'
     },
     handleCloseEditDialog() {
       this.editShow = false
+    },
+    handleCreated() {
+      this.editShow = false
+      this.reload()
     }
   }
 }
@@ -172,4 +204,10 @@ export default {
   padding: 10px;
 }
 
+</style>
+
+<style>
+.long-message {
+  width: 600px;
+}
 </style>
