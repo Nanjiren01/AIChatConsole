@@ -40,3 +40,13 @@ export function changePassword(userId, oldPassword, newPassword) {
     }
   })
 }
+
+export function enableUser(userId, enable) {
+  return request({
+    url: '/users/enable',
+    method: 'post',
+    data: {
+      userId, enable
+    }
+  })
+}

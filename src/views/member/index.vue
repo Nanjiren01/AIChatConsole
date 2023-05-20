@@ -15,6 +15,9 @@
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
+        <el-button @click.stop="handleToggleEnable(slotProps.row)">
+          {{ slotProps.row.state == 1 ? '停用' : '取消停用' }}
+        </el-button>
       </template>
       <!-- <template #columns>
         <el-table-column type="selection" width="55" />
@@ -61,6 +64,7 @@
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
 import { getMembers } from '@/api/member'
+import { enableUser } from '@/api/user'
 import Detail from './detail'
 
 export default {
@@ -220,6 +224,25 @@ export default {
     },
     handleChanged() {
       this.reload()
+    },
+    handleToggleEnable(row) {
+      console.log('handleToggleEnable')
+      this.$confirm(
+        row.state === 1 ? ('确定对' + row.username + '进行停用吗？') : ('确定对' + row.username + '取消停用吗？'),
+        '操作确认',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).then(async() => {
+        const enable = row.state === 2
+        enableUser(row.id, enable).then(resp => {
+          console.log('resp', resp)
+          this.$message.success('操作成功！')
+          this.reload()
+        })
+      })
     },
     getStateName(state) {
       return ({
