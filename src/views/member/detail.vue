@@ -12,6 +12,9 @@
         <el-form-item label="用户名（账号）">
           <el-input v-model="member.username" disabled />
         </el-form-item>
+        <el-form-item label="密码">
+          <el-button @click="handleShowChangePassword">修改密码</el-button>
+        </el-form-item>
         <el-form-item label="昵称">
           <el-input v-model="member.name" disabled />
         </el-form-item>
@@ -84,6 +87,12 @@
         </span>
       </el-dialog>
 
+      <change-password
+        ref="password"
+        :password-dialog-visible="passwordDialogVisible"
+        :show-old-password="false"
+        @close="handlePasswordDialogClose"
+      />
     </div>
   </el-drawer>
 </template>
@@ -92,10 +101,11 @@
 
 import AiTable from '@/components/Table'
 import { getBalanceRecordByUserId, increaseBalance } from '@/api/balance'
+import ChangePassword from '../user/password'
 
 export default {
   name: 'MemberDetail',
-  components: { AiTable },
+  components: { AiTable, ChangePassword },
   props: {
     member: {
       type: Object,
@@ -141,7 +151,9 @@ export default {
       dialogVisible: false,
       increaseType: null,
       increaseCount: 0,
-      increasing: false
+      increasing: false,
+
+      passwordDialogVisible: false
     }
   },
   computed: {
@@ -234,6 +246,14 @@ export default {
       }).finally(() => {
         this.increasing = false
       })
+    },
+    handleShowChangePassword() {
+      this.passwordDialogVisible = true
+      this.$refs.password.init(this.member.id)
+    },
+    handlePasswordDialogClose() {
+      console.log('handlePasswordDialogClose')
+      this.passwordDialogVisible = false
     }
   }
 }

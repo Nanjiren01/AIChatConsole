@@ -24,42 +24,23 @@
         {{ getRoleName(slotProps.row.role) }}
       </template>
     </ai-table>
-
-    <el-dialog
-      title="提示"
-      :visible.sync="passwordDialogVisible"
-      width="400px"
-      :append-to-body="true"
-      :close-on-click-modal="false"
+    <change-password
+      ref="password"
+      :password-dialog-visible="passwordDialogVisible"
       @close="handlePasswordDialogClose"
-    >
-      <el-form ref="passwordForm" label-width="80px">
-        <el-form-item label="旧密码">
-          <el-input v-model="passwordDialogInfo.oldPassword" />
-        </el-form-item>
-        <el-form-item label="新密码">
-          <el-input v-model="passwordDialogInfo.newPassword" />
-        </el-form-item>
-        <el-form-item label="确认密码">
-          <el-input v-model="passwordDialogInfo.newPassword2" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="passwordDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handlePasswordChangeSubmit">确定修改</el-button>
-      </span>
-    </el-dialog>
+    />
   </div>
 </template>
 
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getUsers, changePassword } from '@/api/user'
+import { getUsers } from '@/api/user'
+import ChangePassword from './password'
 
 export default {
   name: 'UserIndex',
-  components: { AiTable },
+  components: { AiTable, ChangePassword },
   data() {
     return {
       tableActions: [
@@ -107,13 +88,7 @@ export default {
 
       },
 
-      passwordDialogVisible: false,
-      passwordDialogInfo: {
-        id: 0,
-        oldPassword: '',
-        newPassword: '',
-        newPassword2: ''
-      }
+      passwordDialogVisible: false
     }
   },
   computed: {
@@ -168,46 +143,11 @@ export default {
     },
     handleShowChangePassword(row) {
       this.passwordDialogVisible = true
-      this.passwordDialogInfo.id = row.id
-    },
-    handlePasswordChangeSubmit() {
-      // todo 修改别人的密码
-      if (!this.passwordDialogInfo.oldPassword) {
-        this.$message.error('请输入旧密码！')
-        return
-      }
-      if (this.passwordDialogInfo.oldPassword.length < 6 || this.passwordDialogInfo.oldPassword.length > 64) {
-        this.$message.error('旧密码长度应该在6-64之间！')
-        return
-      }
-      if (!this.passwordDialogInfo.newPassword) {
-        this.$message.error('请输入新密码！')
-        return
-      }
-      if (this.passwordDialogInfo.newPassword.length < 6 || this.passwordDialogInfo.newPassword.length > 64) {
-        this.$message.error('新密码长度应该在6-64之间！')
-        return
-      }
-      if (!this.passwordDialogInfo.newPassword2) {
-        this.$message.error('请输入确认密码！')
-        return
-      }
-      if (this.passwordDialogInfo.newPassword !== this.passwordDialogInfo.newPassword2) {
-        this.$message.error('两次输入的密码不一致！')
-        return
-      }
-      changePassword(this.passwordDialogInfo.id, this.passwordDialogInfo.oldPassword,
-        this.passwordDialogInfo.newPassword).then(resp => {
-        console.log('resp', resp)
-        this.$message.success('修改密码成功！')
-        this.passwordDialogVisible = false
-      })
+      this.$refs.password.init(row.id)
     },
     handlePasswordDialogClose() {
       console.log('handlePasswordDialogClose')
-      this.passwordDialogInfo.oldPassword = ''
-      this.passwordDialogInfo.newPassword = ''
-      this.passwordDialogInfo.newPassword2 = ''
+      this.passwordDialogVisible = false
     }
   }
 }
