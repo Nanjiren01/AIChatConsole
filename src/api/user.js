@@ -30,3 +30,13 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function changePassword(userId, oldPassword, newPassword) {
+  return request({
+    url: '/users/changePassword',
+    method: 'post',
+    data: {
+      userId, oldPassword, newPassword
+    }
+  })
+}
