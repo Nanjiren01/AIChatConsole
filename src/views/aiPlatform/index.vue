@@ -65,8 +65,8 @@ export default {
       },
       tableData: [],
       pagination: {
-        total: 0
-
+        total: 0,
+        showDetail: false
       }
     }
   },

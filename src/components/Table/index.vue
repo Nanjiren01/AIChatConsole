@@ -59,7 +59,7 @@
         :current-page="currentPage"
         :page-sizes="[20, 200, 500]"
         :page-size="20"
-        layout="total, sizes, prev, pager, next, jumper"
+        :layout="paginationLayout"
         :total="pagination.total || 0"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -102,6 +102,17 @@ export default {
     }
   },
   computed: {
+    paginationLayout() {
+      if (!this.pagination) {
+        return ''
+      }
+      const showDetail = this.pagination.showDetail
+      if (showDetail === false) {
+        return 'total'
+      } else {
+        return 'total, sizes, prev, pager, next, jumper'
+      }
+    }
   },
   created() {
     // if (!this.roles.includes('admin')) {
