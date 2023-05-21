@@ -50,3 +50,13 @@ export function enableUser(userId, enable) {
     }
   })
 }
+
+export function createUser(name, username, password) {
+  return request({
+    url: '/users',
+    method: 'post',
+    data: {
+      name, username, password
+    }
+  })
+}

@@ -8,10 +8,10 @@
       :pagination="pagination"
       @refresh="handleRefresh"
     >
-      <!-- <template #topActions>
+      <template #topActions>
         <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新增</el-button>
-        <el-button type="danger" icon="el-icon-delete" @click="handleDelete">删除</el-button>
-      </template> -->
+        <!-- <el-button type="danger" icon="el-icon-delete" @click="handleDelete">删除</el-button> -->
+      </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-set-up" @click.stop="handleShowChangePassword(slotProps.row)">修改密码</el-button>
       </template>
@@ -29,6 +29,12 @@
       :password-dialog-visible="passwordDialogVisible"
       @close="handlePasswordDialogClose"
     />
+    <create-user
+      ref="createUser"
+      :dialog-visible="createUserDialogVisible"
+      @close="handleCreateUserDialogClose"
+      @created="handleCreateUserDialogCreated"
+    />
   </div>
 </template>
 
@@ -37,10 +43,11 @@
 import AiTable from '@/components/Table'
 import { getUsers } from '@/api/user'
 import ChangePassword from './password'
+import CreateUser from './createUser'
 
 export default {
   name: 'UserIndex',
-  components: { AiTable, ChangePassword },
+  components: { AiTable, ChangePassword, CreateUser },
   data() {
     return {
       tableActions: [
@@ -88,7 +95,9 @@ export default {
 
       },
 
-      passwordDialogVisible: false
+      passwordDialogVisible: false,
+
+      createUserDialogVisible: false
     }
   },
   computed: {
@@ -124,7 +133,8 @@ export default {
       this.reload()
     },
     handleCreate() {
-      this.$message.warning('开发中……')
+      this.createUserDialogVisible = true
+      this.$refs.createUser.init()
     },
     handleDelete() {
       this.$message.warning('开发中……')
@@ -148,6 +158,13 @@ export default {
     handlePasswordDialogClose() {
       console.log('handlePasswordDialogClose')
       this.passwordDialogVisible = false
+    },
+    handleCreateUserDialogClose() {
+      this.createUserDialogVisible = false
+    },
+    handleCreateUserDialogCreated() {
+      this.handleCreateUserDialogClose()
+      this.reload()
     }
   }
 }
