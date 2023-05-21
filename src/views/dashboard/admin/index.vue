@@ -1,5 +1,12 @@
 <template>
   <div class="dashboard-editor-container">
+
+    <el-alert
+      title="此页面数据为假数据，后续版本将会接入真实数据"
+      type="warning"
+      :closable="false"
+    />
+
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">

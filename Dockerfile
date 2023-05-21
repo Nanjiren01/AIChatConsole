@@ -1,4 +1,6 @@
 
+# docker build -t nanjiren01/aichat-console:0.0.1 .
+# docker push nanjiren01/aichat-console:0.0.1
 
 FROM nginx
 
