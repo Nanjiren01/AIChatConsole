@@ -189,6 +189,21 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/website',
+    component: Layout,
+    alwaysShow: true,
+    redirect: '/website/config',
+    meta: { title: '配置管理', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: '/website/config',
+        component: () => import('@/views/website/config/index'),
+        name: 'Dashboard',
+        meta: { title: '网站管理', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
   /*
   {
     path: '/permission',
