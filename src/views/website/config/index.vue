@@ -16,6 +16,12 @@
             <el-form-item label="网站副标题">
               <el-input v-model="form.subTitle" />
             </el-form-item>
+            <el-form-item label="登录页副标题">
+              <el-input v-model="form.loginPageSubTitle" />
+            </el-form-item>
+            <el-form-item label="注册页副标题">
+              <el-input v-model="form.registerPageSubTitle" />
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="loading" @click="handleSubmit">提 交</el-button>
             </el-form-item>
@@ -36,7 +42,9 @@ export default {
     return {
       form: {
         title: '',
-        subTitle: ''
+        subTitle: '',
+        loginPageSubTitle: '',
+        registerPageSubTitle: ''
       },
       loading: false
     }
@@ -52,6 +60,8 @@ export default {
         const config = resp.data
         this.form.title = config.websiteContent.title
         this.form.subTitle = config.websiteContent.subTitle
+        this.form.loginPageSubTitle = config.websiteContent.loginPageSubTitle
+        this.form.registerPageSubTitle = config.websiteContent.registerPageSubTitle
       }).finally(() => {
         this.loading = false
       })
@@ -60,7 +70,9 @@ export default {
       this.loading = true
       saveWebsiteConfig({
         title: this.form.title,
-        subTitle: this.form.subTitle
+        subTitle: this.form.subTitle,
+        loginPageSubTitle: this.form.loginPageSubTitle,
+        registerPageSubTitle: this.form.registerPageSubTitle
       }).then(() => {
         this.$message.success('修改成功！')
       }).finally(() => {
