@@ -25,21 +25,25 @@
 
       <template v-slot:tokens="slotProps">
         <el-tag v-if="slotProps.row.tokens == -1" type="success">无限制</el-tag>
-        <el-tag v-else-if="slotProps.row.tokens < 5" type="warning">{{ slotProps.row.tokens }}</el-tag>
+        <el-tag v-else-if="slotProps.row.tokens === 0" type="danger">{{ slotProps.row.tokens }}</el-tag>
+        <el-tag v-else-if="slotProps.row.tokens < 50" type="warning">{{ slotProps.row.tokens }}</el-tag>
         <el-tag v-else type="success">{{ slotProps.row.tokens }}</el-tag>
       </template>
       <template v-slot:chatCount="slotProps">
         <el-tag v-if="slotProps.row.chatCount == -1" type="success">无限制</el-tag>
+        <el-tag v-else-if="slotProps.row.chatCount === 0" type="danger">{{ slotProps.row.chatCount }}</el-tag>
         <el-tag v-else-if="slotProps.row.chatCount < 5" type="warning">{{ slotProps.row.chatCount }}</el-tag>
         <el-tag v-else type="success">{{ slotProps.row.chatCount }}</el-tag>
       </template>
       <template v-slot:advancedChatCount="slotProps">
         <el-tag v-if="slotProps.row.advancedChatCount == -1" type="success">无限制</el-tag>
+        <el-tag v-else-if="slotProps.row.advancedChatCount === 0" type="danger">{{ slotProps.row.advancedChatCount }}</el-tag>
         <el-tag v-else-if="slotProps.row.advancedChatCount < 5" type="warning">{{ slotProps.row.advancedChatCount }}</el-tag>
         <el-tag v-else type="success">{{ slotProps.row.advancedChatCount }}</el-tag>
       </template>
       <template v-slot:drawCount="slotProps">
-        <el-tag v-if="slotProps.row.drawCount == -1" type="success">无限制</el-tag>
+        <el-tag v-if="slotProps.row.drawCount === -1" type="success">无限制</el-tag>
+        <el-tag v-else-if="slotProps.row.drawCount === 0" type="danger">{{ slotProps.row.drawCount }}</el-tag>
         <el-tag v-else-if="slotProps.row.drawCount < 5" type="warning">{{ slotProps.row.drawCount }}</el-tag>
         <el-tag v-else type="success">{{ slotProps.row.drawCount }}</el-tag>
       </template>
