@@ -98,9 +98,13 @@ export default {
         label: '登录账号',
         prop: 'username'
       }, {
+        label: '登录邮箱',
+        prop: 'email'
+      }, {
         label: '状态',
         prop: 'state',
-        slot: 'state'
+        slot: 'state',
+        width: 60
       }, {
         label: '剩余tokens',
         prop: 'tokens',
