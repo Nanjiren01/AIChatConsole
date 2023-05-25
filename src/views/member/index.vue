@@ -151,6 +151,7 @@ export default {
         username: null,
         state: null,
         role: null,
+        email: null,
         tokens: null,
         chatCount: null,
         advancedChatCount: null,
@@ -181,6 +182,7 @@ export default {
             tokens: user.tokens,
             role: user.role,
             state: user.state,
+            email: user.email,
             chatCount: user.chatCount,
             advancedChatCount: user.advancedChatCount,
             drawCount: user.drawCount,
@@ -209,6 +211,7 @@ export default {
         state: row.state,
         role: row.role,
         tokens: row.tokens,
+        email: row.email,
         chatCount: row.chatCount,
         advancedChatCount: row.advancedChatCount,
         drawCount: row.drawCount
