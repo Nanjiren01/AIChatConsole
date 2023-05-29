@@ -18,11 +18,17 @@
         <el-form-item label="昵称">
           <el-input v-model="member.name" disabled />
         </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="member.email" disabled />
+        </el-form-item>
         <el-form-item label="状态">
           <el-tag v-if="member.state == 1" type="success">正常</el-tag>
           <el-tag v-else type="danger">停用</el-tag>
         </el-form-item>
-        <el-form-item label="剩余tokens">
+        <el-form-item label="创建时间">
+          <el-input v-model="member.createTime" disabled />
+        </el-form-item>
+        <!-- <el-form-item label="剩余tokens">
           <el-input v-model="member.tokens" disabled />
         </el-form-item>
         <el-form-item label="剩余聊天次数">
@@ -36,11 +42,14 @@
         </el-form-item>
         <el-form-item label="操作">
           <el-button type="primary" @click="handleShowQuotaEditDialog">手动添加次数</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
 
       <el-tabs v-model="activeName" style="padding: 10px;" @tab-click="handleTabClick">
-        <el-tab-pane label="次数变动记录" name="balanceRecord">
+        <el-tab-pane label="套餐列表" name="balance">
+          <balances ref="balances" :user-id="member.id" :member="member" />
+        </el-tab-pane>
+        <el-tab-pane label="额度变动记录" name="balanceRecord">
           <ai-table
             :table-actions="tableActions"
             :table-columns="tableColumns"
@@ -56,36 +65,8 @@
               <el-tag>{{ getSourceText(slotProps.row.sourceId) }}</el-tag>
             </template>
           </ai-table>
-
         </el-tab-pane>
       </el-tabs>
-
-      <el-dialog
-        :title="'为' + member.username + '添加使用次数'"
-        :visible.sync="dialogVisible"
-        :append-to-body="true"
-        width="50%"
-      >
-        <el-form label-width="160px">
-          <el-form-item label="类型">
-            <el-select v-model="increaseType">
-              <el-option label="剩余聊天次数" :value="1" />
-              <el-option label="剩余高级聊天次数（GPT4）" :value="2" />
-              <el-option label="剩余tokens" :value="3" />
-              <el-option label="剩余绘画次数" :value="4" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="次数">
-            <el-input v-model="increaseCount" />
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button :disabled="increasing" @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" :disabled="increasing" @click="handleQuotaAdd">
-            {{ increasing ? '处理中' : '确 定' }}
-          </el-button>
-        </span>
-      </el-dialog>
 
       <change-password
         ref="password"
@@ -100,12 +81,13 @@
 <script>
 
 import AiTable from '@/components/Table'
-import { getBalanceRecordByUserId, increaseBalance } from '@/api/balance'
+import Balances from './balance'
+import { getBalanceRecordByUserId } from '@/api/balance'
 import ChangePassword from '../user/password'
 
 export default {
   name: 'MemberDetail',
-  components: { AiTable, ChangePassword },
+  components: { AiTable, ChangePassword, Balances },
   props: {
     member: {
       type: Object,
@@ -119,12 +101,15 @@ export default {
   data() {
     return {
       drawer: true,
-      activeName: 'balanceRecord',
+      activeName: 'balance',
       tableActions: false,
       tableColumns: [{
         label: '#',
         prop: 'id',
         width: 55
+      }, {
+        label: '对应套餐',
+        prop: 'balanceId'
       }, {
         label: '来源',
         prop: 'sourceId',
@@ -135,23 +120,21 @@ export default {
         slot: 'type'
       }, {
         label: '变动',
-        prop: 'delta'
+        prop: 'delta',
+        width: 80
       }, {
         label: '时间',
-        prop: 'createTime'
+        prop: 'createTime',
+        width: 140
       }],
       tableData: [],
       tableActionColumn: {
 
       },
       pagination: {
-        total: 0
+        total: 0,
+        showDetail: false
       },
-
-      dialogVisible: false,
-      increaseType: null,
-      increaseCount: 0,
-      increasing: false,
 
       passwordDialogVisible: false
     }
@@ -177,6 +160,7 @@ export default {
       if (!this.member.id) {
         return
       }
+      this.$refs.balances.reload()
       getBalanceRecordByUserId(this.member.id).then(resp => {
         console.log('resp', resp)
         this.tableData = resp.data.map(item => {
@@ -185,6 +169,7 @@ export default {
             type: item.type,
             typeId: item.typeId,
             delta: item.delta,
+            balanceId: item.balanceId,
             createTime: item.createTime,
             source: item.source,
             sourceId: item.sourceId
@@ -220,33 +205,6 @@ export default {
       })[sourceId] || '未知'
     },
 
-    handleShowQuotaEditDialog() {
-      this.dialogVisible = true
-      this.increaseCount = 0
-      this.increaseType = 1
-    },
-    handleQuotaAdd() {
-      const count = +this.increaseCount
-      if (isNaN(count)) {
-        this.$message.error('次数填写错误！')
-        return
-      }
-      if (count <= 0) {
-        this.$message.error('次数必须是一个大于0的数！')
-        return
-      }
-      this.increasing = true
-      increaseBalance(this.member.id, this.increaseType, count).then(resp => {
-        console.log('resp', resp)
-        this.$message.success('操作成功！')
-        this.dialogVisible = false
-        this.$emit('changed')
-      }).catch(err => {
-        console.error(err)
-      }).finally(() => {
-        this.increasing = false
-      })
-    },
     handleShowChangePassword() {
       this.passwordDialogVisible = true
       this.$refs.password.init(this.member.id)

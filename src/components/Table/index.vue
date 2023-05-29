@@ -29,12 +29,14 @@
           type="selection"
           width="55"
         />
+        <slot name="leftColumns" />
         <el-table-column
           v-for="col in tableColumns"
           :key="col.prop"
           :prop="col.prop"
           :label="col.label"
           :width="col.width"
+          :type="col.type"
           show-overflow-tooltip
         >
           <slot slot-scope="scope" :name="col.slot" :row="scope.row">

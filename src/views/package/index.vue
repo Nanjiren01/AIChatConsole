@@ -9,19 +9,15 @@
       @refresh="handleRefresh"
     >
       <template #topActions>
-        <!-- <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button> -->
-
+        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
         <!-- <el-button type="danger" icon="el-icon-delete" disabled>删除</el-button> -->
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
-        <el-button @click.stop="handleToggleEnable(slotProps.row)">
-          {{ slotProps.row.state == 1 ? '停用' : '取消停用' }}
-        </el-button>
+        <!-- <el-button v-if="[0, 1, 2].includes(slotProps.row.state)" @click.stop="handleToggleEnable(slotProps.row)">
+          {{ slotProps.row.state == 1 ? '下架' : '上架' }}
+        </el-button> -->
       </template>
-      <!-- <template #columns>
-        <el-table-column type="selection" width="55" />
-      </template> -->
 
       <template v-slot:tokens="slotProps">
         <el-tag v-if="slotProps.row.tokens == -1" type="success">无限制</el-tag>
@@ -48,8 +44,18 @@
         <el-tag v-else type="success">{{ slotProps.row.drawCount }}</el-tag>
       </template>
       <template v-slot:state="slotProps">
-        <el-tag v-if="slotProps.row.state == 1" type="success">正常</el-tag>
-        <el-tag v-else type="danger">停用</el-tag>
+        <el-tag v-if="slotProps.row.state == 10" type="success">上架</el-tag>
+        <el-tag v-else-if="slotProps.row.state == 20" type="warning">下架</el-tag>
+        <el-tag v-else-if="slotProps.row.state == 0" type="primary">草稿</el-tag>
+        <el-tag v-else-if="slotProps.row.state == 30" type="info">删除</el-tag>
+      </template>
+      <template v-slot:calcType="slotProps">
+        <el-tag v-if="slotProps.row.calcTypeId == 0">未设置</el-tag>
+        <el-tag v-else-if="slotProps.row.calcTypeId == 1">总额</el-tag>
+        <el-tag v-else-if="slotProps.row.calcTypeId == 2">按天</el-tag>
+        <el-tag v-else-if="slotProps.row.calcTypeId == 3">按小时</el-tag>
+        <el-tag v-else-if="slotProps.row.calcTypeId == 4">按3小时</el-tag>
+        <el-tag v-else>未知</el-tag>
       </template>
 
     </ai-table>
@@ -57,7 +63,7 @@
     <detail
       ref="detail"
       :show="showDetail"
-      :member="detailModel"
+      :package-entity="detailModel"
       @changed="handleChanged"
       @close="handleCloseDetail"
     />
@@ -67,78 +73,79 @@
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getMembers } from '@/api/member'
-import { enableUser } from '@/api/user'
+import { getPackages } from '@/api/package'
 import Detail from './detail'
 
 export default {
-  name: 'MemberIndex',
+  name: 'PackageIndex',
   components: { AiTable, Detail },
   data() {
     return {
       showDetail: false,
       tableActions: [{
-        key: 'increase-tokens',
-        label: '添加tokens',
+        key: 'detail',
+        label: '详情',
         type: 'primary'
-      }, {
-        key: 'tokens-record',
-        label: 'token记录'
-      }, {
-        key: 'message-record',
-        label: '聊天记录'
-      }, {
-        key: 'edit',
-        label: '编辑'
       }],
       tableColumns: [{
         label: '#',
         prop: 'id',
         width: 55
       }, {
-        label: '昵称',
-        prop: 'name'
+        label: 'uuid',
+        prop: 'uuid',
+        width: 260
       }, {
-        label: '登录账号',
-        prop: 'username'
+        label: '标题',
+        prop: 'title'
       }, {
-        label: '登录邮箱',
-        prop: 'email'
+        label: '价格',
+        prop: 'price',
+        width: 75
+      }, {
+        label: '类型',
+        slot: 'calcType',
+        width: 100
       }, {
         label: '状态',
         prop: 'state',
         slot: 'state',
         width: 60
       }, {
-        label: '剩余tokens',
+        label: 'tokens',
         prop: 'tokens',
         slot: 'tokens',
-        width: 120
+        width: 70
       }, {
-        label: '剩余聊天次数',
+        label: '普通聊天次数',
         prop: 'chatCount',
         slot: 'chatCount',
-        width: 120
+        width: 95
       }, {
-        label: '剩余高级聊天次数',
+        label: '高级聊天次数',
         prop: 'advancedChatCount',
         slot: 'advancedChatCount',
-        width: 120
+        width: 95
       }, {
-        label: '剩余绘画次数',
+        label: '绘画次数',
         prop: 'drawCount',
         slot: 'drawCount',
-        width: 120
+        width: 70
+      }, {
+        label: '天数',
+        prop: 'days',
+        width: 75
       }, {
         label: '创建时间',
         prop: 'createTime',
         width: 140
-      // }, {
-      //   label: '更新时间',
-      //   prop: 'update_time'
+      }, {
+        label: '更新时间',
+        prop: 'updateTime',
+        width: 140
       }],
       tableActionColumn: {
-        width: 400
+        width: 100
       },
       tableData: [],
       pagination: {
@@ -147,16 +154,21 @@ export default {
       },
       detailModel: {
         id: null,
-        name: null,
-        username: null,
+        uuid: null,
+        title: null,
+        subTitle: null,
         state: null,
-        role: null,
-        email: null,
+        top: null,
         tokens: null,
+        days: null,
+        price: null,
+        calcTypeId: null,
+        calcType: null,
         chatCount: null,
         advancedChatCount: null,
         drawCount: null,
-        createTime: null
+        createTime: null,
+        updateTime: null
       }
     }
   },
@@ -172,23 +184,27 @@ export default {
   },
   methods: {
     reload() {
-      getMembers().then(resp => {
-        console.log('resp', resp)
-        const users = resp.data || []
-        this.tableData = users.map(user => {
+      getPackages().then(resp => {
+        // console.log('resp', resp)
+        const items = resp.data || []
+        this.tableData = items.map(item => {
           return {
-            id: user.id,
-            username: user.username,
-            name: user.name,
-            tokens: user.tokens,
-            role: user.role,
-            state: user.state,
-            email: user.email,
-            chatCount: user.chatCount,
-            advancedChatCount: user.advancedChatCount,
-            drawCount: user.drawCount,
-            createTime: user.createTime,
-            updateTime: user.updateTime
+            id: item.id,
+            uuid: item.uuid,
+            title: item.title,
+            subTitle: item.subTitle,
+            state: item.state,
+            top: item.top,
+            tokens: item.tokens,
+            days: item.days,
+            price: item.price,
+            calcType: item.calcType,
+            calcTypeId: item.calcTypeId,
+            chatCount: item.chatCount,
+            advancedChatCount: item.advancedChatCount,
+            drawCount: item.drawCount,
+            createTime: item.createTime,
+            updateTime: item.updateTime
           }
         })
         this.pagination.total = this.tableData.length
@@ -204,19 +220,24 @@ export default {
       })
     },
     updateDetail(row) {
-      console.log('updateDetail')
+      // console.log('updateDetail')
       this.detailModel = {
         id: row.id,
-        name: row.name,
-        username: row.username,
+        uuid: row.uuid,
+        title: row.title,
+        subTitle: row.subTitle,
+        top: row.top,
         state: row.state,
-        role: row.role,
         tokens: row.tokens,
-        email: row.email,
+        days: row.days,
+        price: row.price,
+        calcType: row.calcType,
+        calcTypeId: row.calcTypeId,
         chatCount: row.chatCount,
         advancedChatCount: row.advancedChatCount,
         drawCount: row.drawCount,
-        createTime: row.createTime
+        createTime: row.createTime,
+        updateTime: row.updateTime
       }
       this.$nextTick(() => {
         this.$refs.detail.reload()
@@ -226,7 +247,25 @@ export default {
       this.reload()
     },
     handleCreate() {
-      this.$message.warning('开发中……')
+      this.showDetail = true
+      this.updateDetail({
+        id: null,
+        uuid: '',
+        title: '',
+        subTitle: '',
+        top: 0,
+        state: 0,
+        days: 0,
+        price: null,
+        calcType: null,
+        calcTypeId: null,
+        tokens: 0,
+        chatCount: 0,
+        advancedChatCount: 0,
+        drawCount: 0,
+        createTime: null,
+        updateTime: null
+      })
     },
     handleEdit(row) {
       this.showDetail = true
@@ -237,31 +276,6 @@ export default {
     },
     handleChanged() {
       this.reload()
-    },
-    handleToggleEnable(row) {
-      console.log('handleToggleEnable')
-      this.$confirm(
-        row.state === 1 ? ('确定对' + row.username + '进行停用吗？') : ('确定对' + row.username + '取消停用吗？'),
-        '操作确认',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      ).then(async() => {
-        const enable = row.state === 2
-        enableUser(row.id, enable).then(resp => {
-          console.log('resp', resp)
-          this.$message.success('操作成功！')
-          this.reload()
-        })
-      })
-    },
-    getStateName(state) {
-      return ({
-        1: '正常',
-        2: '禁用'
-      })[state] || '未知'
     }
   }
 }

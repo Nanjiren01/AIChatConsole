@@ -1,6 +1,14 @@
 
 import request from '@/utils/request'
 
+export function getBalancesByUserId(userId) {
+  return request({
+    url: '/balances/' + userId,
+    method: 'get',
+    params: {}
+  })
+}
+
 export function getBalanceRecordByUserId(userId) {
   return request({
     url: '/balances/' + userId + '/records',
@@ -9,13 +17,27 @@ export function getBalanceRecordByUserId(userId) {
   })
 }
 
-export function increaseBalance(userId, type, count) {
+export function setEnable(balanceId) {
+  return request({
+    url: '/balances/' + balanceId + '/enable',
+    method: 'put'
+  })
+}
+
+export function setDisable(balanceId) {
+  return request({
+    url: '/balances/' + balanceId + '/disable',
+    method: 'put'
+  })
+}
+
+export function increaseBalance(userId, balanceId, type, count) {
   return request({
     url: '/balances/increase',
     method: 'post',
     params: {},
     data: {
-      userId, type, count
+      userId, type, count, balanceId
     }
   })
 }
