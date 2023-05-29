@@ -41,3 +41,13 @@ export function increaseBalance(userId, balanceId, type, count) {
     }
   })
 }
+
+export function addPackage(userId, packageId) {
+  return request({
+    url: '/balances/addPackage',
+    method: 'post',
+    data: {
+      userId, packageId
+    }
+  })
+}

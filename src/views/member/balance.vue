@@ -25,8 +25,13 @@
                 <span>{{ props.row.drawCount }}</span>
               </el-form-item>
             </el-form>
+            <el-alert v-if="props.row.calcTypeId == 1" title="此为总额套餐，以上数值将会随着使用而减少" type="success" />
+            <el-alert v-if="[2, 3, 4].includes(props.row.calcTypeId)" title="此为周期套餐，以上数值表示周期内的总额，不会随着使用而减少" type="success" />
           </template>
         </el-table-column>
+      </template>
+      <template #topActions>
+        <el-button type="primary" @click="handleShowAddPackageDialog">增加套餐</el-button>
       </template>
       <template v-slot:sourceId="slotProps">
         <el-tag>{{ getSourceText(slotProps.row.sourceId) }}</el-tag>
@@ -49,7 +54,9 @@
         >
           {{ slotProps.row.state == 1 ? '废除' : '恢复' }}
         </el-button>
-        <el-button v-if="slotProps.row.state == 1" type="primary" @click.stop="handleShowQuotaEditDialog(slotProps.row)">赠送</el-button>
+        <el-button type="primary" @click.stop="handleShowQuotaEditDialog(slotProps.row)">
+          {{ slotProps.row.calcTypeId == 1 ? '赠送额度' : '提升限额' }}
+        </el-button>
       </template>
     </ai-table>
 
@@ -62,10 +69,10 @@
       <el-form label-width="160px">
         <el-form-item label="类型">
           <el-select v-model="increaseType">
-            <el-option label="剩余聊天次数" :value="1" />
-            <el-option label="剩余高级聊天次数（GPT4）" :value="2" />
-            <el-option label="剩余tokens" :value="3" />
-            <el-option label="剩余绘画次数" :value="4" />
+            <el-option label="聊天次数" :value="1" />
+            <el-option label="高级聊天次数（GPT4）" :value="2" />
+            <el-option label="tokens" :value="3" />
+            <el-option label="绘画次数" :value="4" />
           </el-select>
         </el-form-item>
         <el-form-item label="次数">
@@ -79,13 +86,36 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :title="'为' + member.username + '增加套餐'"
+      :visible.sync="packageDialogVisible"
+      :append-to-body="true"
+      width="30%"
+    >
+      <el-form label-width="100px">
+        <el-form-item label="选择套餐">
+          <el-select v-model="packageId">
+            <el-option v-for="pkg in packages" :key="pkg.id" :label="pkg.title" :value="pkg.id" />
+          </el-select>
+
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button :disabled="increasing" @click="packageDialogVisible = false">取 消</el-button>
+        <el-button type="primary" :disabled="increasing" @click="handlePackageAdd">
+          {{ increasing ? '处理中' : '确 定' }}
+        </el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 
 import AiTable from '@/components/Table'
-import { getBalancesByUserId, increaseBalance, setDisable, setEnable } from '@/api/balance'
+import { getBalancesByUserId, increaseBalance, setDisable, setEnable, addPackage } from '@/api/balance'
+import { getPackages } from '@/api/package'
 
 export default {
   name: 'Balances',
@@ -135,7 +165,7 @@ export default {
       }],
       tableData: [],
       tableActionColumn: {
-        width: 160
+        width: 180
       },
       pagination: {
         total: 0,
@@ -146,7 +176,11 @@ export default {
       increaseType: null,
       increaseCount: 0,
       increasing: false,
-      increaseBalanceId: 0
+      increaseBalanceId: 0,
+
+      packages: [],
+      packageDialogVisible: false,
+      packageId: null
     }
   },
   methods: {
@@ -170,6 +204,11 @@ export default {
           }
         })
         this.pagination.total = this.tableData.length
+      })
+      getPackages().then(resp => {
+        this.packages = resp.data.map(pkg => {
+          return { ...pkg }
+        })
       })
     },
     handleRefresh() {
@@ -220,8 +259,26 @@ export default {
         this.$message.success('操作成功！')
         this.dialogVisible = false
         this.$emit('changed')
+        this.reload()
       }).catch(err => {
         console.error(err)
+      }).finally(() => {
+        this.increasing = false
+      })
+    },
+    handleShowAddPackageDialog() {
+      this.packageDialogVisible = true
+      this.packageId = null
+    },
+    handlePackageAdd() {
+      if (!this.packageId) {
+        this.$message.error('请选择套餐！')
+        return
+      }
+      this.increasing = true
+      addPackage(this.userId, this.packageId).then(() => {
+        this.reload()
+        this.packageDialogVisible = false
       }).finally(() => {
         this.increasing = false
       })

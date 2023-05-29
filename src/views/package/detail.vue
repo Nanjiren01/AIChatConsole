@@ -179,6 +179,10 @@ export default {
         return
       }
       if (this.packageEntity.id) {
+        if (this.packageEntity.state === 10) {
+          this.$message.error('请先下架！')
+          return
+        }
         updatePackage(this.packageEntity).then((resp) => {
           this.$message.success('操作成功！')
           this.$emit('changed')
@@ -202,6 +206,21 @@ export default {
     handleToggleEnable() {
       // console.log('handleToggleEnable')
       const row = this.packageEntity
+      if (row.state === 0 || row.state === 20) {
+        // 说明要上架
+        if (!row.title) {
+          this.$message.error('请输入标题！')
+          return
+        }
+        if (!row.calcTypeId) {
+          this.$message.error('请选择类型')
+          return
+        }
+        if (!row.price) {
+          this.$message.error('请输入价格')
+          return
+        }
+      }
       this.$confirm(
         row.state === 10 ? ('下架后用户将无法购买此套餐，确定下架' + row.title + '吗？') : ('上架后套餐信息无法修改，确定上架' + row.title + '吗？'),
         '操作确认',
