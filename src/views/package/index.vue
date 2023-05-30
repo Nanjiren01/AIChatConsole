@@ -19,6 +19,10 @@
         </el-button> -->
       </template>
 
+      <template v-slot:formattedTitle="slotProps">
+        <i v-if="slotProps.row.formatted" class="el-icon-orange" />
+        {{ slotProps.row.formattedTitle }}
+      </template>
       <template v-slot:tokens="slotProps">
         <el-tag v-if="slotProps.row.tokens == -1" type="success">无限制</el-tag>
         <el-tag v-else-if="slotProps.row.tokens === 0" type="danger">{{ slotProps.row.tokens }}</el-tag>
@@ -97,7 +101,7 @@ export default {
         width: 260
       }, {
         label: '标题',
-        prop: 'title'
+        slot: 'formattedTitle'
       }, {
         label: '价格',
         prop: 'price',
@@ -188,10 +192,13 @@ export default {
         // console.log('resp', resp)
         const items = resp.data || []
         this.tableData = items.map(item => {
+          const formattedTitle = item.title ? item.title.replace(/(<([^>]+)>)/ig, '') : item.title
           return {
             id: item.id,
             uuid: item.uuid,
             title: item.title,
+            formattedTitle,
+            formatted: item.title !== formattedTitle,
             subTitle: item.subTitle,
             state: item.state,
             top: item.top,

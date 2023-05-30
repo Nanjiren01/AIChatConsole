@@ -35,6 +35,12 @@
                 <el-checkbox label="UsernameAndEmailWithCaptchaAndCode">用户名+邮箱验证码（带图形验证码）</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
+            <el-form-item label="套餐页标题">
+              <el-input v-model="form.pricingPageTitle" />
+            </el-form-item>
+            <el-form-item label="套餐页副标题">
+              <el-input v-model="form.pricingPageSubTitle" />
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="loading" @click="handleSubmit">提 交</el-button>
             </el-form-item>
@@ -58,7 +64,9 @@ export default {
         subTitle: '',
         loginPageSubTitle: '',
         registerPageSubTitle: '',
-        registerTypes: []
+        registerTypes: [],
+        pricingPageTitle: null,
+        pricingPageSubTitle: null
       },
       loading: false
     }
@@ -76,6 +84,8 @@ export default {
         this.form.subTitle = config.websiteContent.subTitle
         this.form.loginPageSubTitle = config.websiteContent.loginPageSubTitle
         this.form.registerPageSubTitle = config.websiteContent.registerPageSubTitle
+        this.form.pricingPageTitle = config.websiteContent.pricingPageTitle
+        this.form.pricingPageSubTitle = config.websiteContent.pricingPageSubTitle
 
         const types = config.websiteContent.registerTypes
         this.form.registerTypes.splice(0, this.form.registerTypes.length)
@@ -95,7 +105,9 @@ export default {
         subTitle: this.form.subTitle,
         loginPageSubTitle: this.form.loginPageSubTitle,
         registerPageSubTitle: this.form.registerPageSubTitle,
-        registerTypes: this.form.registerTypes
+        registerTypes: this.form.registerTypes,
+        pricingPageTitle: this.form.pricingPageTitle,
+        pricingPageSubTitle: this.form.pricingPageSubTitle
       }).then(() => {
         this.$message.success('修改成功！')
       }).finally(() => {
