@@ -1,7 +1,7 @@
 <template>
   <el-drawer
     :title="title"
-    size="60%"
+    size="80%"
     :visible="show"
     :modal-append-to-body="true"
     :before-close="handleClose"
@@ -47,7 +47,7 @@
 
       <el-tabs v-model="activeName" style="padding: 10px;" @tab-click="handleTabClick">
         <el-tab-pane label="套餐列表" name="balance">
-          <balances ref="balances" :user-id="member.id" :member="member" />
+          <balances ref="balances" :user-id="member.id" :member="member" @changed="handleBalanceChanged" />
         </el-tab-pane>
         <el-tab-pane label="额度变动记录" name="balanceRecord">
           <ai-table
@@ -187,6 +187,9 @@ export default {
     },
     handleTabClick() {
 
+    },
+    handleBalanceChanged() {
+      this.reload()
     },
     getTypeText(typeId) {
       return ({

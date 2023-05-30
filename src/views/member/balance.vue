@@ -55,18 +55,20 @@
           {{ slotProps.row.state == 1 ? '废除' : '恢复' }}
         </el-button>
         <el-button type="primary" @click.stop="handleShowQuotaEditDialog(slotProps.row)">
-          {{ slotProps.row.calcTypeId == 1 ? '赠送额度' : '提升限额' }}
+          {{ slotProps.row.calcTypeId == 1 ? '调整额度' : '调整限额' }}
         </el-button>
       </template>
     </ai-table>
 
     <el-dialog
-      :title="'为' + member.username + '添加使用次数'"
+      :title="'为' + member.username + (increaseCalcTypeId == 1 ? '调整额度' : '调整限额')"
       :visible.sync="dialogVisible"
       :append-to-body="true"
-      width="50%"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="450px"
     >
-      <el-form label-width="160px">
+      <el-form label-width="80px">
         <el-form-item label="类型">
           <el-select v-model="increaseType">
             <el-option label="聊天次数" :value="1" />
@@ -76,7 +78,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="次数">
-          <el-input v-model="increaseCount" />
+          <el-input-number v-model="increaseCount" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -177,6 +179,7 @@ export default {
       increaseCount: 0,
       increasing: false,
       increaseBalanceId: 0,
+      increaseCalcTypeId: 0,
 
       packages: [],
       packageDialogVisible: false,
@@ -242,24 +245,25 @@ export default {
       this.increaseCount = 0
       this.increaseType = 1
       this.increaseBalanceId = row.id
+      this.increaseCalcTypeId = row.calcTypeId
     },
     handleQuotaAdd() {
       const count = +this.increaseCount
-      if (isNaN(count)) {
-        this.$message.error('次数填写错误！')
+      if (count === 0) {
+        this.$message.error('次数不能为0！')
         return
       }
-      if (count <= 0) {
-        this.$message.error('次数必须是一个大于0的数！')
-        return
-      }
+      // if (count <= 0) {
+      //   this.$message.error('次数必须是一个大于0的数！')
+      //   return
+      // }
       this.increasing = true
       increaseBalance(this.member.id, this.increaseBalanceId, this.increaseType, count).then(resp => {
         console.log('resp', resp)
         this.$message.success('操作成功！')
         this.dialogVisible = false
         this.$emit('changed')
-        this.reload()
+        // this.reload()
       }).catch(err => {
         console.error(err)
       }).finally(() => {
