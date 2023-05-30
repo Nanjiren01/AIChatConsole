@@ -35,3 +35,21 @@ export function saveEmailConfig(content) {
     }
   })
 }
+
+export function getRegisterQuotaConfig() {
+  return request({
+    url: '/globalConfig/registerQuota',
+    method: 'get'
+  })
+}
+
+export function saveRegisterQuotaConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'RegisterQuota',
+      ...content
+    }
+  })
+}

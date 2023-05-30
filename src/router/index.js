@@ -190,6 +190,22 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/activity',
+    component: Layout,
+    redirect: '/activity/list',
+    alwaysShow: true, // will always show the root menu
+    name: 'activity',
+    meta: { title: '活动管理', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/activity/index'),
+        name: 'activityList',
+        meta: { title: '活动列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/package',
     component: Layout,
     redirect: '/package/list',
