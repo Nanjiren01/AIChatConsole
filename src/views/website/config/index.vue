@@ -2,12 +2,6 @@
   <div style="padding: 20px;">
     <el-tabs type="border-card">
       <el-tab-pane label="页面配置">
-        <!-- <el-alert
-          title="如您希望使用环境变量中的设置，请全部置空即可。"
-          type="info"
-          style="margin-bottom: 10px;"
-          :closable="false"
-        /> -->
         <div style="margin: 0 auto; width: 500px;">
           <el-form ref="form" :model="form" label-width="120px">
             <el-form-item label="网站主标题">
@@ -47,6 +41,9 @@
           </el-form>
         </div>
       </el-tab-pane>
+      <el-tab-pane label="邮箱配置">
+        <email-config />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -54,9 +51,11 @@
 <script>
 
 import { getWebsiteConfig, saveWebsiteConfig } from '@/api/globalConfig'
+import EmailConfig from './emailConfig'
 
 export default {
   name: 'WebsiteConfig',
+  components: { EmailConfig },
   data() {
     return {
       form: {

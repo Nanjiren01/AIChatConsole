@@ -17,3 +17,21 @@ export function saveWebsiteConfig(content) {
     }
   })
 }
+
+export function getEmailConfig() {
+  return request({
+    url: '/globalConfig/email',
+    method: 'get'
+  })
+}
+
+export function saveEmailConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'Email',
+      ...content
+    }
+  })
+}
