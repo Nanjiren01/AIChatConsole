@@ -12,7 +12,7 @@
         <el-button type="primary" icon="el-icon-plus" disabled @click="handleCreate">新建</el-button>
       </template>
       <template v-slot:rowActions="slotProps">
-        <el-button type="primary" plain icon="el-icon-edit" @click="handleEdit(slotProps.row)">编辑</el-button>
+        <el-button type="primary" plain icon="el-icon-edit" @click.stop="handleShowEdit(slotProps.row)">编辑</el-button>
         <el-button
           :type="slotProps.row.state == 1 ? 'danger' : 'success'"
           plain
@@ -32,10 +32,31 @@
 
       <template v-slot:baseUrl="props">
         <span v-if="props.row.baseUrl">{{ props.row.baseUrl }}</span>
-        <i v-else style="color: #888">系统默认</i>
+        <i v-else style="color: #888">系统默认（https://api.openai.com）</i>
       </template>
 
     </ai-table>
+
+    <el-dialog
+      title="平台修改"
+      :visible.sync="dialogVisible"
+      width="500px"
+    >
+      <div style="margin: 0 auto;">
+        <el-form ref="form" :model="form" label-width="120px">
+          <el-form-item label="名称">
+            <el-input v-model="form.name" />
+          </el-form-item>
+          <el-form-item label="BASE_URL">
+            <el-input v-model="form.baseUrl" />
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleEditSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
 
   </div>
 </template>
@@ -63,14 +84,17 @@ export default {
         slot: 'baseUrl'
       }, {
         label: '模型总数',
-        prop: 'modelsCount'
+        prop: 'modelsCount',
+        width: 75
       }, {
         label: '状态',
         prop: 'state',
-        slot: 'state'
+        slot: 'state',
+        width: 65
       }, {
         label: '创建时间',
-        prop: 'createTime'
+        prop: 'createTime',
+        width: 135
       }],
       tableActionColumn: {
         width: 175
@@ -80,7 +104,14 @@ export default {
         total: 0,
         showDetail: false
       },
-      loading: false
+      loading: false,
+
+      dialogVisible: false,
+      form: {
+        id: null,
+        name: null,
+        baseUrl: null
+      }
     }
   },
   computed: {
@@ -119,6 +150,38 @@ export default {
     // handleDelete(row) {
     //   console.log('delete', row)
     // },
+    handleShowEdit(row) {
+      this.dialogVisible = true
+      this.form.id = row.id
+      this.form.name = row.name
+      this.form.state = row.state
+      this.form.baseUrl = row.baseUrl || ''
+    },
+    handleEditSubmit() {
+      if (!this.form.name) {
+        this.$message.error('名称不能为空！')
+        return
+      }
+      if (this.form.baseUrl) {
+        if (!this.form.baseUrl.startsWith('http')) {
+          this.$message.error('BASE_URL必须以http开头')
+          return
+        }
+      }
+      this.loading = true
+      updateAiPlatform({
+        id: this.form.id,
+        name: this.form.name,
+        state: this.form.state,
+        baseUrl: this.form.baseUrl
+      }).then(() => {
+        this.$message.success('操作成功！')
+        this.reload()
+        this.dialogVisible = false
+      }).finally(() => {
+        this.loading = false
+      })
+    },
     toggleEnable(row) {
       this.loading = true
       this.$message.info('处理中……')
