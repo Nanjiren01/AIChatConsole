@@ -7,6 +7,8 @@
       :table-action-column="tableActionColumn"
       :pagination="pagination"
       :loading="loading"
+      @pageSizeChanged="handlePageSizeChange"
+      @pageCurrentChanged="handlePageCurrentChanged"
       @refresh="handleRefresh"
     >
       <template #filter>
@@ -18,7 +20,7 @@
             <el-input v-model="filter.email" placeholder="请输入邮箱" />
           </el-col>
           <el-col :span="6" :xs="24">
-            <el-button type="primary" plain :disabled="loading" @click="reload">搜索</el-button>
+            <el-button type="primary" plain :disabled="loading" @click="handleSearch">搜索</el-button>
             <el-button type="info" plain @click="handleResetFilter">重置</el-button>
           </el-col>
         </el-row>
@@ -159,7 +161,9 @@ export default {
       tableData: [],
       pagination: {
         total: 0,
-        showDetail: false
+        pageNum: 1,
+        pageSize: 20
+        // showDetail: false
       },
       filter: {
         username: null,
@@ -195,10 +199,13 @@ export default {
       this.loading = true
       return getMembers({
         username: this.filter.username,
-        email: this.filter.email
+        email: this.filter.email,
+        page: this.pagination.pageNum,
+        size: this.pagination.pageSize
       }).then(resp => {
         console.log('resp', resp)
-        const users = resp.data || []
+        const page = resp.data
+        const users = page.list
         this.tableData = users.map(user => {
           return {
             id: user.id,
@@ -215,7 +222,9 @@ export default {
             updateTime: user.updateTime
           }
         })
-        this.pagination.total = this.tableData.length
+        this.pagination.total = page.total
+        this.pagination.pageNum = page.pageNum
+        this.pagination.pageSize = page.pageSize
       }).then(() => {
         console.log('this.showDetail', this.showDetail)
         if (this.showDetail) {
@@ -248,8 +257,23 @@ export default {
         this.$refs.detail.reload()
       })
     },
+    handleSearch() {
+      this.pagination.pageNum = 1 // 搜索时只是跳回第一页，不调整分页数量
+      // this.pagination.pageSize = 20
+      this.reload()
+    },
     handleRefresh() {
-      this.handleResetFilter()
+      this.reload()
+    },
+    handlePageSizeChange(size) {
+      this.pagination.pageNum = 1
+      this.pagination.pageSize = size
+      this.reload()
+    },
+    handlePageCurrentChanged(page) {
+      console.log('page', page)
+      this.pagination.pageNum = page
+      this.reload()
     },
     handleCreate() {
       this.$message.warning('开发中……')
@@ -286,6 +310,8 @@ export default {
     handleResetFilter() {
       this.filter.username = ''
       this.filter.email = ''
+      this.pagination.pageNum = 1
+      // this.pagination.pageSize = 20
       this.reload()
     },
     getStateName(state) {

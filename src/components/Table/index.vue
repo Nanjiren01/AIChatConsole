@@ -59,9 +59,9 @@
 
       <el-pagination
         style="margin-top: 10px;"
-        :current-page="currentPage"
+        :current-page="pagination.pageNum"
         :page-sizes="[20, 200, 500]"
-        :page-size="20"
+        :page-size="pagination.pageSize"
         :layout="paginationLayout"
         :total="pagination.total || 0"
         @size-change="handleSizeChange"
@@ -127,15 +127,16 @@ export default {
     // }
   },
   methods: {
-    handleSizeChange() {
-
+    handleSizeChange(pageSize) {
+      this.$emit('pageSizeChanged', pageSize)
     },
-    handleCurrentChange() {
-
+    handleCurrentChange(page) {
+      // console.log('page', page)
+      this.$emit('pageCurrentChanged', page)
     },
 
     handleRowClick(row) {
-      console.log('row', row)
+      // console.log('row', row)
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     // 多选
