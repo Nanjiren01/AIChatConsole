@@ -6,12 +6,27 @@
       :table-data="tableData"
       :table-action-column="tableActionColumn"
       :pagination="pagination"
+      :loading="loading"
       @refresh="handleRefresh"
     >
+      <template #filter>
+        <el-row :gutter="20">
+          <el-col :span="6" :xs="24">
+            <el-input v-model="filter.username" placeholder="请输入用户名" />
+          </el-col>
+          <el-col :span="6" :xs="24">
+            <el-input v-model="filter.email" placeholder="请输入邮箱" />
+          </el-col>
+          <el-col :span="6" :xs="24">
+            <el-button type="primary" plain :disabled="loading" @click="reload">搜索</el-button>
+            <el-button type="info" plain @click="handleResetFilter">重置</el-button>
+          </el-col>
+        </el-row>
+      </template>
       <template #topActions>
-        <!-- <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button> -->
+      <!-- <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button> -->
 
-        <!-- <el-button type="danger" icon="el-icon-delete" disabled>删除</el-button> -->
+      <!-- <el-button type="danger" icon="el-icon-delete" disabled>删除</el-button> -->
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
@@ -76,6 +91,7 @@ export default {
   components: { AiTable, Detail },
   data() {
     return {
+      loading: false,
       showDetail: false,
       tableActions: [{
         key: 'increase-tokens',
@@ -138,12 +154,16 @@ export default {
       //   prop: 'update_time'
       }],
       tableActionColumn: {
-        width: 400
+        width: 165
       },
       tableData: [],
       pagination: {
         total: 0,
         showDetail: false
+      },
+      filter: {
+        username: null,
+        email: null
       },
       detailModel: {
         id: null,
@@ -172,7 +192,11 @@ export default {
   },
   methods: {
     reload() {
-      getMembers().then(resp => {
+      this.loading = true
+      return getMembers({
+        username: this.filter.username,
+        email: this.filter.email
+      }).then(resp => {
         console.log('resp', resp)
         const users = resp.data || []
         this.tableData = users.map(user => {
@@ -201,6 +225,8 @@ export default {
             this.updateDetail(row)
           }
         }
+      }).finally(() => {
+        this.loading = false
       })
     },
     updateDetail(row) {
@@ -223,7 +249,7 @@ export default {
       })
     },
     handleRefresh() {
-      this.reload()
+      this.handleResetFilter()
     },
     handleCreate() {
       this.$message.warning('开发中……')
@@ -256,6 +282,11 @@ export default {
           this.reload()
         })
       })
+    },
+    handleResetFilter() {
+      this.filter.username = ''
+      this.filter.email = ''
+      this.reload()
     },
     getStateName(state) {
       return ({

@@ -1,8 +1,8 @@
 <template>
   <div class="comp-container">
-    <!-- <div class="filter-container">
-      这里是筛选条件
-    </div> -->
+    <div class="filter-container">
+      <slot name="filter" />
+    </div>
 
     <div class="table-container" style="padding: 20px;">
 
@@ -18,6 +18,7 @@
 
       <el-table
         ref="multipleTable"
+        v-loading="loading"
         :data="tableData"
         border
         stripe
@@ -96,6 +97,10 @@ export default {
     pagination: {
       type: Object,
       default: () => {}
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
