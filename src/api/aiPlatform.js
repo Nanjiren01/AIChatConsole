@@ -8,3 +8,11 @@ export function getAiPlatforms(params) {
     params
   })
 }
+
+export function updateAiPlatform(params) {
+  return request({
+    url: '/aiPlatforms',
+    method: 'put',
+    data: params
+  })
+}
