@@ -8,3 +8,11 @@ export function getAiModels(params) {
     params
   })
 }
+
+export function updateAiModel(params) {
+  return request({
+    url: '/aiModels',
+    method: 'put',
+    data: params
+  })
+}

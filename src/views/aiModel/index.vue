@@ -13,9 +13,15 @@
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">查看</el-button>
-        <!-- <el-button type="warn" icon="el-icon-disabled" @click="toggleEnable(slotProps.row)">
+        <el-button
+          :type="slotProps.row.state == 1 ? 'danger' : 'success'"
+          plain
+          icon="el-icon-disabled"
+          :disalbed="loading"
+          @click.stop="toggleEnable(slotProps.row)"
+        >
           {{ slotProps.row.state == 1 ? '禁用' : '启用' }}
-        </el-button> -->
+        </el-button>
         <!-- <el-button type="danger" icon="el-icon-delete" @click="handleDelete(slotProps.row)">删除</el-button> -->
       </template>
       <!-- <template #columns>
@@ -32,14 +38,14 @@
 
     </ai-table>
 
-    <edit :show="showEdit" :model="editModel" @close="handleCloseEdit" />
+    <edit :show="showEdit" :model="editModel" @close="handleCloseEdit" @changed="handleChanged" />
   </div>
 </template>
 
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getAiModels } from '@/api/aiModel.js'
+import { getAiModels, updateAiModel } from '@/api/aiModel.js'
 import Edit from './edit'
 
 export default {
@@ -59,20 +65,23 @@ export default {
         label: '模型名称',
         prop: 'name'
       }, {
+        label: 'path',
+        prop: 'path'
+      }, {
         label: '计费方式',
-        prop: 'levelId',
-        slot: 'levelId'
+        slot: 'levelId',
+        width: 85
       }, {
         label: '状态',
-        prop: 'state',
-        slot: 'state'
+        slot: 'state',
+        width: 65
       }, {
         label: '创建时间',
         prop: 'createTime',
-        width: 140
+        width: 135
       }],
       tableActionColumn: {
-        width: 280
+        width: 170
       },
       tableData: [],
       pagination: {
@@ -88,8 +97,11 @@ export default {
         state: null,
         level: null,
         levelId: null,
+        path: null,
         createTime: null
-      }
+      },
+
+      loading: false
     }
   },
   computed: {
@@ -106,6 +118,7 @@ export default {
           return {
             id: model.id,
             name: model.name,
+            platformId: model.platformId,
             platformName: model.platformName,
             state: model.state,
             level: model.level,
@@ -114,6 +127,7 @@ export default {
             // quota: key.quota,
             // state: key.state,
             // creatorName: key.creatorName,
+            path: model.path,
             createTime: model.createTime
             // updateTime: key.updateTime
           }
@@ -136,17 +150,34 @@ export default {
       this.editModel.level = row.level
       this.editModel.levelId = row.levelId
       this.editModel.state = row.state
+      this.editModel.path = row.path
       this.editModel.createTime = row.createTime
       this.showEdit = true
     },
     handleCloseEdit() {
       this.showEdit = false
     },
+    handleChanged() {
+      this.reload()
+    },
     handleDelete(row) {
       console.log('delete', row)
     },
     toggleEnable(row) {
-      console.log('toggle', row)
+      this.loading = true
+      this.$message.info('处理中……')
+      updateAiModel({
+        id: row.id,
+        name: row.name,
+        state: row.state === 1 ? 2 : 1,
+        levelId: row.levelId,
+        path: row.path
+      }).then(() => {
+        this.$message.success('操作成功！')
+        this.reload()
+      }).finally(() => {
+        this.loading = false
+      })
     },
     getStateName(state) {
       return ({
