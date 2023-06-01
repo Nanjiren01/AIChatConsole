@@ -35,6 +35,9 @@
             <el-form-item label="聊天窗口：敏感词提示">
               <el-input v-model="form.sensitiveWordsTip" />
             </el-form-item>
+            <el-form-item label="聊天窗口：额度不足提示">
+              <el-input v-model="form.balanceNotEnough" type="textarea" autosize />
+            </el-form-item>
             <el-form-item label="套餐页标题">
               <el-input v-model="form.pricingPageTitle" />
             </el-form-item>
@@ -77,7 +80,8 @@ export default {
         pricingPageTitle: null,
         pricingPageSubTitle: null,
         chatPageSubTitle: '',
-        sensitiveWordsTip: ''
+        sensitiveWordsTip: '',
+        balanceNotEnough: ''
       },
       loading: false
     }
@@ -99,6 +103,7 @@ export default {
         this.form.pricingPageSubTitle = config.websiteContent.pricingPageSubTitle
         this.form.chatPageSubTitle = config.websiteContent.chatPageSubTitle
         this.form.sensitiveWordsTip = config.websiteContent.sensitiveWordsTip
+        this.form.balanceNotEnough = config.websiteContent.balanceNotEnough
 
         const types = config.websiteContent.registerTypes
         this.form.registerTypes.splice(0, this.form.registerTypes.length)
@@ -122,7 +127,8 @@ export default {
         pricingPageTitle: this.form.pricingPageTitle,
         pricingPageSubTitle: this.form.pricingPageSubTitle,
         chatPageSubTitle: this.form.chatPageSubTitle,
-        sensitiveWordsTip: this.form.sensitiveWordsTip
+        sensitiveWordsTip: this.form.sensitiveWordsTip,
+        balanceNotEnough: this.form.balanceNotEnough
       }).then(() => {
         this.$message.success('修改成功！')
       }).finally(() => {
