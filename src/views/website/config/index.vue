@@ -29,6 +29,9 @@
                 <el-checkbox label="UsernameAndEmailWithCaptchaAndCode">用户名+邮箱验证码（带图形验证码）</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
+            <el-form-item label="聊天页副标题">
+              <el-input v-model="form.chatPageSubTitle" />
+            </el-form-item>
             <el-form-item label="套餐页标题">
               <el-input v-model="form.pricingPageTitle" />
             </el-form-item>
@@ -65,7 +68,8 @@ export default {
         registerPageSubTitle: '',
         registerTypes: [],
         pricingPageTitle: null,
-        pricingPageSubTitle: null
+        pricingPageSubTitle: null,
+        chatPageSubTitle: ''
       },
       loading: false
     }
@@ -85,6 +89,7 @@ export default {
         this.form.registerPageSubTitle = config.websiteContent.registerPageSubTitle
         this.form.pricingPageTitle = config.websiteContent.pricingPageTitle
         this.form.pricingPageSubTitle = config.websiteContent.pricingPageSubTitle
+        this.form.chatPageSubTitle = config.websiteContent.chatPageSubTitle
 
         const types = config.websiteContent.registerTypes
         this.form.registerTypes.splice(0, this.form.registerTypes.length)
@@ -106,7 +111,8 @@ export default {
         registerPageSubTitle: this.form.registerPageSubTitle,
         registerTypes: this.form.registerTypes,
         pricingPageTitle: this.form.pricingPageTitle,
-        pricingPageSubTitle: this.form.pricingPageSubTitle
+        pricingPageSubTitle: this.form.pricingPageSubTitle,
+        chatPageSubTitle: this.form.chatPageSubTitle
       }).then(() => {
         this.$message.success('修改成功！')
       }).finally(() => {
