@@ -3,7 +3,7 @@
     <el-tabs type="border-card">
       <el-tab-pane label="页面配置">
         <div style="margin: 0 auto; width: 500px;">
-          <el-form ref="form" :model="form" label-width="120px">
+          <el-form ref="form" :model="form" label-width="180px">
             <el-form-item label="网站主标题">
               <el-input v-model="form.title" />
             </el-form-item>
@@ -31,6 +31,9 @@
             </el-form-item>
             <el-form-item label="聊天页副标题">
               <el-input v-model="form.chatPageSubTitle" />
+            </el-form-item>
+            <el-form-item label="聊天窗口：敏感词提示">
+              <el-input v-model="form.sensitiveWordsTip" />
             </el-form-item>
             <el-form-item label="套餐页标题">
               <el-input v-model="form.pricingPageTitle" />
@@ -73,7 +76,8 @@ export default {
         registerTypes: [],
         pricingPageTitle: null,
         pricingPageSubTitle: null,
-        chatPageSubTitle: ''
+        chatPageSubTitle: '',
+        sensitiveWordsTip: ''
       },
       loading: false
     }
@@ -94,6 +98,7 @@ export default {
         this.form.pricingPageTitle = config.websiteContent.pricingPageTitle
         this.form.pricingPageSubTitle = config.websiteContent.pricingPageSubTitle
         this.form.chatPageSubTitle = config.websiteContent.chatPageSubTitle
+        this.form.sensitiveWordsTip = config.websiteContent.sensitiveWordsTip
 
         const types = config.websiteContent.registerTypes
         this.form.registerTypes.splice(0, this.form.registerTypes.length)
@@ -116,7 +121,8 @@ export default {
         registerTypes: this.form.registerTypes,
         pricingPageTitle: this.form.pricingPageTitle,
         pricingPageSubTitle: this.form.pricingPageSubTitle,
-        chatPageSubTitle: this.form.chatPageSubTitle
+        chatPageSubTitle: this.form.chatPageSubTitle,
+        sensitiveWordsTip: this.form.sensitiveWordsTip
       }).then(() => {
         this.$message.success('修改成功！')
       }).finally(() => {
