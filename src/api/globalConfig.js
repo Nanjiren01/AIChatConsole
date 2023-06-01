@@ -53,3 +53,21 @@ export function saveRegisterQuotaConfig(content) {
     }
   })
 }
+
+export function getSensitiveWordsConfig() {
+  return request({
+    url: '/globalConfig/sensitiveWords',
+    method: 'get'
+  })
+}
+
+export function saveSensitiveWordsConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'SensitiveWords',
+      ...content
+    }
+  })
+}

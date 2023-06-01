@@ -47,6 +47,9 @@
       <el-tab-pane label="邮箱配置">
         <email-config />
       </el-tab-pane>
+      <el-tab-pane label="敏感词配置">
+        <sensitive-words-config />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -55,10 +58,11 @@
 
 import { getWebsiteConfig, saveWebsiteConfig } from '@/api/globalConfig'
 import EmailConfig from './emailConfig'
+import SensitiveWordsConfig from './sensitiveWords'
 
 export default {
   name: 'WebsiteConfig',
-  components: { EmailConfig },
+  components: { EmailConfig, SensitiveWordsConfig },
   data() {
     return {
       form: {
