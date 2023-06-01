@@ -7,7 +7,7 @@
       :closable="false"
     />
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group :basic-data="basicData" @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
@@ -56,6 +56,7 @@ import LineChart from './components/LineChart'
 // import TransactionTable from './components/TransactionTable'
 // import TodoList from './components/TodoList'
 // import BoxCard from './components/BoxCard'
+import { getBasic } from '@/api/dashboard'
 
 const lineChartData = {
   newVisitis: {
@@ -91,10 +92,24 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      basicData: {
+        memberCount: 0,
+        apiCallCount: 0
+      }
     }
   },
+  mounted() {
+    this.reload()
+  },
   methods: {
+    reload() {
+      getBasic().then(resp => {
+        const data = resp.data
+        this.basicData.memberCount = data.memberCount
+        this.basicData.apiCallCount = data.apiCallCount
+      })
+    },
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
     }

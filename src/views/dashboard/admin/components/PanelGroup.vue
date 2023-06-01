@@ -9,7 +9,7 @@
           <div class="card-panel-text">
             成员总数
           </div>
-          <count-to :start-val="0" :end-val="302" :duration="2000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="basicData.memberCount" :duration="2000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -20,9 +20,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            消息总数
+            聊天总数
           </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="basicData.apiCallCount" :duration="2000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -61,6 +61,12 @@ import CountTo from 'vue-count-to'
 export default {
   components: {
     CountTo
+  },
+  props: {
+    basicData: {
+      type: Object,
+      default: () => {}
+    }
   },
   methods: {
     handleSetLineChartData(type) {
