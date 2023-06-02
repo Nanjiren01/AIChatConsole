@@ -228,24 +228,40 @@ export default {
     },
     updateDetail(row) {
       // console.log('updateDetail')
-      this.detailModel = {
-        id: row.id,
-        uuid: row.uuid,
-        title: row.title,
-        subTitle: row.subTitle,
-        top: row.top,
-        state: row.state,
-        tokens: row.tokens,
-        days: row.days,
-        price: row.price,
-        calcType: row.calcType,
-        calcTypeId: row.calcTypeId,
-        chatCount: row.chatCount,
-        advancedChatCount: row.advancedChatCount,
-        drawCount: row.drawCount,
-        createTime: row.createTime,
-        updateTime: row.updateTime
-      }
+      this.detailModel.id = row.id
+      this.detailModel.uuid = row.uuid
+      this.detailModel.title = row.title
+      this.detailModel.subTitle = row.subTitle
+      this.detailModel.top = row.top
+      this.detailModel.state = row.state
+      this.detailModel.tokens = row.tokens
+      this.detailModel.days = row.days
+      this.detailModel.price = row.price
+      this.detailModel.calcType = row.calcType
+      this.detailModel.calcTypeId = row.calcTypeId
+      this.detailModel.chatCount = row.chatCount
+      this.detailModel.advancedChatCount = row.advancedChatCount
+      this.detailModel.drawCount = row.drawCount
+      this.detailModel.createTime = row.createTime
+      this.detailModel.updateTime = row.updateTime
+      // this.detailModel = {
+      //   id: row.id,
+      //   uuid: row.uuid,
+      //   title: row.title,
+      //   subTitle: row.subTitle,
+      //   top: row.top,
+      //   state: row.state,
+      //   tokens: row.tokens,
+      //   days: row.days,
+      //   price: row.price,
+      //   calcType: row.calcType,
+      //   calcTypeId: row.calcTypeId,
+      //   chatCount: row.chatCount,
+      //   advancedChatCount: row.advancedChatCount,
+      //   drawCount: row.drawCount,
+      //   createTime: row.createTime,
+      //   updateTime: row.updateTime
+      // }
       this.$nextTick(() => {
         this.$refs.detail.reload()
       })
@@ -281,7 +297,8 @@ export default {
     handleCloseDetail() {
       this.showDetail = false
     },
-    handleChanged() {
+    handleChanged(id) {
+      this.detailModel.id = id
       this.reload()
     }
   }

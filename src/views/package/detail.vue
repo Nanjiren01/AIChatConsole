@@ -196,10 +196,11 @@ export default {
           advancedChatCount: this.packageEntity.advancedChatCount,
           drawCount: this.packageEntity.drawCount,
           days: this.packageEntity.days,
-          price: this.packageEntity.price
+          price: this.packageEntity.price,
+          calcTypeId: this.packageEntity.calcTypeId
         }).then((resp) => {
           this.$message.success('创建成功！')
-          this.$emit('changed')
+          this.$emit('changed', resp.data.id)
         })
       }
     },
