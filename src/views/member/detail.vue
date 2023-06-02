@@ -61,6 +61,11 @@
             <template v-slot:type="slotProps">
               <el-tag>{{ getTypeText(slotProps.row.typeId) }}</el-tag>
             </template>
+            <template v-slot:state="props">
+              <el-tag v-if="props.row.state === 1" type="success">成功</el-tag>
+              <el-tag v-if="props.row.state === 0" type="warning">处理中</el-tag>
+              <el-tag v-if="props.row.state === 2" type="warning">已回滚</el-tag>
+            </template>
             <template v-slot:sourceId="slotProps">
               <el-tag>{{ getSourceText(slotProps.row.sourceId) }}</el-tag>
             </template>
@@ -123,6 +128,10 @@ export default {
         prop: 'delta',
         width: 80
       }, {
+        label: '状态',
+        slot: 'state',
+        width: 80
+      }, {
         label: '时间',
         prop: 'createTime',
         width: 140
@@ -171,6 +180,7 @@ export default {
             delta: item.delta,
             balanceId: item.balanceId,
             createTime: item.createTime,
+            state: item.state,
             source: item.source,
             sourceId: item.sourceId
           }
