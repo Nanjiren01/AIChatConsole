@@ -13,13 +13,13 @@
           <el-input v-model="packageEntity.uuid" disabled />
         </el-form-item>
         <el-form-item label="标题">
-          <el-input v-model="packageEntity.title" type="textarea" autosize />
+          <el-input v-model="packageEntity.title" type="textarea" autosize :disabled="disabled" />
         </el-form-item>
         <el-form-item label="副标题">
-          <el-input v-model="packageEntity.subTitle" type="textarea" autosize :placeholder="defaultSubTitle" />
+          <el-input v-model="packageEntity.subTitle" type="textarea" autosize :placeholder="defaultSubTitle" :disabled="disabled" />
         </el-form-item>
         <el-form-item label="类型">
-          <el-select v-model="packageEntity.calcTypeId">
+          <el-select v-model="packageEntity.calcTypeId" :disabled="disabled">
             <el-option label="总额" :value="1" />
             <el-option label="每天" :value="2" />
             <el-option label="每小时" :value="3" />
@@ -38,25 +38,26 @@
           </el-button>
         </el-form-item>
         <el-form-item label="tokens">
-          <el-input-number v-model="packageEntity.tokens" />
+          <el-input-number v-model="packageEntity.tokens" :disabled="disabled" />
         </el-form-item>
         <el-form-item label="普通聊天次数（GPT3.5）">
-          <el-input-number v-model="packageEntity.chatCount" />
+          <el-input-number v-model="packageEntity.chatCount" :disabled="disabled" />
         </el-form-item>
         <el-form-item label="高级聊天次数（GPT4）">
-          <el-input-number v-model="packageEntity.advancedChatCount" />
+          <el-input-number v-model="packageEntity.advancedChatCount" :disabled="disabled" />
         </el-form-item>
         <el-form-item label="绘图次数">
-          <el-input-number v-model="packageEntity.drawCount" />
+          <el-input-number v-model="packageEntity.drawCount" :disabled="disabled" />
         </el-form-item>
         <el-form-item label="天数">
-          <el-input-number v-model="packageEntity.days" />
+          <el-input-number v-model="packageEntity.days" :disabled="disabled" />
         </el-form-item>
         <el-form-item label="价格（元）">
-          <el-input v-model="packageEntity.price" />
+          <el-input v-model="packageEntity.price" :disabled="disabled" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleSubmit">
+          <el-alert v-if="packageEntity.state === 10" title="请先下架" type="info" :closable="false" />
+          <el-button type="primary" :disabled="disabled" @click="handleSubmit">
             {{ packageEntity.id ? '保存' : '创建' }}
           </el-button>
         </el-form-item>
@@ -110,6 +111,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       drawer: true
     }
   },
@@ -144,6 +146,9 @@ export default {
         text.push(`有效期：${this.packageEntity.days}天`)
       }
       return text.join('，')
+    },
+    disabled() {
+      return (this.loading) || this.packageEntity.state === 10
     }
   },
   mounted() {
@@ -183,11 +188,15 @@ export default {
           this.$message.error('请先下架！')
           return
         }
+        this.loading = true
         updatePackage(this.packageEntity).then((resp) => {
           this.$message.success('操作成功！')
-          this.$emit('changed')
+          this.$emit('changed', this.packageEntity.id)
+        }).finally(() => {
+          this.loading = false
         })
       } else {
+        this.loading = true
         createPackage({
           title: this.packageEntity.title,
           subTitle: this.packageEntity.subTitle,
@@ -201,6 +210,8 @@ export default {
         }).then((resp) => {
           this.$message.success('创建成功！')
           this.$emit('changed', resp.data.id)
+        }).finally(() => {
+          this.loading = false
         })
       }
     },
@@ -234,12 +245,12 @@ export default {
         if (row.state === 10) {
           putOffShelves(row.uuid).then(() => {
             this.$message.success('操作成功！')
-            this.$emit('changed')
+            this.$emit('changed', row.id)
           })
         } else {
           putOnSales(row.uuid).then(() => {
             this.$message.success('操作成功！')
-            this.$emit('changed')
+            this.$emit('changed', row.id)
           })
         }
       })
