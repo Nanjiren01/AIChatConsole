@@ -58,7 +58,7 @@
         <el-form-item>
           <el-alert v-if="packageEntity.state === 10" title="请先下架" type="info" :closable="false" />
           <el-button type="primary" :disabled="disabled" @click="handleSubmit">
-            {{ packageEntity.id ? '保存' : '创建' }}
+            {{ loading ? '操作中……' : packageEntity.id ? '保存' : '创建' }}
           </el-button>
         </el-form-item>
       </el-form>
