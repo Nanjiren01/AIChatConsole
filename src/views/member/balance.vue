@@ -1,6 +1,7 @@
 <template>
   <div>
     <ai-table
+      v-loading="loading"
       :table-actions="tableActions"
       :table-columns="tableColumns"
       :table-data="tableData"
@@ -134,6 +135,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       tableActions: [],
       tableColumns: [{
         label: '#',
@@ -186,8 +188,16 @@ export default {
       packageId: null
     }
   },
+  mounted() {
+    getPackages().then(resp => {
+      this.packages = resp.data.map(pkg => {
+        return { ...pkg }
+      })
+    })
+  },
   methods: {
     reload() {
+      this.loading = true
       getBalancesByUserId(this.userId).then(resp => {
         console.log('resp', resp)
         this.tableData = resp.data.map(balance => {
@@ -207,11 +217,8 @@ export default {
           }
         })
         this.pagination.total = this.tableData.length
-      })
-      getPackages().then(resp => {
-        this.packages = resp.data.map(pkg => {
-          return { ...pkg }
-        })
+      }).finally(() => {
+        this.loading = false
       })
     },
     handleRefresh() {
@@ -227,15 +234,20 @@ export default {
           type: 'warning'
         }
       ).then(async() => {
+        this.loading = true
         if (row.state === 1) {
           setDisable(row.id).then(() => {
             this.$message.success('操作成功！')
             this.reload()
+          }).finally(() => {
+            this.loading = false
           })
         } else {
           setEnable(row.id).then(() => {
             this.$message.success('操作成功！')
             this.reload()
+          }).finally(() => {
+            this.loading = false
           })
         }
       })

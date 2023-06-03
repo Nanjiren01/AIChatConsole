@@ -51,6 +51,7 @@
         </el-tab-pane>
         <el-tab-pane label="额度变动记录" name="balanceRecord">
           <ai-table
+            v-loading="loading"
             :table-actions="tableActions"
             :table-columns="tableColumns"
             :table-data="tableData"
@@ -106,6 +107,7 @@ export default {
   data() {
     return {
       drawer: true,
+      loading: false,
       activeName: 'balance',
       tableActions: false,
       tableColumns: [{
@@ -169,6 +171,7 @@ export default {
       if (!this.member.id) {
         return
       }
+      this.loading = true
       this.$refs.balances.reload()
       getBalanceRecordByUserId(this.member.id).then(resp => {
         console.log('resp', resp)
@@ -186,6 +189,8 @@ export default {
           }
         })
         this.pagination.total = this.tableData.length
+      }).finally(() => {
+        this.loading = false
       })
     },
     handleClose() {
