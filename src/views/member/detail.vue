@@ -65,7 +65,9 @@
             <template v-slot:state="props">
               <el-tag v-if="props.row.state === 1" type="success">成功</el-tag>
               <el-tag v-if="props.row.state === 0" type="warning">处理中</el-tag>
-              <el-tag v-if="props.row.state === 2" type="warning">已回滚</el-tag>
+              <el-tooltip v-if="props.row.state === 2" effect="dark" :content="getReason(props.row)" placement="top">
+                <el-tag type="warning">已回滚</el-tag>
+              </el-tooltip>
             </template>
             <template v-slot:sourceId="slotProps">
               <el-tag>{{ getSourceText(slotProps.row.sourceId) }}</el-tag>
@@ -185,7 +187,8 @@ export default {
             createTime: item.createTime,
             state: item.state,
             source: item.source,
-            sourceId: item.sourceId
+            sourceId: item.sourceId,
+            reason: item.reason
           }
         })
         this.pagination.total = this.tableData.length
@@ -230,6 +233,21 @@ export default {
     handlePasswordDialogClose() {
       console.log('handlePasswordDialogClose')
       this.passwordDialogVisible = false
+    },
+    getReason(row) {
+      if (!row.jsonReason) {
+        try {
+          row.jsonReason = row.reason ? JSON.parse(row.reason) : null
+        } catch (e) {
+          console.error(e)
+        }
+      }
+      if (!row.jsonReason) {
+        row.jsonReason = {
+          message: '无具体回滚原因'
+        }
+      }
+      return row.jsonReason.message
     }
   }
 }

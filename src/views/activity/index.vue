@@ -25,7 +25,6 @@
       title="注册赠额活动配置"
       :visible.sync="registerQuotaActivityDialogVisible"
       width="30%"
-      :before-close="handleClose"
     >
       <register-quota-activity />
       <span slot="footer" class="dialog-footer">
