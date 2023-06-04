@@ -38,6 +38,9 @@
             <el-form-item label="聊天窗口：额度不足提示（MD）">
               <el-input v-model="form.balanceNotEnough" type="textarea" autosize />
             </el-form-item>
+            <el-form-item label="聊天窗口：欢迎词">
+              <el-input v-model="form.botHello" type="textarea" autosize />
+            </el-form-item>
             <el-form-item label="套餐页标题">
               <el-input v-model="form.pricingPageTitle" />
             </el-form-item>
@@ -89,7 +92,8 @@ export default {
         chatPageSubTitle: '',
         sensitiveWordsTip: '',
         balanceNotEnough: '',
-        hideGithubIcon: false
+        hideGithubIcon: false,
+        botHello: ''
       },
       loading: false
     }
@@ -113,6 +117,7 @@ export default {
         this.form.sensitiveWordsTip = config.websiteContent.sensitiveWordsTip
         this.form.balanceNotEnough = config.websiteContent.balanceNotEnough
         this.form.hideGithubIcon = config.websiteContent.hideGithubIcon
+        this.form.botHello = config.websiteContent.botHello
 
         const types = config.websiteContent.registerTypes
         this.form.registerTypes.splice(0, this.form.registerTypes.length)
@@ -138,7 +143,8 @@ export default {
         chatPageSubTitle: this.form.chatPageSubTitle,
         sensitiveWordsTip: this.form.sensitiveWordsTip,
         balanceNotEnough: this.form.balanceNotEnough,
-        hideGithubIcon: this.form.hideGithubIcon
+        hideGithubIcon: this.form.hideGithubIcon,
+        botHello: this.form.botHello
       }).then(() => {
         this.$message.success('修改成功！')
       }).finally(() => {
