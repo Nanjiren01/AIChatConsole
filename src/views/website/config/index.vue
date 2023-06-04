@@ -44,6 +44,9 @@
             <el-form-item label="套餐页副标题">
               <el-input v-model="form.pricingPageSubTitle" />
             </el-form-item>
+            <el-form-item label="隐藏Github按钮">
+              <el-switch v-model="form.hideGithubIcon" />
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="loading" @click="handleSubmit">提 交</el-button>
             </el-form-item>
@@ -81,7 +84,8 @@ export default {
         pricingPageSubTitle: null,
         chatPageSubTitle: '',
         sensitiveWordsTip: '',
-        balanceNotEnough: ''
+        balanceNotEnough: '',
+        hideGithubIcon: false
       },
       loading: false
     }
@@ -104,6 +108,7 @@ export default {
         this.form.chatPageSubTitle = config.websiteContent.chatPageSubTitle
         this.form.sensitiveWordsTip = config.websiteContent.sensitiveWordsTip
         this.form.balanceNotEnough = config.websiteContent.balanceNotEnough
+        this.form.hideGithubIcon = config.websiteContent.hideGithubIcon
 
         const types = config.websiteContent.registerTypes
         this.form.registerTypes.splice(0, this.form.registerTypes.length)
@@ -128,7 +133,8 @@ export default {
         pricingPageSubTitle: this.form.pricingPageSubTitle,
         chatPageSubTitle: this.form.chatPageSubTitle,
         sensitiveWordsTip: this.form.sensitiveWordsTip,
-        balanceNotEnough: this.form.balanceNotEnough
+        balanceNotEnough: this.form.balanceNotEnough,
+        hideGithubIcon: this.form.hideGithubIcon
       }).then(() => {
         this.$message.success('修改成功！')
       }).finally(() => {
