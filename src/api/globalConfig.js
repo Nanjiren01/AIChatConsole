@@ -71,3 +71,21 @@ export function saveSensitiveWordsConfig(content) {
     }
   })
 }
+
+export function getNoticeConfig() {
+  return request({
+    url: '/globalConfig/notice',
+    method: 'get'
+  })
+}
+
+export function saveNoticeConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'Notice',
+      ...content
+    }
+  })
+}

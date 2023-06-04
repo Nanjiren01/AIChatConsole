@@ -32,10 +32,10 @@
             <el-form-item label="聊天页副标题">
               <el-input v-model="form.chatPageSubTitle" />
             </el-form-item>
-            <el-form-item label="聊天窗口：敏感词提示">
+            <el-form-item label="聊天窗口：敏感词提示（MD）">
               <el-input v-model="form.sensitiveWordsTip" />
             </el-form-item>
-            <el-form-item label="聊天窗口：额度不足提示">
+            <el-form-item label="聊天窗口：额度不足提示（MD）">
               <el-input v-model="form.balanceNotEnough" type="textarea" autosize />
             </el-form-item>
             <el-form-item label="套餐页标题">
@@ -59,6 +59,9 @@
       <el-tab-pane label="敏感词配置">
         <sensitive-words-config />
       </el-tab-pane>
+      <el-tab-pane label="公告配置">
+        <notice-config />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -68,10 +71,11 @@
 import { getWebsiteConfig, saveWebsiteConfig } from '@/api/globalConfig'
 import EmailConfig from './emailConfig'
 import SensitiveWordsConfig from './sensitiveWords'
+import NoticeConfig from './noticeConfig'
 
 export default {
   name: 'WebsiteConfig',
-  components: { EmailConfig, SensitiveWordsConfig },
+  components: { EmailConfig, SensitiveWordsConfig, NoticeConfig },
   data() {
     return {
       form: {
