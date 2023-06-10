@@ -22,9 +22,9 @@
         </el-button>
         <!-- <el-button type="danger" icon="el-icon-delete" disabled>删除</el-button> -->
       </template>
-      <!-- <template v-slot:rowActions="slotProps">
-        <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
-      </template> -->
+      <template v-slot:rowActions="slotProps">
+        <el-button icon="el-icon-delete" type="danger" plain @click.stop="handleDelete(slotProps.row)">删除</el-button>
+      </template>
 
       <template v-slot:originalName="props">
         <div>
@@ -56,6 +56,8 @@ import request from '@/utils/request'
 // import clip from '@/utils/clipboard' // use clipboard directly
 import { getWebsiteConfig } from '@/api/globalConfig'
 import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
+
+import { getToken } from '@/utils/auth'
 
 import AiTable from '@/components/Table'
 import FileUpload from './upload'
@@ -161,6 +163,28 @@ export default {
       this.$message({
         message: '复制成功！',
         type: 'success'
+      })
+    },
+    handleDelete(row) {
+      this.$confirm('确定删除' + row.originalName + '吗？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        this.loading = true
+        request({
+          url: '/file/' + row.uuid,
+          method: 'delete',
+          headers: {
+            Authorization: 'Bearer ' + getToken()
+          }
+        }).then(resp => {
+          this.reload()
+        }).finally(() => {
+          this.loading = false
+        })
       })
     }
   }
