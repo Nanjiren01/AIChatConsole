@@ -4,6 +4,9 @@
       <el-tab-pane label="页面配置">
         <div style="margin: 0 auto; width: 500px;">
           <el-form ref="form" :model="form" label-width="180px">
+            <el-form-item label="网站地址">
+              <el-input v-model="form.frontBaseUrl" />
+            </el-form-item>
             <el-form-item label="网站主标题">
               <el-input v-model="form.title" />
             </el-form-item>
@@ -82,6 +85,7 @@ export default {
   data() {
     return {
       form: {
+        frontBaseUrl: '',
         title: '',
         subTitle: '',
         loginPageSubTitle: '',
@@ -107,6 +111,7 @@ export default {
       getWebsiteConfig().then(resp => {
         // console.log('resp.data', resp.data)
         const config = resp.data
+        this.form.frontBaseUrl = config.websiteContent.frontBaseUrl
         this.form.title = config.websiteContent.title
         this.form.subTitle = config.websiteContent.subTitle
         this.form.loginPageSubTitle = config.websiteContent.loginPageSubTitle
@@ -133,6 +138,7 @@ export default {
       }
       this.loading = true
       saveWebsiteConfig({
+        frontBaseUrl: this.form.frontBaseUrl,
         title: this.form.title,
         subTitle: this.form.subTitle,
         loginPageSubTitle: this.form.loginPageSubTitle,
