@@ -4,8 +4,8 @@
       <el-tab-pane label="页面配置">
         <div style="margin: 0 auto; width: 500px;">
           <el-form ref="form" :model="form" label-width="180px">
-            <el-form-item label="网站地址">
-              <el-input v-model="form.frontBaseUrl" />
+            <el-form-item label="网站基址">
+              <el-input v-model="form.frontBaseUrl" placeholder="前台网站基址" />
             </el-form-item>
             <el-form-item label="网站主标题">
               <el-input v-model="form.title" />
