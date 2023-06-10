@@ -42,7 +42,7 @@
       </template>
       <template v-slot:content="props">
         <img
-          :src="'data:image/' + getSuffix(props.row) + ';base64,' + props.row.content"
+          :src="getSrc(props.row)"
           style="max-width: 150px; max-height: 100px;"
         >
       </template>
@@ -70,6 +70,7 @@ export default {
   },
   data() {
     return {
+      BASE_URL: process.env.VUE_APP_BASE_API || '',
       loading: false,
       loadingConfig: false,
       showUploadDialog: false,
@@ -186,6 +187,12 @@ export default {
           this.loading = false
         })
       })
+    },
+    getSrc(row) {
+      if (row.mimeType === 'image/svg+xml') {
+        return this.BASE_URL + '/file/' + row.uuid
+      }
+      return 'data:image/' + this.getSuffix(row) + ';base64,' + row.content
     }
   }
 }

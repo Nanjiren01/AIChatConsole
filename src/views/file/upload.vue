@@ -49,7 +49,7 @@ export default {
   name: 'FileUpload',
   data() {
     return {
-      BASE_URL: process.env.VUE_APP_BASE_API,
+      BASE_URL: process.env.VUE_APP_BASE_API || '',
       fileUsage: 'logo',
       imageUrl: '',
       fileList: []
