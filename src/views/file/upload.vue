@@ -115,13 +115,22 @@ export default {
       })
     },
     handleError(err, file, fileList) {
-      this.$message.error('上传失败！原因：' + err)
-      console.error(err, file, fileList)
+      try {
+        const json = JSON.parse(err.message)
+        if (json.code === 11001) {
+          this.$message.error('上传失败！请先删除原来的logo！')
+          return
+        }
+        this.$message.error('上传失败！原因：' + json.message)
+      } catch (e) {
+        this.$message.error('上传失败！原因：' + err)
+        console.error(err)
+      }
     },
     handleChange(file, fileList) {
-      console.log('handleChange', file, fileList)
+      // console.log('handleChange', file, fileList)
       this.fileList.splice(0, this.fileList.length, ...fileList)
-      console.log(this.fileList)
+      // console.log(this.fileList)
     }
     // handleProress(event, file, fileList) {
     //   console.log(event, file, fileList)
