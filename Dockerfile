@@ -13,8 +13,12 @@
 # docker tag nanjiren01/aichat-console:0.2 nanjiren01/aichat-console:latest
 # docker push nanjiren01/aichat-console:latest
 
+# docker build -t nanjiren01/aichat-console:mask .
+# docker push nanjiren01/aichat-console:mask
+
 FROM nginx
 
+ENV ADMIN_HOST aichat-admin
 
 RUN mkdir -p /app/
 
