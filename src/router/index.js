@@ -221,6 +221,21 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/order',
+    component: Layout,
+    redirect: '/order/list',
+    alwaysShow: false, // will always show the root menu
+    name: 'order',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/order/index'),
+        name: 'orderList',
+        meta: { title: '订单列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/website',
     component: Layout,
     alwaysShow: true,
