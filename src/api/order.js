@@ -8,3 +8,17 @@ export function getOrders(params) {
     data: params
   })
 }
+
+export function cancelOrder(uuid) {
+  return request({
+    url: '/order/cancel?uuid=' + uuid,
+    method: 'put'
+  })
+}
+
+export function deleteOrder(uuid) {
+  return request({
+    url: '/order/' + uuid,
+    method: 'delete'
+  })
+}

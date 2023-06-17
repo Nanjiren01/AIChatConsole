@@ -50,13 +50,13 @@
 
     </ai-table>
 
-    <!-- <detail
+    <detail
       ref="detail"
       :show="showDetail"
-      :package-entity="detailModel"
+      :order-entity="detailModel"
       @changed="handleChanged"
       @close="handleCloseDetail"
-    /> -->
+    />
   </div>
 </template>
 
@@ -64,11 +64,11 @@
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
 import { getOrders } from '@/api/order'
-// import Detail from './detail'
+import Detail from './detail'
 
 export default {
-  name: 'PackageIndex',
-  components: { AiTable },
+  name: 'OrderIndex',
+  components: { AiTable, Detail },
   data() {
     return {
       loading: false,
@@ -158,7 +158,10 @@ export default {
             price: item.price,
             state: item.state,
             createTime: item.createTime,
-            updateTime: item.updateTime
+            updateTime: item.updateTime,
+            submitTime: item.submitTime,
+            payTime: item.payTime,
+            cancelTime: item.cancelTime
           }
         })
         this.pagination.total = this.tableData.length
@@ -189,6 +192,9 @@ export default {
       this.detailModel.state = row.state
       this.detailModel.createTime = row.createTime
       this.detailModel.updateTime = row.updateTime
+      this.detailModel.submitTime = row.submitTime
+      this.detailModel.payTime = row.payTime
+      this.detailModel.cancelTime = row.cancelTime
       this.$nextTick(() => {
         this.$refs.detail.reload()
       })
