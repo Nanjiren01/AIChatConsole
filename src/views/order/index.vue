@@ -18,6 +18,9 @@
             <el-input v-model="filter.email" placeholder="请输入邮箱" />
           </el-col>
           <el-col :span="6" :xs="24">
+            <el-input v-model="filter.title" placeholder="请输入标题" />
+          </el-col>
+          <el-col :span="6" :xs="24">
             <el-button type="primary" plain :disabled="loading" @click="handleSearch">搜索</el-button>
             <el-button type="info" plain @click="handleResetFilter">重置</el-button>
           </el-col>
@@ -72,7 +75,8 @@ export default {
       showDetail: false,
       filter: {
         username: null,
-        email: null
+        email: null,
+        title: null
       },
       tableActions: [],
       tableColumns: [{
@@ -137,6 +141,7 @@ export default {
       getOrders({
         username: this.filter.username,
         email: this.filter.email,
+        title: this.filter.title,
         page: this.pagination.pageNum,
         size: this.pagination.pageSize
       }).then(resp => {
@@ -210,6 +215,7 @@ export default {
     handleResetFilter() {
       this.filter.username = ''
       this.filter.email = ''
+      this.filter.title = ''
       this.pagination.pageNum = 1
       // this.pagination.pageSize = 20
       this.reload()
