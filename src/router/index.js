@@ -238,7 +238,7 @@ export const asyncRoutes = [
   {
     path: '/website',
     component: Layout,
-    alwaysShow: true,
+    alwaysShow: false,
     redirect: '/website/config',
     meta: { title: '配置管理', icon: 'dashboard', affix: true },
     children: [
@@ -246,7 +246,7 @@ export const asyncRoutes = [
         path: '/website/config',
         component: () => import('@/views/website/config/index'),
         name: 'Dashboard',
-        meta: { title: '网站管理', icon: 'dashboard', affix: true }
+        meta: { title: '站点管理', icon: 'dashboard', affix: true }
       }
     ]
   },

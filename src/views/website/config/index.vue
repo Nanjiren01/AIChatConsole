@@ -68,6 +68,9 @@
       <el-tab-pane label="公告配置">
         <notice-config />
       </el-tab-pane>
+      <el-tab-pane label="支付配置">
+        <pay-config />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -78,10 +81,11 @@ import { getWebsiteConfig, saveWebsiteConfig } from '@/api/globalConfig'
 import EmailConfig from './emailConfig'
 import SensitiveWordsConfig from './sensitiveWords'
 import NoticeConfig from './noticeConfig'
+import PayConfig from './payConfig'
 
 export default {
   name: 'WebsiteConfig',
-  components: { EmailConfig, SensitiveWordsConfig, NoticeConfig },
+  components: { EmailConfig, SensitiveWordsConfig, NoticeConfig, PayConfig },
   data() {
     return {
       form: {

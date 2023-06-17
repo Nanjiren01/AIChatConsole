@@ -89,3 +89,21 @@ export function saveNoticeConfig(content) {
     }
   })
 }
+
+export function getPayConfig() {
+  return request({
+    url: '/globalConfig/pay',
+    method: 'get'
+  })
+}
+
+export function savePayConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'Pay',
+      ...content
+    }
+  })
+}
