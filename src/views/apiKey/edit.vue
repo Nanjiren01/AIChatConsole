@@ -19,8 +19,8 @@
       </el-table> -->
       <el-form ref="form" :model="model" label-width="80px">
         <el-form-item label="平台">
-          <el-select v-model="model.platformId" disabled>
-            <el-option label="OpenAI" :value="1" />
+          <el-select v-model="model.platformId">
+            <el-option v-for="p in platforms" :key="p.id" :label="p.name" :value="p.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="API KEY">
@@ -28,7 +28,7 @@
         </el-form-item>
         <el-form-item label="适用模型">
           <el-select v-model="model.modelIds" multiple style="width: 100%" placeholder="未选择时默认适用于该平台下所有模型，若希望不适用于任何模型，请禁用此key">
-            <el-option v-for="md in allModels" :key="md.id" :label="md.name" :value="md.id" />
+            <el-option v-for="md in allModels.filter(m => m.platformId === model.platformId)" :key="md.id" :label="md.platformName + '-' + md.name" :value="md.id" />
           </el-select>
         </el-form-item>
 
@@ -73,6 +73,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    platforms: {
+      type: Array,
+      default: () => []
+    },
     allModels: {
       type: Array,
       default: () => []
@@ -99,7 +103,7 @@ export default {
   },
   created() {
     this.model.id = this.apiKey && this.apiKey.id || 0
-    this.model.platformId = this.apiKey && this.apiKey.platformId || 0
+    this.model.platformId = this.apiKey && this.apiKey.platformId
     this.model.state = this.apiKey && this.apiKey.state || 1
     this.model.key = this.apiKey && this.apiKey.key || ''
     this.model.modelIds = this.apiKey && this.apiKey.modelIds || []
@@ -115,6 +119,14 @@ export default {
       this.$emit('close')
     },
     handleSubmit() {
+      if (!this.model.platformId) {
+        this.$message.error('请选择平台！')
+        return
+      }
+      if (!this.model.key) {
+        this.$message.error('请输入key！')
+        return
+      }
       storeApiKey(this.model.id, this.model.key, this.model.state, this.model.platformId, this.model.modelIds).then(resp => {
         this.$message.success(this.model.id ? '修改成功！' : '添加成功！')
         this.$emit('created')
