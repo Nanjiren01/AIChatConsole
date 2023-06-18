@@ -221,6 +221,21 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/order',
+    component: Layout,
+    redirect: '/order/list',
+    alwaysShow: false, // will always show the root menu
+    name: 'order',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/order/index'),
+        name: 'orderList',
+        meta: { title: '订单列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/file',
     component: Layout,
     redirect: '/file/list',
@@ -238,7 +253,7 @@ export const asyncRoutes = [
   {
     path: '/website',
     component: Layout,
-    alwaysShow: true,
+    alwaysShow: false,
     redirect: '/website/config',
     meta: { title: '配置管理', icon: 'dashboard', affix: true },
     children: [
@@ -246,7 +261,7 @@ export const asyncRoutes = [
         path: '/website/config',
         component: () => import('@/views/website/config/index'),
         name: 'Dashboard',
-        meta: { title: '网站管理', icon: 'dashboard', affix: true }
+        meta: { title: '站点管理', icon: 'dashboard', affix: true }
       }
     ]
   },
