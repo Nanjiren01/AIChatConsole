@@ -29,7 +29,7 @@
               <el-checkbox-group v-model="form.registerTypes" @change="handleCheckedRegisterTypesChange">
                 <el-checkbox label="OnlyUsername">仅用户名</el-checkbox>
                 <el-checkbox label="OnlyUsernameWithCaptcha">仅用户名（带图形验证码）</el-checkbox>
-                <el-checkbox label="UsernameAndEmailWithCaptchaAndCode">用户名+邮箱验证码（带图形验证码）</el-checkbox>
+                <el-checkbox label="UsernameAndEmailWithCaptchaAndCode">用户名+邮箱验证码</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
             <el-form-item label="聊天页副标题">
