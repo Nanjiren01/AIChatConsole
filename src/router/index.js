@@ -221,6 +221,21 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/file',
+    component: Layout,
+    redirect: '/file/list',
+    alwaysShow: false, // will always show the root menu
+    name: 'file',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/file/index'),
+        name: 'fileList',
+        meta: { title: '文件列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/website',
     component: Layout,
     alwaysShow: true,
