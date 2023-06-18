@@ -9,7 +9,7 @@
       @refresh="handleRefresh"
     >
       <template #topActions>
-        <el-button type="primary" icon="el-icon-plus" disabled @click="handleCreate">新建</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button type="primary" plain icon="el-icon-edit" @click.stop="handleShowEdit(slotProps.row)">编辑</el-button>
@@ -64,7 +64,7 @@
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getAiPlatforms, updateAiPlatform } from '@/api/aiPlatform.js'
+import { getAiPlatforms, updateAiPlatform, createAiPlatform } from '@/api/aiPlatform.js'
 
 export default {
   name: 'AiPlatformIndex',
@@ -142,7 +142,11 @@ export default {
       this.reload()
     },
     handleCreate() {
-      this.$message.warning('开发中……')
+      this.dialogVisible = true
+      this.form.id = null
+      this.form.name = ''
+      this.form.state = 0
+      this.form.baseUrl = ''
     },
     // handleEdit(row) {
     //   console.log('edit', row)
@@ -169,6 +173,21 @@ export default {
         }
       }
       this.loading = true
+      if (!this.form.id) {
+        createAiPlatform({
+          // id: this.form.id,
+          name: this.form.name,
+          state: this.form.state,
+          baseUrl: this.form.baseUrl
+        }).then(() => {
+          this.$message.success('操作成功！')
+          this.reload()
+          this.dialogVisible = false
+        }).finally(() => {
+          this.loading = false
+        })
+        return
+      }
       updateAiPlatform({
         id: this.form.id,
         name: this.form.name,

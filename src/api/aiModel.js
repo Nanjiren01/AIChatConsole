@@ -16,3 +16,11 @@ export function updateAiModel(params) {
     data: params
   })
 }
+
+export function createAiModel(params) {
+  return request({
+    url: '/aiModels',
+    method: 'post',
+    data: params
+  })
+}

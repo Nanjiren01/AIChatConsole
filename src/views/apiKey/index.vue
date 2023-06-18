@@ -54,6 +54,7 @@
       v-if="editShow"
       :api-key="edit"
       :all-models="allModels"
+      :platforms="platforms"
       @close="handleCloseEditDialog"
       @created="handleCreated"
     />
@@ -65,6 +66,7 @@
 import AiTable from '@/components/Table'
 import ApiKeyEdit from './edit'
 import { getApiKeys, storeApiKey } from '@/api/apiKey.js'
+import { getAiPlatforms } from '@/api/aiPlatform.js'
 import { getAiModels } from '@/api/aiModel.js'
 
 export default {
@@ -72,6 +74,7 @@ export default {
   components: { AiTable, ApiKeyEdit },
   data() {
     return {
+      platforms: [],
       allModels: [],
       tableActions: [],
       tableColumns: [{
@@ -127,6 +130,7 @@ export default {
   },
   mounted() {
     this.reload()
+    this.reloadPlatforms()
     this.reloadModels()
   },
   methods: {
@@ -153,6 +157,12 @@ export default {
         this.pagination.total = this.tableData.length
       })
     },
+    reloadPlatforms() {
+      getAiPlatforms().then(resp => {
+        this.platforms.splice(0, this.platforms.length)
+        this.platforms.push(... (resp.data || []))
+      })
+    },
     reloadModels() {
       getAiModels().then(resp => {
         const models = resp.data || []
@@ -167,7 +177,7 @@ export default {
       // this.$message.warning('开发中……')
       this.editShow = true
       this.edit.id = 0
-      this.edit.platformId = 1
+      this.edit.platformId = null
       this.edit.key = null
       this.edit.modelIds = []
       this.edit.state = null

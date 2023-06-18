@@ -16,3 +16,11 @@ export function updateAiPlatform(params) {
     data: params
   })
 }
+
+export function createAiPlatform(params) {
+  return request({
+    url: '/aiPlatforms',
+    method: 'post',
+    data: params
+  })
+}

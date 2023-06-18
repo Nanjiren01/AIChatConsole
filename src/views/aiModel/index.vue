@@ -9,7 +9,7 @@
       @refresh="handleRefresh"
     >
       <template #topActions>
-        <el-button type="primary" icon="el-icon-plus" disabled @click="handleCreate">新建</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">查看</el-button>
@@ -38,7 +38,13 @@
 
     </ai-table>
 
-    <edit :show="showEdit" :model="editModel" @close="handleCloseEdit" @changed="handleChanged" />
+    <edit
+      :show="showEdit"
+      :model="editModel"
+      :platforms="platforms"
+      @close="handleCloseEdit"
+      @changed="handleChanged"
+    />
   </div>
 </template>
 
@@ -46,6 +52,7 @@
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
 import { getAiModels, updateAiModel } from '@/api/aiModel.js'
+import { getAiPlatforms } from '@/api/aiPlatform.js'
 import Edit from './edit'
 
 export default {
@@ -53,6 +60,7 @@ export default {
   components: { AiTable, Edit },
   data() {
     return {
+      platforms: [],
       tableActions: [],
       tableColumns: [{
         label: '#',
@@ -108,6 +116,7 @@ export default {
   },
   mounted() {
     this.reload()
+    this.reloadPlatforms()
   },
   methods: {
     reload() {
@@ -135,11 +144,25 @@ export default {
         this.pagination.total = this.tableData.length
       })
     },
+    reloadPlatforms() {
+      getAiPlatforms().then(resp => {
+        this.platforms.splice(0, this.platforms.length)
+        this.platforms.push(... (resp.data || []))
+      })
+    },
     handleRefresh() {
       this.reload()
     },
     handleCreate() {
-      this.$message.warning('开发中……')
+      this.editModel.id = null
+      this.editModel.name = ''
+      this.editModel.platformId = null
+      this.editModel.platformName = null
+      this.editModel.level = null
+      this.editModel.levelId = null
+      this.editModel.state = null
+      this.editModel.path = null
+      this.showEdit = true
     },
     handleEdit(row) {
       // console.log('edit', row)
