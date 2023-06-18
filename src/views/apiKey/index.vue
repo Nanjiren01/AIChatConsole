@@ -27,6 +27,13 @@
         </el-button>
       </template>
 
+      <template v-slot:model="props">
+        <template v-for="md in props.row.models">
+          <el-tag :key="md.id" :type="props.row.state === 1 ? 'primary' : 'info'" style="margin: 0 2px;">{{ md.name }}</el-tag>
+        </template>
+        <el-tag v-if="!props.row.models || props.row.models.length === 0" :type="props.row.state === 1 ? 'success' : 'info'">所有模型</el-tag>
+      </template>
+
       <template v-slot:platformName="slotProps">
         <el-tag>{{ slotProps.row.platformName }}</el-tag>
       </template>
@@ -46,6 +53,7 @@
     <api-key-edit
       v-if="editShow"
       :api-key="edit"
+      :all-models="allModels"
       @close="handleCloseEditDialog"
       @created="handleCreated"
     />
@@ -57,12 +65,14 @@
 import AiTable from '@/components/Table'
 import ApiKeyEdit from './edit'
 import { getApiKeys, storeApiKey } from '@/api/apiKey.js'
+import { getAiModels } from '@/api/aiModel.js'
 
 export default {
   name: 'UserIndex',
   components: { AiTable, ApiKeyEdit },
   data() {
     return {
+      allModels: [],
       tableActions: [],
       tableColumns: [{
         label: '#',
@@ -85,9 +95,11 @@ export default {
         width: 80
       }, {
         label: '状态',
-        prop: 'state',
         slot: 'state',
         width: 150
+      }, {
+        label: '适用模型',
+        slot: 'model'
       }, {
         label: '创建人',
         prop: 'creatorName',
@@ -115,6 +127,7 @@ export default {
   },
   mounted() {
     this.reload()
+    this.reloadModels()
   },
   methods: {
     reload() {
@@ -128,6 +141,7 @@ export default {
             platformName: key.platformName,
             key: key.key,
             models: key.models,
+            modelIds: key.models.map(m => m.id),
             quota: key.quota,
             callCount: key.callCount,
             state: key.state,
@@ -139,6 +153,13 @@ export default {
         this.pagination.total = this.tableData.length
       })
     },
+    reloadModels() {
+      getAiModels().then(resp => {
+        const models = resp.data || []
+        this.allModels.splice(0, this.allModels.length)
+        this.allModels.push(...models)
+      })
+    },
     handleRefresh() {
       this.reload()
     },
@@ -148,6 +169,7 @@ export default {
       this.edit.id = 0
       this.edit.platformId = 1
       this.edit.key = null
+      this.edit.modelIds = []
       this.edit.state = null
       this.edit.creatorName = null
       this.edit.createTime = null
@@ -158,6 +180,7 @@ export default {
       this.edit.id = row.id
       this.edit.platformId = row.platformId
       this.edit.key = row.key
+      this.edit.modelIds = row.modelIds
       this.edit.state = row.state
       this.edit.creatorName = row.creatorName
       this.edit.createTime = row.createTime
