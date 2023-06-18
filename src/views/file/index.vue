@@ -120,7 +120,7 @@ export default {
     reload() {
       this.loading = true
       request({
-        url: '/file/all',
+        url: '/file/all/normal',
         method: 'get',
         params: {}
       }).then(resp => {
