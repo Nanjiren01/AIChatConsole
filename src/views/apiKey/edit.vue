@@ -26,12 +26,17 @@
         <el-form-item label="API KEY">
           <el-input v-model="model.key" />
         </el-form-item>
+        <el-form-item label="适用模型">
+          <el-select v-model="model.modelIds" multiple style="width: 100%" placeholder="未选择时默认适用于该平台下所有模型，若希望不适用于任何模型，请禁用此key">
+            <el-option v-for="md in allModels" :key="md.id" :label="md.name" :value="md.id" />
+          </el-select>
+        </el-form-item>
 
         <template v-if="model.id">
           <el-form-item label="状态">
             <el-radio-group v-model="model.state" disabled>
               <el-radio :label="1">启用</el-radio>
-              <el-radio :label="2">停用</el-radio>
+              <el-radio :label="2">禁用</el-radio>
               <el-radio :label="3">初始</el-radio>
               <el-radio :label="4">额度查询中</el-radio>
               <el-radio :label="5">key被禁用</el-radio>
@@ -67,6 +72,10 @@ export default {
     apiKey: {
       type: Object,
       default: () => {}
+    },
+    allModels: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -76,6 +85,7 @@ export default {
         id: null,
         platformId: null,
         key: null,
+        modelIds: [],
         state: null,
         creatorName: null,
         createTime: null
@@ -92,6 +102,7 @@ export default {
     this.model.platformId = this.apiKey && this.apiKey.platformId || 0
     this.model.state = this.apiKey && this.apiKey.state || 1
     this.model.key = this.apiKey && this.apiKey.key || ''
+    this.model.modelIds = this.apiKey && this.apiKey.modelIds || []
     this.model.creatorName = this.apiKey && this.apiKey.creatorName || ''
     this.model.createTime = this.apiKey && this.apiKey.createTime || ''
   },
@@ -104,7 +115,7 @@ export default {
       this.$emit('close')
     },
     handleSubmit() {
-      storeApiKey(this.model.id, this.model.key, this.model.state, this.model.platformId).then(resp => {
+      storeApiKey(this.model.id, this.model.key, this.model.state, this.model.platformId, this.model.modelIds).then(resp => {
         this.$message.success(this.model.id ? '修改成功！' : '添加成功！')
         this.$emit('created')
       })
