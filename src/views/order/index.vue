@@ -7,6 +7,8 @@
       :table-data="tableData"
       :table-action-column="tableActionColumn"
       :pagination="pagination"
+      @pageSizeChanged="handlePageSizeChange"
+      @pageCurrentChanged="handlePageCurrentChanged"
       @refresh="handleRefresh"
     >
       <template #filter>
@@ -200,6 +202,16 @@ export default {
       })
     },
     handleRefresh() {
+      this.reload()
+    },
+    handlePageSizeChange(size) {
+      this.pagination.pageNum = 1
+      this.pagination.pageSize = size
+      this.reload()
+    },
+    handlePageCurrentChanged(page) {
+      console.log('page', page)
+      this.pagination.pageNum = page
       this.reload()
     },
     handleShow(row) {
