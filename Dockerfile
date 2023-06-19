@@ -13,6 +13,11 @@
 # docker tag nanjiren01/aichat-console:0.2 nanjiren01/aichat-console:latest
 # docker push nanjiren01/aichat-console:latest
 
+# docker build -t nanjiren01/aichat-console:0.2.1 .
+# docker push nanjiren01/aichat-console:0.2.1
+# docker tag nanjiren01/aichat-console:0.2.1 nanjiren01/aichat-console:latest
+# docker push nanjiren01/aichat-console:latest
+
 FROM nginx
 
 
