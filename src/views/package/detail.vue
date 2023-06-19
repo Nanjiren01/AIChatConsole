@@ -26,6 +26,9 @@
             <el-option label="每3小时" :value="4" />
           </el-select>
         </el-form-item>
+        <el-form-item label="置顶值">
+          <span style="color: #aaa;">{{ packageEntity.top }}（{{ getDateTimeText(packageEntity.top) }}）</span>
+        </el-form-item>
         <el-form-item label="状态">
           <span style="margin-right: 10px">
             <el-tag v-if="packageEntity.state == 10" type="success">上架</el-tag>
@@ -254,6 +257,10 @@ export default {
           })
         }
       })
+    },
+    getDateTimeText(top) {
+      const total = new Date(top).toISOString()
+      return total.slice(0, 10) + ' ' + total.slice(11, 19)
     },
     handleDelete() {
       const row = this.packageEntity

@@ -1,6 +1,7 @@
 <template>
   <div class="page-container">
     <ai-table
+      :loading="loading"
       :table-actions="tableActions"
       :table-columns="tableColumns"
       :table-data="tableData"
@@ -14,9 +15,9 @@
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
-        <!-- <el-button v-if="[0, 1, 2].includes(slotProps.row.state)" @click.stop="handleToggleEnable(slotProps.row)">
-          {{ slotProps.row.state == 1 ? '下架' : '上架' }}
-        </el-button> -->
+        <el-button @click.stop="handleToggleTop(slotProps.row)">
+          {{ slotProps.row.top == 0 ? '置顶' : '取消置顶' }}
+        </el-button>
       </template>
 
       <template v-slot:formattedTitle="slotProps">
@@ -77,7 +78,7 @@
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getPackages } from '@/api/package'
+import { getPackages, setTop, cancelTop } from '@/api/package'
 import Detail from './detail'
 
 export default {
@@ -85,6 +86,7 @@ export default {
   components: { AiTable, Detail },
   data() {
     return {
+      loading: false,
       showDetail: false,
       tableActions: [{
         key: 'detail',
@@ -109,6 +111,10 @@ export default {
       }, {
         label: '类型',
         slot: 'calcType',
+        width: 100
+      }, {
+        label: '置顶值',
+        prop: 'top',
         width: 100
       }, {
         label: '状态',
@@ -149,7 +155,7 @@ export default {
         width: 140
       }],
       tableActionColumn: {
-        width: 100
+        width: 200
       },
       tableData: [],
       pagination: {
@@ -300,6 +306,22 @@ export default {
     handleChanged(id) {
       this.detailModel.id = id
       this.reload()
+    },
+    handleToggleTop(row) {
+      this.loading = true
+      if (row.top === 0) {
+        setTop(row.uuid).then(() => {
+          this.reload()
+        }).finally(() => {
+          this.loading = false
+        })
+      } else {
+        cancelTop(row.uuid).then(() => {
+          this.reload()
+        }).finally(() => {
+          this.loading = false
+        })
+      }
     }
   }
 }

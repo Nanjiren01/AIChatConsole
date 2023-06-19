@@ -4,6 +4,9 @@
       <el-tab-pane label="页面配置">
         <div style="margin: 0 auto; width: 500px;">
           <el-form ref="form" :model="form" label-width="180px">
+            <el-form-item label="网站基址">
+              <el-input v-model="form.frontBaseUrl" placeholder="前台网站基址" />
+            </el-form-item>
             <el-form-item label="网站主标题">
               <el-input v-model="form.title" />
             </el-form-item>
@@ -26,7 +29,7 @@
               <el-checkbox-group v-model="form.registerTypes" @change="handleCheckedRegisterTypesChange">
                 <el-checkbox label="OnlyUsername">仅用户名</el-checkbox>
                 <el-checkbox label="OnlyUsernameWithCaptcha">仅用户名（带图形验证码）</el-checkbox>
-                <el-checkbox label="UsernameAndEmailWithCaptchaAndCode">用户名+邮箱验证码（带图形验证码）</el-checkbox>
+                <el-checkbox label="UsernameAndEmailWithCaptchaAndCode">用户名+邮箱验证码</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
             <el-form-item label="聊天页副标题">
@@ -82,6 +85,7 @@ export default {
   data() {
     return {
       form: {
+        frontBaseUrl: '',
         title: '',
         subTitle: '',
         loginPageSubTitle: '',
@@ -107,6 +111,7 @@ export default {
       getWebsiteConfig().then(resp => {
         // console.log('resp.data', resp.data)
         const config = resp.data
+        this.form.frontBaseUrl = config.websiteContent.frontBaseUrl
         this.form.title = config.websiteContent.title
         this.form.subTitle = config.websiteContent.subTitle
         this.form.loginPageSubTitle = config.websiteContent.loginPageSubTitle
@@ -133,6 +138,7 @@ export default {
       }
       this.loading = true
       saveWebsiteConfig({
+        frontBaseUrl: this.form.frontBaseUrl,
         title: this.form.title,
         subTitle: this.form.subTitle,
         loginPageSubTitle: this.form.loginPageSubTitle,

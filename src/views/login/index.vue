@@ -3,6 +3,9 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
+        <div style="text-align: center">
+          <img src="@/assets/ai-chat-bot.png" style="width: 64px; height: 64px;margin: 0 auto;">
+        </div>
         <h3 class="title">AI Chat Admin</h3>
       </div>
 
