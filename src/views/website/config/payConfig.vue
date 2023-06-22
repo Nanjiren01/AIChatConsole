@@ -5,6 +5,7 @@
         <el-form-item label="支付方式">
           <el-select v-model="form.thirdpartName">
             <el-option :label="'虎皮椒'" :value="'xunhu'" />
+            <el-option :label="'蓝兔'" :value="'lantu'" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.thirdpartName === 'xunhu'" label="虎皮椒AppId">
@@ -12,6 +13,12 @@
         </el-form-item>
         <el-form-item v-if="form.thirdpartName === 'xunhu'" label="虎皮椒AppSecret">
           <el-input v-model="form.xunhuAppSecret" type="password" />
+        </el-form-item>
+        <el-form-item v-if="form.thirdpartName === 'lantu'" label="蓝兔商户号">
+          <el-input v-model="form.lantuAppId" />
+        </el-form-item>
+        <el-form-item v-if="form.thirdpartName === 'lantu'" label="蓝兔商户秘钥">
+          <el-input v-model="form.lantuAppSecret" type="password" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="loading" @click="handleSubmit">
@@ -35,7 +42,9 @@ export default {
       form: {
         thirdpartName: '',
         xunhuAppId: '',
-        xunhuAppSecret: ''
+        xunhuAppSecret: '',
+        lantuAppId: '',
+        lantuAppSecret: ''
       }
     }
   },
@@ -51,6 +60,8 @@ export default {
         this.form.thirdpartName = content.thirdpartName
         this.form.xunhuAppId = content.xunhuAppId
         this.form.xunhuAppSecret = content.xunhuAppSecret
+        this.form.lantuAppId = content.lantuAppId
+        this.form.lantuAppSecret = content.lantuAppSecret
       }).finally(() => {
         this.loading = false
       })
@@ -60,7 +71,9 @@ export default {
       savePayConfig({
         thirdpartPayName: this.form.thirdpartName,
         xunhuAppId: this.form.xunhuAppId,
-        xunhuAppSecret: this.form.xunhuAppSecret
+        xunhuAppSecret: this.form.xunhuAppSecret,
+        lantuAppId: this.form.lantuAppId,
+        lantuAppSecret: this.form.lantuAppSecret
       }).then(() => {
         this.$message.success('保存成功！')
       }).finally(() => {
