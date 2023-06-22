@@ -21,6 +21,9 @@
         <el-form-item label="标题">
           <span class="order-form-item">{{ orderEntity.title }}</span>
         </el-form-item>
+        <el-form-item label="支付方式">
+          <span class="order-form-item">{{ getChannelText(orderEntity) }}</span>
+        </el-form-item>
         <el-form-item label="价格（元）">
           <span>￥{{ orderEntity.price }}</span>
         </el-form-item>
@@ -139,6 +142,15 @@ export default {
           this.$emit('close')
         })
       })
+    },
+    getChannelText(order) {
+      if (order.payChannel === 'xunhu') {
+        return '虎皮椒'
+      } else if (order.payChannel === 'lantu') {
+        return '蓝兔'
+      } else {
+        return order.payChannel
+      }
     }
   }
 }
