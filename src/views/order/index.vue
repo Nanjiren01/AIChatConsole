@@ -129,6 +129,7 @@ export default {
         title: null,
         price: null,
         state: null,
+        payChannel: null,
         createTime: null,
         updateTime: null
       }
@@ -159,6 +160,7 @@ export default {
             title: item.title,
             price: item.price,
             state: item.state,
+            payChannel: item.payChannel,
             createTime: item.createTime,
             updateTime: item.updateTime,
             submitTime: item.submitTime,
@@ -192,6 +194,7 @@ export default {
       this.detailModel.title = row.title
       this.detailModel.price = row.price
       this.detailModel.state = row.state
+      this.detailModel.payChannel = row.payChannel
       this.detailModel.createTime = row.createTime
       this.detailModel.updateTime = row.updateTime
       this.detailModel.submitTime = row.submitTime
