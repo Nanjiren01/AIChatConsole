@@ -7,8 +7,11 @@
             <el-form-item label="网站基址">
               <el-input v-model="form.frontBaseUrl" placeholder="前台网站基址" />
             </el-form-item>
-            <el-form-item label="网站主标题">
+            <el-form-item label="页签标题">
               <el-input v-model="form.title" />
+            </el-form-item>
+            <el-form-item label="网站主标题">
+              <el-input v-model="form.mainTitle" />
             </el-form-item>
             <el-form-item label="网站副标题">
               <el-input v-model="form.subTitle" />
@@ -87,6 +90,7 @@ export default {
       form: {
         frontBaseUrl: '',
         title: '',
+        mainTitle: '',
         subTitle: '',
         loginPageSubTitle: '',
         registerPageSubTitle: '',
@@ -113,6 +117,7 @@ export default {
         const config = resp.data
         this.form.frontBaseUrl = config.websiteContent.frontBaseUrl
         this.form.title = config.websiteContent.title
+        this.form.mainTitle = config.websiteContent.mainTitle
         this.form.subTitle = config.websiteContent.subTitle
         this.form.loginPageSubTitle = config.websiteContent.loginPageSubTitle
         this.form.registerPageSubTitle = config.websiteContent.registerPageSubTitle
@@ -140,6 +145,7 @@ export default {
       saveWebsiteConfig({
         frontBaseUrl: this.form.frontBaseUrl,
         title: this.form.title,
+        mainTitle: this.form.mainTitle,
         subTitle: this.form.subTitle,
         loginPageSubTitle: this.form.loginPageSubTitle,
         registerPageSubTitle: this.form.registerPageSubTitle,
