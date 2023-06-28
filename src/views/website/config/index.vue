@@ -10,10 +10,10 @@
             <el-form-item label="页签标题">
               <el-input v-model="form.title" />
             </el-form-item>
-            <el-form-item label="网站主标题">
+            <el-form-item label="网站主标题（HTML）">
               <el-input v-model="form.mainTitle" />
             </el-form-item>
-            <el-form-item label="网站副标题">
+            <el-form-item label="网站副标题（HTML）">
               <el-input v-model="form.subTitle" />
             </el-form-item>
             <el-form-item label="登录页副标题">
