@@ -8,6 +8,10 @@
         <el-form-item label="端口">
           <el-input v-model="form.port" />
         </el-form-item>
+        <el-form-item label="SSL">
+          <el-alert title="如果端口是25或587，建议关闭SSL，如果端口是465，建议开启SSL，其他端口请参见各邮件服务商" />
+          <el-switch v-model="form.ssl" />
+        </el-form-item>
         <el-form-item label="用户名">
           <el-input v-model="form.username" />
         </el-form-item>
@@ -39,6 +43,7 @@ export default {
       form: {
         host: null,
         port: null,
+        ssl: false,
         username: null,
         password: null,
         from: null
@@ -56,6 +61,7 @@ export default {
         const content = resp.data.emailContent
         this.form.host = content.host
         this.form.port = content.port
+        this.form.ssl = content.ssl
         this.form.username = content.username
         this.form.password = content.password
         this.form.from = content.from
@@ -68,6 +74,7 @@ export default {
       saveEmailConfig({
         host: this.form.host,
         port: this.form.port,
+        ssl: this.form.ssl,
         username: this.form.username,
         password: this.form.password,
         from: this.form.from
