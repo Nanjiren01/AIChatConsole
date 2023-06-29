@@ -21,6 +21,24 @@
         <el-form-item label="发件人">
           <el-input v-model="form.from" placeholder="当用户名就是发件人时，此处可留空" />
         </el-form-item>
+        <el-form-item label="注册邮件模板（HTML）">
+          <el-alert
+            type="info"
+            title="标题占位符：${title}，验证码占位符：${code}"
+            style="line-height: 14px;margin-bottom: 5px;"
+            :closable="false"
+          />
+          <el-input v-model="form.registerTemplate" type="textarea" autosize />
+        </el-form-item>
+        <el-form-item label="重置密码邮件模板（HTML）">
+          <el-alert
+            type="info"
+            title="标题占位符：${title}，验证码占位符：${code}"
+            style="line-height: 14px;margin-bottom: 5px;"
+            :closable="false"
+          />
+          <el-input v-model="form.resetPasswordTemplate" type="textarea" autosize />
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="loading" @click="handleSubmit">
             {{ loading ? '保存中……' : '提 交' }}
@@ -46,7 +64,9 @@ export default {
         ssl: false,
         username: null,
         password: null,
-        from: null
+        from: null,
+        registerTemplate: '',
+        resetPasswordTemplate: ''
       }
     }
   },
@@ -65,6 +85,8 @@ export default {
         this.form.username = content.username
         this.form.password = content.password
         this.form.from = content.from
+        this.form.registerTemplate = content.registerTemplate || ''
+        this.form.resetPasswordTemplate = content.resetPasswordTemplate || ''
       }).finally(() => {
         this.loading = false
       })
@@ -77,7 +99,9 @@ export default {
         ssl: this.form.ssl,
         username: this.form.username,
         password: this.form.password,
-        from: this.form.from
+        from: this.form.from,
+        registerTemplate: this.form.registerTemplate,
+        resetPasswordTemplate: this.form.resetPasswordTemplate
       }).then(() => {
         this.$message.success('保存成功！')
       }).finally(() => {
