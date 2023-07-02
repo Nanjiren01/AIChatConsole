@@ -27,6 +27,16 @@
         </el-button>
       </template>
 
+      <template v-slot:billingState="props">
+        <el-tag v-if="props.row.billingState == 0" type="warning">未知</el-tag>
+        <el-tag v-else-if="props.row.billingState == 1" type="success">正常</el-tag>
+        <el-tag v-else-if="props.row.billingState == 10" type="danger">异常</el-tag>
+        <el-tag v-else-if="props.row.billingState == 11" type="danger">禁用</el-tag>
+        <el-tag v-else-if="props.row.billingState == 12" type="danger">过期</el-tag>
+        <el-tag v-else-if="props.row.billingState == 13" type="danger">非法</el-tag>
+        <el-tag v-else-if="props.row.billingState == 14" type="danger">欠费</el-tag>
+      </template>
+
       <template v-slot:platformName="slotProps">
         <el-tag>{{ slotProps.row.platformName }}</el-tag>
       </template>
@@ -89,6 +99,10 @@ export default {
         slot: 'state',
         width: 150
       }, {
+        label: '账单状态',
+        slot: 'billingState',
+        width: 75
+      }, {
         label: '创建人',
         prop: 'creatorName',
         width: 150
@@ -131,6 +145,7 @@ export default {
             quota: key.quota,
             callCount: key.callCount,
             state: key.state,
+            billingState: key.billingState,
             creatorName: key.creatorName,
             createTime: key.createTime,
             updateTime: key.updateTime
@@ -149,6 +164,7 @@ export default {
       this.edit.platformId = 1
       this.edit.key = null
       this.edit.state = null
+      this.edit.billingState = null
       this.edit.creatorName = null
       this.edit.createTime = null
     },
@@ -159,6 +175,7 @@ export default {
       this.edit.platformId = row.platformId
       this.edit.key = row.key
       this.edit.state = row.state
+      this.edit.billingState = row.billingState
       this.edit.creatorName = row.creatorName
       this.edit.createTime = row.createTime
     },
