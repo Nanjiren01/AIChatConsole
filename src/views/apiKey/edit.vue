@@ -114,6 +114,7 @@ export default {
       storeApiKey(this.model.id, this.model.key, this.model.state, this.model.platformId).then(resp => {
         this.$message.success(this.model.id ? '修改成功！' : '添加成功！')
         this.$emit('created')
+        this.$emit('close')
       })
     }
   }
