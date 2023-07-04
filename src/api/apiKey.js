@@ -18,3 +18,10 @@ export function storeApiKey(id, key, state, platformId, modelIds, remark) {
     }
   })
 }
+
+export function deleteApiKey(id) {
+  return request({
+    url: '/apiKeys/' + id,
+    method: 'delete'
+  })
+}
