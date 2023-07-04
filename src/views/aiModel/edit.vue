@@ -18,6 +18,9 @@
         <el-form-item label="path">
           <el-input v-model="model.path" />
         </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="model.remark" type="textarea" :row="1" autosize />
+        </el-form-item>
         <el-form-item v-if="model.id" label="状态">
           <el-tag v-if="model.state == 1" type="success">正常</el-tag>
           <el-tag v-else type="danger">停用</el-tag>
@@ -92,7 +95,8 @@ export default {
           name: this.model.name,
           state: 0,
           levelId: this.model.levelId,
-          path: this.model.path
+          path: this.model.path,
+          remark: this.model.remark
         }).then(() => {
           this.$message.success('操作成功！')
           this.$emit('changed')
@@ -107,7 +111,8 @@ export default {
         name: this.model.name,
         state: this.model.state,
         levelId: this.model.levelId,
-        path: this.model.path
+        path: this.model.path,
+        remark: this.model.remark
       }).then(() => {
         this.$message.success('操作成功！')
         this.$emit('changed')

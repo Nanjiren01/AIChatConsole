@@ -151,7 +151,7 @@ export default {
         width: 140
       }],
       tableActionColumn: {
-        width: 260
+        width: 180
       },
       tableData: [],
       pagination: {
@@ -187,6 +187,7 @@ export default {
             quota: key.quota,
             callCount: key.callCount,
             state: key.state,
+            remark: key.remark,
             billingState: key.billingState,
             billingUsage: key.billingUsage,
             billingSubs: key.billingSubs,
@@ -222,6 +223,7 @@ export default {
       this.edit.key = null
       this.edit.modelIds = []
       this.edit.state = null
+      this.edit.remark = null
       this.edit.billingState = null
       this.edit.billingUsage = null
       this.edit.billingSubs = null
@@ -236,6 +238,7 @@ export default {
       this.edit.key = row.key
       this.edit.modelIds = row.modelIds
       this.edit.state = row.state
+      this.edit.remark = row.remark
       this.edit.billingState = row.billingState
       this.edit.billingUsage = row.billingUsage
       this.edit.billingSubs = row.billingSubs

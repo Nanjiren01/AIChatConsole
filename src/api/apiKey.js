@@ -9,12 +9,12 @@ export function getApiKeys(params) {
   })
 }
 
-export function storeApiKey(id, key, state, platformId, modelIds) {
+export function storeApiKey(id, key, state, platformId, modelIds, remark) {
   return request({
     url: '/apiKeys',
     method: 'post',
     data: {
-      id, key, state, platformId, modelIds
+      id, key, state, platformId, modelIds, remark
     }
   })
 }

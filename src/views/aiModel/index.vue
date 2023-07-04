@@ -84,6 +84,9 @@ export default {
         slot: 'state',
         width: 65
       }, {
+        label: '备注',
+        prop: 'remark'
+      }, {
         label: '创建时间',
         prop: 'createTime',
         width: 135
@@ -106,6 +109,7 @@ export default {
         level: null,
         levelId: null,
         path: null,
+        remark: null,
         createTime: null
       },
 
@@ -137,6 +141,7 @@ export default {
             // state: key.state,
             // creatorName: key.creatorName,
             path: model.path,
+            remark: model.remark,
             createTime: model.createTime
             // updateTime: key.updateTime
           }
@@ -162,6 +167,7 @@ export default {
       this.editModel.levelId = null
       this.editModel.state = null
       this.editModel.path = null
+      this.editModel.remark = null
       this.showEdit = true
     },
     handleEdit(row) {
@@ -174,6 +180,7 @@ export default {
       this.editModel.levelId = row.levelId
       this.editModel.state = row.state
       this.editModel.path = row.path
+      this.editModel.remark = row.remark
       this.editModel.createTime = row.createTime
       this.showEdit = true
     },
