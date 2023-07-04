@@ -107,3 +107,21 @@ export function savePayConfig(content) {
     }
   })
 }
+
+export function getWechatConfig() {
+  return request({
+    url: '/globalConfig/wechat',
+    method: 'get'
+  })
+}
+
+export function saveWechatConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'Wechat',
+      ...content
+    }
+  })
+}

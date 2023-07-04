@@ -74,6 +74,9 @@
       <el-tab-pane label="支付配置">
         <pay-config />
       </el-tab-pane>
+      <el-tab-pane label="微信配置">
+        <wechat-config />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -85,10 +88,11 @@ import EmailConfig from './emailConfig'
 import SensitiveWordsConfig from './sensitiveWords'
 import NoticeConfig from './noticeConfig'
 import PayConfig from './payConfig'
+import WechatConfig from './wechatConfig'
 
 export default {
   name: 'WebsiteConfig',
-  components: { EmailConfig, SensitiveWordsConfig, NoticeConfig, PayConfig },
+  components: { EmailConfig, SensitiveWordsConfig, NoticeConfig, PayConfig, WechatConfig },
   data() {
     return {
       form: {
