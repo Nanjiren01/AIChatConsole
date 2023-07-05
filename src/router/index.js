@@ -193,7 +193,7 @@ export const asyncRoutes = [
     path: '/activity',
     component: Layout,
     redirect: '/activity/list',
-    alwaysShow: true, // will always show the root menu
+    alwaysShow: false, // will always show the root menu
     name: 'activity',
     meta: { title: '活动管理', icon: 'dashboard', affix: true },
     children: [
