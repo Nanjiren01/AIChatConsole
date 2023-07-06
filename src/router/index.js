@@ -251,6 +251,21 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/chat',
+    component: Layout,
+    redirect: '/chat/log',
+    alwaysShow: false, // will always show the root menu
+    name: 'chat',
+    children: [
+      {
+        path: 'log',
+        component: () => import('@/views/chat/index'),
+        name: 'chatLog',
+        meta: { title: '聊天记录', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/website',
     component: Layout,
     alwaysShow: false,
