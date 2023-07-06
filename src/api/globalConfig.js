@@ -54,6 +54,24 @@ export function saveRegisterQuotaConfig(content) {
   })
 }
 
+export function getInviteRegisterConfig() {
+  return request({
+    url: '/globalConfig/inviteRegister',
+    method: 'get'
+  })
+}
+
+export function saveInviteRegisterConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'InviteRegister',
+      ...content
+    }
+  })
+}
+
 export function getSensitiveWordsConfig() {
   return request({
     url: '/globalConfig/sensitiveWords',
