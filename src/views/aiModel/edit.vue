@@ -15,6 +15,9 @@
         <el-form-item label="名称">
           <el-input v-model="model.name" />
         </el-form-item>
+        <el-form-item label="展示名称">
+          <el-input v-model="model.showName" />
+        </el-form-item>
         <el-form-item label="path">
           <el-input v-model="model.path" />
         </el-form-item>
@@ -93,6 +96,7 @@ export default {
           id: this.model.id,
           platformId: this.model.platformId,
           name: this.model.name,
+          showName: this.model.showName,
           state: 0,
           levelId: this.model.levelId,
           path: this.model.path,
@@ -109,6 +113,7 @@ export default {
       updateAiModel({
         id: this.model.id,
         name: this.model.name,
+        showName: this.model.showName,
         state: this.model.state,
         levelId: this.model.levelId,
         path: this.model.path,

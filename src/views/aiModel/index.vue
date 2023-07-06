@@ -73,6 +73,9 @@ export default {
         label: '模型名称',
         prop: 'name'
       }, {
+        label: '展示名称',
+        prop: 'showName'
+      }, {
         label: 'path',
         prop: 'path'
       }, {
@@ -103,6 +106,7 @@ export default {
       editModel: {
         id: null,
         name: null,
+        showName: null,
         platformId: null,
         platformName: null,
         state: null,
@@ -131,6 +135,7 @@ export default {
           return {
             id: model.id,
             name: model.name,
+            showName: model.showName,
             platformId: model.platformId,
             platformName: model.platformName,
             state: model.state,
@@ -161,6 +166,7 @@ export default {
     handleCreate() {
       this.editModel.id = null
       this.editModel.name = ''
+      this.editModel.showName = ''
       this.editModel.platformId = null
       this.editModel.platformName = null
       this.editModel.level = null
@@ -174,6 +180,7 @@ export default {
       // console.log('edit', row)
       this.editModel.id = row.id
       this.editModel.name = row.name
+      this.editModel.showName = row.showName
       this.editModel.platformId = row.platformId
       this.editModel.platformName = row.platformName
       this.editModel.level = row.level
