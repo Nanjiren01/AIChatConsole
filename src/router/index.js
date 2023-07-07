@@ -206,6 +206,22 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/redeemCode',
+    component: Layout,
+    redirect: '/redeemCode/list',
+    alwaysShow: false, // will always show the root menu
+    name: 'redeemCode',
+    meta: { title: '活动管理', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/redeemCode/index'),
+        name: 'redeemCodeList',
+        meta: { title: '兑换码列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/package',
     component: Layout,
     redirect: '/package/list',
