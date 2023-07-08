@@ -8,6 +8,12 @@
         <el-form-item label="AppSecret">
           <el-input v-model="form.appSecret" type="password" />
         </el-form-item>
+        <el-form-item label="Token">
+          <el-input v-model="form.token" />
+        </el-form-item>
+        <el-form-item label="EncodingAESKey">
+          <el-input v-model="form.encodingAesKey" type="password" />
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="loading" @click="handleSubmit">
             {{ loading ? '保存中……' : '提 交' }}
@@ -28,8 +34,10 @@ export default {
     return {
       loading: false,
       form: {
-        appId: '',
-        appSecret: ''
+        appId: null,
+        appSecret: null,
+        token: null,
+        encodingAesKey: null
       }
     }
   },
@@ -44,6 +52,8 @@ export default {
         const content = resp.data.wechatContent
         this.form.appId = content.appId
         this.form.appSecret = content.appSecret
+        this.form.token = content.token
+        this.form.encodingAesKey = content.encodingAesKey
       }).finally(() => {
         this.loading = false
       })
@@ -52,7 +62,9 @@ export default {
       this.loading = true
       saveWechatConfig({
         wechatAppId: this.form.appId,
-        wechatAppSecret: this.form.appSecret
+        wechatAppSecret: this.form.appSecret,
+        wechatToken: this.form.token,
+        wechatEncodingAesKey: this.form.encodingAesKey
       }).then(() => {
         this.$message.success('保存成功！')
       }).finally(() => {
