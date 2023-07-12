@@ -31,17 +31,33 @@
             <el-option v-for="md in allModels.filter(m => m.platformId === model.platformId)" :key="md.id" :label="md.platformName + '-' + md.name" :value="md.id" />
           </el-select>
         </el-form-item>
+        <el-form-item v-if="!model.id" label="备注">
+          <el-input v-model="model.remark" type="textarea" :row="1" autosize />
+        </el-form-item>
 
         <template v-if="model.id">
           <el-form-item label="状态">
             <el-radio-group v-model="model.state" disabled>
               <el-radio :label="1">启用</el-radio>
               <el-radio :label="2">禁用</el-radio>
-              <el-radio :label="3">初始</el-radio>
-              <el-radio :label="4">额度查询中</el-radio>
-              <el-radio :label="5">key被禁用</el-radio>
-              <el-radio :label="6">key不合法</el-radio>
             </el-radio-group>
+          </el-form-item>
+          <el-form-item label="账户状态">
+            <el-tag v-if="model.billingState == 0" type="warning">未知</el-tag>
+            <el-tag v-else-if="model.billingState == 1" type="success">正常</el-tag>
+            <el-tag v-else-if="model.billingState == 10" type="danger">异常</el-tag>
+            <el-tag v-else-if="model.billingState == 11" type="danger">禁用</el-tag>
+            <el-tag v-else-if="model.billingState == 12" type="danger">过期</el-tag>
+            <el-tag v-else-if="model.billingState == 13" type="danger">非法</el-tag>
+            <el-tag v-else-if="model.billingState == 14" type="danger">欠费</el-tag>
+          </el-form-item>
+          <el-form-item label="余额">
+            <template v-if="model.billingUsage > -1">
+              <span>${{ model.billingUsage }} / ${{ model.billingSubs }}</span>
+            </template>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="model.remark" type="textarea" :row="1" autosize />
           </el-form-item>
           <el-form-item label="创建者">
             <el-input v-model="model.creatorName" disabled />
@@ -91,6 +107,8 @@ export default {
         key: null,
         modelIds: [],
         state: null,
+        remark: null,
+        billingState: null,
         creatorName: null,
         createTime: null
       }
@@ -105,8 +123,12 @@ export default {
     this.model.id = this.apiKey && this.apiKey.id || 0
     this.model.platformId = this.apiKey && this.apiKey.platformId
     this.model.state = this.apiKey && this.apiKey.state || 1
+    this.model.billingState = this.apiKey && this.apiKey.billingState || 0
     this.model.key = this.apiKey && this.apiKey.key || ''
+    this.model.remark = this.apiKey && this.apiKey.remark || ''
     this.model.modelIds = this.apiKey && this.apiKey.modelIds || []
+    this.model.billingUsage = this.apiKey && this.apiKey.billingUsage || -1
+    this.model.billingSubs = this.apiKey && this.apiKey.billingSubs || -1
     this.model.creatorName = this.apiKey && this.apiKey.creatorName || ''
     this.model.createTime = this.apiKey && this.apiKey.createTime || ''
   },
@@ -127,9 +149,11 @@ export default {
         this.$message.error('请输入key！')
         return
       }
-      storeApiKey(this.model.id, this.model.key, this.model.state, this.model.platformId, this.model.modelIds).then(resp => {
+      storeApiKey(this.model.id, this.model.key, this.model.state, this.model.platformId, this.model.modelIds,
+        this.model.remark).then(resp => {
         this.$message.success(this.model.id ? '修改成功！' : '添加成功！')
         this.$emit('created')
+        this.$emit('close')
       })
     }
   }

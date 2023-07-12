@@ -73,6 +73,9 @@ export default {
         label: '模型名称',
         prop: 'name'
       }, {
+        label: '展示名称',
+        prop: 'showName'
+      }, {
         label: 'path',
         prop: 'path'
       }, {
@@ -83,6 +86,9 @@ export default {
         label: '状态',
         slot: 'state',
         width: 65
+      }, {
+        label: '备注',
+        prop: 'remark'
       }, {
         label: '创建时间',
         prop: 'createTime',
@@ -100,12 +106,14 @@ export default {
       editModel: {
         id: null,
         name: null,
+        showName: null,
         platformId: null,
         platformName: null,
         state: null,
         level: null,
         levelId: null,
         path: null,
+        remark: null,
         createTime: null
       },
 
@@ -127,6 +135,7 @@ export default {
           return {
             id: model.id,
             name: model.name,
+            showName: model.showName,
             platformId: model.platformId,
             platformName: model.platformName,
             state: model.state,
@@ -137,6 +146,7 @@ export default {
             // state: key.state,
             // creatorName: key.creatorName,
             path: model.path,
+            remark: model.remark,
             createTime: model.createTime
             // updateTime: key.updateTime
           }
@@ -156,24 +166,28 @@ export default {
     handleCreate() {
       this.editModel.id = null
       this.editModel.name = ''
+      this.editModel.showName = ''
       this.editModel.platformId = null
       this.editModel.platformName = null
       this.editModel.level = null
       this.editModel.levelId = null
       this.editModel.state = null
       this.editModel.path = null
+      this.editModel.remark = null
       this.showEdit = true
     },
     handleEdit(row) {
       // console.log('edit', row)
       this.editModel.id = row.id
       this.editModel.name = row.name
+      this.editModel.showName = row.showName
       this.editModel.platformId = row.platformId
       this.editModel.platformName = row.platformName
       this.editModel.level = row.level
       this.editModel.levelId = row.levelId
       this.editModel.state = row.state
       this.editModel.path = row.path
+      this.editModel.remark = row.remark
       this.editModel.createTime = row.createTime
       this.showEdit = true
     },

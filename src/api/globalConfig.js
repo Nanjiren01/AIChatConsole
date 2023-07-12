@@ -54,6 +54,24 @@ export function saveRegisterQuotaConfig(content) {
   })
 }
 
+export function getInviteRegisterConfig() {
+  return request({
+    url: '/globalConfig/inviteRegister',
+    method: 'get'
+  })
+}
+
+export function saveInviteRegisterConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'InviteRegister',
+      ...content
+    }
+  })
+}
+
 export function getSensitiveWordsConfig() {
   return request({
     url: '/globalConfig/sensitiveWords',
@@ -103,6 +121,42 @@ export function savePayConfig(content) {
     method: 'post',
     data: {
       type: 'Pay',
+      ...content
+    }
+  })
+}
+
+export function getWechatConfig() {
+  return request({
+    url: '/globalConfig/wechat',
+    method: 'get'
+  })
+}
+
+export function saveWechatConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'Wechat',
+      ...content
+    }
+  })
+}
+
+export function getChatConfig() {
+  return request({
+    url: '/globalConfig/chat',
+    method: 'get'
+  })
+}
+
+export function saveChatConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'Chat',
       ...content
     }
   })

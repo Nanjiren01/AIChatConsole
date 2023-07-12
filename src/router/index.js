@@ -193,7 +193,7 @@ export const asyncRoutes = [
     path: '/activity',
     component: Layout,
     redirect: '/activity/list',
-    alwaysShow: true, // will always show the root menu
+    alwaysShow: false, // will always show the root menu
     name: 'activity',
     meta: { title: '活动管理', icon: 'dashboard', affix: true },
     children: [
@@ -247,6 +247,21 @@ export const asyncRoutes = [
         component: () => import('@/views/file/index'),
         name: 'fileList',
         meta: { title: '文件列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/chat',
+    component: Layout,
+    redirect: '/chat/log',
+    alwaysShow: false, // will always show the root menu
+    name: 'chat',
+    children: [
+      {
+        path: 'log',
+        component: () => import('@/views/chat/index'),
+        name: 'chatLog',
+        meta: { title: '聊天记录', icon: 'dashboard', affix: true }
       }
     ]
   },

@@ -15,8 +15,14 @@
         <el-form-item label="名称">
           <el-input v-model="model.name" />
         </el-form-item>
+        <el-form-item label="展示名称">
+          <el-input v-model="model.showName" />
+        </el-form-item>
         <el-form-item label="path">
           <el-input v-model="model.path" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="model.remark" type="textarea" :row="1" autosize />
         </el-form-item>
         <el-form-item v-if="model.id" label="状态">
           <el-tag v-if="model.state == 1" type="success">正常</el-tag>
@@ -90,9 +96,11 @@ export default {
           id: this.model.id,
           platformId: this.model.platformId,
           name: this.model.name,
+          showName: this.model.showName,
           state: 0,
           levelId: this.model.levelId,
-          path: this.model.path
+          path: this.model.path,
+          remark: this.model.remark
         }).then(() => {
           this.$message.success('操作成功！')
           this.$emit('changed')
@@ -105,9 +113,11 @@ export default {
       updateAiModel({
         id: this.model.id,
         name: this.model.name,
+        showName: this.model.showName,
         state: this.model.state,
         levelId: this.model.levelId,
-        path: this.model.path
+        path: this.model.path,
+        remark: this.model.remark
       }).then(() => {
         this.$message.success('操作成功！')
         this.$emit('changed')

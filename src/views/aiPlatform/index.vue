@@ -50,6 +50,9 @@
           <el-form-item label="BASE_URL">
             <el-input v-model="form.baseUrl" />
           </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="form.remark" />
+          </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -87,6 +90,9 @@ export default {
         prop: 'modelsCount',
         width: 75
       }, {
+        label: '备注',
+        prop: 'remark'
+      }, {
         label: '状态',
         prop: 'state',
         slot: 'state',
@@ -110,7 +116,8 @@ export default {
       form: {
         id: null,
         name: null,
-        baseUrl: null
+        baseUrl: null,
+        remark: null
       }
     }
   },
@@ -130,6 +137,7 @@ export default {
             name: platform.name,
             state: platform.state,
             baseUrl: platform.baseUrl,
+            remark: platform.remark,
             modelsCount: platform.modelsCount,
             createTime: platform.createTime
             // updateTime: key.updateTime
@@ -147,6 +155,7 @@ export default {
       this.form.name = ''
       this.form.state = 0
       this.form.baseUrl = ''
+      this.form.remark = ''
     },
     // handleEdit(row) {
     //   console.log('edit', row)
@@ -160,6 +169,7 @@ export default {
       this.form.name = row.name
       this.form.state = row.state
       this.form.baseUrl = row.baseUrl || ''
+      this.form.remark = row.remark || ''
     },
     handleEditSubmit() {
       if (!this.form.name) {
@@ -178,7 +188,8 @@ export default {
           // id: this.form.id,
           name: this.form.name,
           state: this.form.state,
-          baseUrl: this.form.baseUrl
+          baseUrl: this.form.baseUrl,
+          remark: this.form.remark
         }).then(() => {
           this.$message.success('操作成功！')
           this.reload()
@@ -192,7 +203,8 @@ export default {
         id: this.form.id,
         name: this.form.name,
         state: this.form.state,
-        baseUrl: this.form.baseUrl
+        baseUrl: this.form.baseUrl,
+        remark: this.form.remark
       }).then(() => {
         this.$message.success('操作成功！')
         this.reload()
@@ -208,7 +220,8 @@ export default {
         id: row.id,
         name: row.name,
         state: row.state === 1 ? 2 : 1,
-        baseUrl: row.baseUrl
+        baseUrl: row.baseUrl,
+        remark: row.remark
       }).then(() => {
         this.$message.success('操作成功！')
         this.reload()
