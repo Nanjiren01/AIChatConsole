@@ -16,6 +16,9 @@
             <el-form-item label="网站副标题（HTML）">
               <el-input v-model="form.subTitle" />
             </el-form-item>
+            <el-form-item label="网站自定义（HTML）">
+              <el-input v-model="form.icp" type="textarea" autosize />
+            </el-form-item>
             <el-form-item label="登录页副标题">
               <el-input v-model="form.loginPageSubTitle" />
             </el-form-item>
@@ -104,6 +107,7 @@ export default {
         title: '',
         mainTitle: '',
         subTitle: '',
+        icp: '',
         loginPageSubTitle: '',
         registerPageSubTitle: '',
         registerTypes: [],
@@ -131,6 +135,7 @@ export default {
         this.form.title = config.websiteContent.title
         this.form.mainTitle = config.websiteContent.mainTitle
         this.form.subTitle = config.websiteContent.subTitle
+        this.form.icp = config.websiteContent.icp
         this.form.loginPageSubTitle = config.websiteContent.loginPageSubTitle
         this.form.registerPageSubTitle = config.websiteContent.registerPageSubTitle
         this.form.pricingPageTitle = config.websiteContent.pricingPageTitle
@@ -159,6 +164,7 @@ export default {
         title: this.form.title,
         mainTitle: this.form.mainTitle,
         subTitle: this.form.subTitle,
+        icp: this.form.icp,
         loginPageSubTitle: this.form.loginPageSubTitle,
         registerPageSubTitle: this.form.registerPageSubTitle,
         registerTypes: this.form.registerTypes,
