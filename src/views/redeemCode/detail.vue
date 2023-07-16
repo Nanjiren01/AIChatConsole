@@ -57,6 +57,12 @@
         <el-form-item label="创建时间">
           <el-input v-model="member.createTime" disabled />
         </el-form-item>
+        <el-form-item label="兑换时间">
+          <el-input v-model="member.redeemTime" disabled />
+        </el-form-item>
+        <el-form-item v-if="member.cancelTime" label="作废时间">
+          <el-input v-model="member.cancelTime" disabled />
+        </el-form-item>
       </el-form>
 
     </div>

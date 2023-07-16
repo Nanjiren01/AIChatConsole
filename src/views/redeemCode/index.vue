@@ -30,7 +30,7 @@
         </el-row>
       </template>
       <template #topActions>
-        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">批量生成</el-button>
         <el-button type="success" @click="handldNormal">批量生效</el-button>
         <el-button type="danger" @click="handldDelete">批量删除</el-button>
         <el-button type="info" @click="handldCancel">批量作废</el-button>
@@ -85,7 +85,9 @@
           v-if="slotProps.row.redeemState == 0"
           :type="[1].includes(slotProps.row.state) ? 'success' : 'info' "
         >未兑换</el-tag>
-        <el-tag v-if="slotProps.row.redeemState == 1" type="info">已兑换</el-tag>
+        <template v-if="slotProps.row.redeemState == 1">
+          <el-tag type="info">已兑换</el-tag> {{ slotProps.row.username || slotProps.row.userEmail }}(#{{ slotProps.row.userId }})
+        </template>
       </template>
 
     </ai-table>
@@ -147,8 +149,7 @@ export default {
         width: 70
       }, {
         label: '兑换',
-        slot: 'redeemState',
-        width: 70
+        slot: 'redeemState'
       }, {
         label: '创建时间',
         prop: 'createTime',
@@ -183,7 +184,9 @@ export default {
         remark: null,
         state: null,
         redeemState: null,
-        createTime: null
+        createTime: null,
+        redeemTime: null,
+        cancelTime: null
       }
     }
   },
@@ -224,8 +227,13 @@ export default {
             channel: code.channel || null,
             remark: code.remark || null,
             state: code.state,
+            userId: code.userId,
+            username: code.username,
+            userEmail: code.userEmail,
             redeemState: code.redeemState,
-            createTime: code.createTime
+            createTime: code.createTime,
+            redeemTime: code.redeemTime,
+            cancelTime: code.cancelTime
           }
         })
         this.pagination.total = page.total
@@ -258,9 +266,14 @@ export default {
         days: row.days || null,
         channel: row.channel,
         state: row.state,
+        userId: row.userId,
+        username: row.username,
+        userEmail: row.userEmail,
         redeemState: row.redeemState,
         remark: row.remark,
-        createTime: row.createTime
+        createTime: row.createTime,
+        redeemTime: row.redeemTime,
+        cancelTime: row.cancelTime
       }
       // this.$nextTick(() => {
       //   this.$refs.detail.reload()
