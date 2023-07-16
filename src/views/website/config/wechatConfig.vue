@@ -3,8 +3,17 @@
     <div style="margin: 0 auto; width: 500px;">
       <el-form ref="form" :model="form" label-width="180px">
         <el-alert type="info" style="margin-bottom: 10px;" :closable="false">
-          请在下方填写微信<b>网页应用</b>相关信息
+          请在下方填写微信<b>网页应用</b>或<b>公众号应用</b>相关信息
         </el-alert>
+        <el-form-item label="类型">
+          <el-select v-model="form.appType">
+            <el-option label="公众号应用" value="webApp" />
+            <el-option label="网页应用" value="websiteApp" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="AppId">
+          <el-input v-model="form.appId" />
+        </el-form-item>
         <el-form-item label="AppId">
           <el-input v-model="form.appId" />
         </el-form-item>
@@ -23,6 +32,15 @@
           </el-button>
         </el-form-item>
       </el-form>
+
+      <div>
+        <el-alert type="info" show-icon style="line-height: 20px; margin-bottom: 10px;" :closable="false">
+          微信公众号网页应用文档：<a target="_blank" href="https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html">https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html</a>
+        </el-alert>
+        <el-alert type="info" show-icon style="line-height: 20px; margin-bottom: 10px;" :closable="false">
+          微信网页应用文档：<a target="_blank" href="https://developers.weixin.qq.com/doc/oplatform/Website_App/operation.html">https://developers.weixin.qq.com/doc/oplatform/Website_App/operation.html</a>
+        </el-alert>
+      </div>
     </div>
   </div>
 </template>
@@ -37,6 +55,7 @@ export default {
     return {
       loading: false,
       form: {
+        appType: null,
         appId: null,
         appSecret: null,
         token: null,
@@ -53,6 +72,7 @@ export default {
       getWechatConfig().then(resp => {
         // console.log('resp', resp)
         const content = resp.data.wechatContent
+        this.form.appType = content.appType
         this.form.appId = content.appId
         this.form.appSecret = content.appSecret
         this.form.token = content.token
@@ -64,6 +84,7 @@ export default {
     handleSubmit() {
       this.loading = true
       saveWechatConfig({
+        wechatAppType: this.form.appType,
         wechatAppId: this.form.appId,
         wechatAppSecret: this.form.appSecret,
         wechatToken: this.form.token,
