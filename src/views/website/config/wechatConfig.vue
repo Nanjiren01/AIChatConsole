@@ -14,9 +14,6 @@
         <el-form-item label="AppId">
           <el-input v-model="form.appId" />
         </el-form-item>
-        <el-form-item label="AppId">
-          <el-input v-model="form.appId" />
-        </el-form-item>
         <el-form-item label="AppSecret">
           <el-input v-model="form.appSecret" type="password" />
         </el-form-item>
