@@ -140,8 +140,8 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     // 多选
-    handleSelectionChange() {
-
+    handleSelectionChange(rows) {
+      this.$emit('selection-change', rows)
     },
 
     handleClickRefreshButton() {

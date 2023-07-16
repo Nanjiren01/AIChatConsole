@@ -15,6 +15,29 @@
         <el-form-item label="卡号">
           <el-input v-model="member.key" disabled />
         </el-form-item>
+        <el-form-item label="tokens">
+          <el-input-number v-model="member.tokens" disabled />
+        </el-form-item>
+        <el-form-item label="普通聊天次数">
+          <el-input-number v-model="member.chatCount" disabled />
+        </el-form-item>
+        <el-form-item label="高级聊天次数">
+          <el-input-number v-model="member.advancedChatCount" disabled />
+        </el-form-item>
+        <el-form-item label="AI绘图次数">
+          <el-input-number v-model="member.drawCount" disabled />
+        </el-form-item>
+        <el-form-item label="类型">
+          <el-select v-model="member.calcType" disabled>
+            <el-option label="总额" value="Total" />
+            <el-option label="每天" value="Daily" />
+            <el-option label="每3小时" value="ThreeHourly" />
+            <el-option label="每小时" value="Hourly" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="天数">
+          <el-input-number v-model="member.days" disabled />
+        </el-form-item>
         <el-form-item label="渠道">
           <el-input v-model="member.channel" disabled />
         </el-form-item>

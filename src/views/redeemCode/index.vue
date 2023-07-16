@@ -10,11 +10,18 @@
       @pageSizeChanged="handlePageSizeChange"
       @pageCurrentChanged="handlePageCurrentChanged"
       @refresh="handleRefresh"
+      @selection-change="handleSelectionChange"
     >
       <template #filter>
         <el-row :gutter="20">
           <el-col :span="6" :xs="24">
-            <el-input v-model="filter.keys" placeholder="请输入卡号" />
+            <el-input v-model="filter.keys" placeholder="请输入卡号（精确搜索）" />
+          </el-col>
+          <el-col :span="6" :xs="24">
+            <el-input v-model="filter.channel" placeholder="请输入渠道（模糊搜索）" />
+          </el-col>
+          <el-col :span="6" :xs="24">
+            <el-input v-model="filter.remark" placeholder="请输入备注（模糊搜索）" />
           </el-col>
           <el-col :span="6" :xs="24">
             <el-button type="primary" plain :disabled="loading" @click="handleSearch">搜索</el-button>
@@ -24,12 +31,15 @@
       </template>
       <template #topActions>
         <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
+        <el-button type="success" @click="handldNormal">批量生效</el-button>
+        <el-button type="danger" @click="handldDelete">批量删除</el-button>
+        <el-button type="info" @click="handldCancel">批量作废</el-button>
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">查看</el-button>
       </template>
 
-      <template v-slot:tokens="slotProps">
+      <!-- <template v-slot:tokens="slotProps">
         <el-tag v-if="slotProps.row.tokens == -1" type="success">无限制</el-tag>
         <el-tag v-else-if="slotProps.row.tokens === 0" type="danger">{{ slotProps.row.tokens }}</el-tag>
         <el-tag v-else-if="slotProps.row.tokens < 50" type="warning">{{ slotProps.row.tokens }}</el-tag>
@@ -52,15 +62,29 @@
         <el-tag v-else-if="slotProps.row.drawCount === 0" type="danger">{{ slotProps.row.drawCount }}</el-tag>
         <el-tag v-else-if="slotProps.row.drawCount < 5" type="warning">{{ slotProps.row.drawCount }}</el-tag>
         <el-tag v-else type="success">{{ slotProps.row.drawCount }}</el-tag>
+      </template> -->
+      <template v-slot:balances="props">
+        <span>
+          {{ props.row.tokens }} /
+          {{ props.row.chatCount }} /
+          {{ props.row.advancedChatCount }} /
+          {{ props.row.drawCount }}，
+          {{ props.row.days }}天，
+          {{ getCalcTypeText(props.row.calcTypeId) }}
+        </span>
       </template>
+
       <template v-slot:state="slotProps">
         <el-tag v-if="slotProps.row.state == 0" type="info">草稿</el-tag>
         <el-tag v-if="slotProps.row.state == 1" type="success">生效中</el-tag>
-        <el-tag v-if="slotProps.row.state == 2" type="success">已作废</el-tag>
+        <el-tag v-if="slotProps.row.state == 2" type="info">已作废</el-tag>
         <el-tag v-if="slotProps.row.state == 3" type="success">已删除</el-tag>
       </template>
       <template v-slot:redeemState="slotProps">
-        <el-tag v-if="slotProps.row.redeemState == 0" type="success">未兑换</el-tag>
+        <el-tag
+          v-if="slotProps.row.redeemState == 0"
+          :type="[1].includes(slotProps.row.state) ? 'success' : 'info' "
+        >未兑换</el-tag>
         <el-tag v-if="slotProps.row.redeemState == 1" type="info">已兑换</el-tag>
       </template>
 
@@ -85,7 +109,7 @@
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getRedeemCodes } from '@/api/redeemCode'
+import { getRedeemCodes, batchDelete, batchCancel, batchNormal } from '@/api/redeemCode'
 import Create from './create'
 import Detail from './detail'
 
@@ -97,6 +121,7 @@ export default {
       loading: false,
       showDetail: false,
       showCreateDialog: false,
+      selectedRows: null,
       tableActions: [],
       tableColumns: [{
         label: '#',
@@ -109,6 +134,10 @@ export default {
         label: '渠道',
         prop: 'channel',
         width: 150
+      }, {
+        label: '额度',
+        slot: 'balances',
+        width: 380
       }, {
         label: '备注',
         prop: 'remark'
@@ -136,11 +165,20 @@ export default {
         // showDetail: false
       },
       filter: {
-        keys: null
+        keys: null,
+        channel: null,
+        remark: null
       },
       detailModel: {
         id: null,
         key: null,
+        calcType: null,
+        calcTypeId: null,
+        tokens: null,
+        chatCount: null,
+        advancedChatCount: null,
+        drawCount: null,
+        days: null,
         channel: null,
         remark: null,
         state: null,
@@ -164,6 +202,8 @@ export default {
       this.loading = true
       return getRedeemCodes({
         keys: this.filter.keys,
+        channel: this.filter.channel,
+        remark: this.filter.remark,
         page: this.pagination.pageNum,
         size: this.pagination.pageSize
       }).then(resp => {
@@ -174,8 +214,15 @@ export default {
           return {
             id: code.id,
             key: code.key,
-            channel: code.channel,
-            remark: code.remark,
+            calcType: code.calcType || null,
+            calcTypeId: code.calcTypeId || null,
+            tokens: code.tokens || null,
+            chatCount: code.chatCount || null,
+            advancedChatCount: code.advancedChatCount || null,
+            drawCount: code.drawCount || null,
+            days: code.days || null,
+            channel: code.channel || null,
+            remark: code.remark || null,
             state: code.state,
             redeemState: code.redeemState,
             createTime: code.createTime
@@ -202,6 +249,13 @@ export default {
       this.detailModel = {
         id: row.id,
         key: row.key,
+        calcType: row.calcType || null,
+        calcTypeId: row.calcTypeId || null,
+        tokens: row.tokens || null,
+        chatCount: row.chatCount || null,
+        advancedChatCount: row.advancedChatCount || null,
+        drawCount: row.drawCount || null,
+        days: row.days || null,
         channel: row.channel,
         state: row.state,
         redeemState: row.redeemState,
@@ -219,6 +273,14 @@ export default {
     },
     handleRefresh() {
       this.reload()
+    },
+    getCalcTypeText(calcTypeId) {
+      return ({
+        1: '总额',
+        2: '每天',
+        3: '每小时',
+        4: '每3小时'
+      })[calcTypeId]
     },
     handlePageSizeChange(size) {
       this.pagination.pageNum = 1
@@ -249,6 +311,8 @@ export default {
     },
     handleResetFilter() {
       this.filter.keys = ''
+      this.filter.channel = ''
+      this.filter.remark = ''
       this.pagination.pageNum = 1
       // this.pagination.pageSize = 20
       this.reload()
@@ -256,6 +320,73 @@ export default {
     handleCreated() {
       this.handleResetFilter()
       this.handleCloseCreateDialog()
+    },
+    handldDelete() {
+      if (!this.selectedRows || this.selectedRows.length === 0) {
+        this.$message.error('请选择要删除的兑换码！')
+        return
+      }
+      this.$confirm('确定删除选中的' + this.selectedRows.length + '个兑换码？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        this.loading = true
+        batchDelete(this.selectedRows.map(row => row.id)).then(() => {
+          this.$message.success('删除成功！')
+          this.reload()
+        }).finally(() => {
+          this.loading = false
+        })
+      })
+    },
+    handldCancel() {
+      if (!this.selectedRows || this.selectedRows.length === 0) {
+        this.$message.error('请选择要作废的兑换码！')
+        return
+      }
+      this.$confirm('确定作废选中的' + this.selectedRows.length + '个兑换码？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        this.loading = true
+        batchCancel(this.selectedRows.map(row => row.id)).then(() => {
+          this.$message.success('作废成功！')
+          this.reload()
+        }).finally(() => {
+          this.loading = false
+        })
+      })
+    },
+    handldNormal() {
+      if (!this.selectedRows || this.selectedRows.length === 0) {
+        this.$message.error('请选择要生效的兑换码！')
+        return
+      }
+      this.$confirm('确定生效选中的' + this.selectedRows.length + '个兑换码？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        this.loading = true
+        batchNormal(this.selectedRows.map(row => row.id)).then(() => {
+          this.$message.success('操作成功！')
+          this.reload()
+        }).finally(() => {
+          this.loading = false
+        })
+      })
+    },
+    handleSelectionChange(rows) {
+      console.log('rows', rows)
+      this.selectedRows = rows
     }
   }
 }
