@@ -64,7 +64,7 @@
     <el-dialog
       title="聊天详情"
       :visible.sync="dialogVisible"
-      width="500px"
+      width="50%"
     >
       <div style="margin: 0 auto;">
         <el-form ref="form" :model="form" label-width="80px">
@@ -87,10 +87,16 @@
           <el-form-item label="模型">
             <el-input v-model="form.modelName" disabled />
           </el-form-item>
+          <el-form-item label="请求">
+            <el-alert :closable="false">{{ form.request }}</el-alert>
+          </el-form-item>
+          <el-form-item label="响应">
+            <el-alert :closable="false">{{ form.response }}</el-alert>
+          </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="dialogVisible = false">关 闭</el-button>
       </span>
     </el-dialog>
 
@@ -187,7 +193,9 @@ export default {
             status: log.status,
             platformName: log.platformName,
             modelName: log.modelName,
-            createTime: log.createTime
+            createTime: log.createTime,
+            request: log.request,
+            response: log.response
           }
         })
         this.pagination.total = page.total
@@ -208,6 +216,8 @@ export default {
       this.form.platformName = row.platformName
       this.form.modelName = row.modelName
       this.form.createTime = row.createTime
+      this.form.request = row.request === `{"error":"only super admin to check user private data"}` ? '仅超级管理员可查看用户隐私数据' : row.request
+      this.form.response = row.response === `{"error":"only super admin to check user private data"}` ? '仅超级管理员可查看用户隐私数据' : row.response
     },
     handlePageSizeChange(size) {
       this.pagination.pageNum = 1
