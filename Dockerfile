@@ -49,6 +49,11 @@
 # docker tag harbor.nanjiren.online:8099/aichat/aichat-console:0.5 harbor.nanjiren.online:8099/aichat/aichat-console:latest
 # docker push harbor.nanjiren.online:8099/aichat/aichat-console:latest
 
+# docker build -t harbor.nanjiren.online:8099/aichat/aichat-console:0.7 .
+# docker push harbor.nanjiren.online:8099/aichat/aichat-console:0.7
+# docker tag harbor.nanjiren.online:8099/aichat/aichat-console:0.7 harbor.nanjiren.online:8099/aichat/aichat-console:latest
+# docker push harbor.nanjiren.online:8099/aichat/aichat-console:latest
+
 
 FROM nginx
 
