@@ -171,7 +171,7 @@ export default {
       //   prop: 'update_time'
       }],
       tableActionColumn: {
-        width: 165
+        width: 185
       },
       tableData: [],
       pagination: {
