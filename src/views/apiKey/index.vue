@@ -270,7 +270,7 @@ export default {
         type: 'warning'
       }).then(async() => {
         const targetState = row.state === 1 ? 2 : 1
-        storeApiKey(row.id, row.key, targetState, row.platformId).then(resp => {
+        storeApiKey(row.id, row.key, targetState, row.platformId, row.modelIds, row.remark).then(resp => {
           console.log('resp', resp)
           this.$message.success('操作成功！')
           this.reload()
