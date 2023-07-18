@@ -17,6 +17,7 @@
       <slot name="header" />
 
       <el-table
+        :id="tableId"
         ref="multipleTable"
         v-loading="loading"
         :data="tableData"
@@ -78,6 +79,10 @@ export default {
   name: 'AiTable',
   components: {},
   props: {
+    tableId: {
+      type: String,
+      default: () => '' + Math.random()
+    },
     tableActions: {
       type: [Array, Boolean],
       default: () => []

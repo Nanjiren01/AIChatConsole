@@ -1,6 +1,7 @@
 <template>
   <div class="page-container">
     <ai-table
+      :table-id="'redeem-code-table'"
       :table-actions="tableActions"
       :table-columns="tableColumns"
       :table-data="tableData"
@@ -34,6 +35,7 @@
         <el-button type="success" @click="handldNormal">批量生效</el-button>
         <el-button type="danger" @click="handldDelete">批量删除</el-button>
         <el-button type="info" @click="handldCancel">批量作废</el-button>
+        <el-button type="info" :disabled="exporting" @click="handleExportPage">{{ exporting ? '导出中……' : '导出本页' }}</el-button>
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">查看</el-button>
@@ -114,6 +116,7 @@ import AiTable from '@/components/Table'
 import { getRedeemCodes, batchDelete, batchCancel, batchNormal } from '@/api/redeemCode'
 import Create from './create'
 import Detail from './detail'
+import { export_table_to_excel } from '@/vendor/Export2Excel'
 
 export default {
   name: 'MemberIndex',
@@ -121,6 +124,7 @@ export default {
   data() {
     return {
       loading: false,
+      exporting: false,
       showDetail: false,
       showCreateDialog: false,
       selectedRows: null,
@@ -400,6 +404,23 @@ export default {
     handleSelectionChange(rows) {
       console.log('rows', rows)
       this.selectedRows = rows
+    },
+    handleExportPage() {
+      this.exporting = true
+      function formatDate(date) {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hours = String(date.getHours()).padStart(2, '0')
+        const minutes = String(date.getMinutes()).padStart(2, '0')
+        const seconds = String(date.getSeconds()).padStart(2, '0')
+
+        return `${year}-${month}-${day}-${hours}-${minutes}-${seconds}`
+      }
+      setTimeout(() => {
+        export_table_to_excel('redeem-code-table', formatDate(new Date()) + '.xlsx')
+        this.exporting = false
+      }, 50)
     }
   }
 }
