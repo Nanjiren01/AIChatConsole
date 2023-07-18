@@ -26,24 +26,24 @@
 
     </ai-table>
 
-    <!-- <detail
+    <detail
       ref="detail"
       :show="showDetail"
-      :package-entity="detailModel"
+      :mask-entity="detailModel"
       @changed="handleChanged"
       @close="handleCloseDetail"
-    /> -->
+    />
   </div>
 </template>
 
 <script>
 import AiTable from '@/components/Table'
 import { getMasks } from '@/api/mask'
-// import Detail from './detail'
+import Detail from './detail'
 
 export default {
-  name: 'PackageIndex',
-  components: { AiTable },
+  name: 'MaskIndex',
+  components: { AiTable, Detail },
   data() {
     return {
       loading: false,
@@ -67,11 +67,11 @@ export default {
       }, {
         label: '状态',
         slot: 'state',
-        width: 60
-      }, {
-        label: '上下文数量',
-        slot: 'count',
-        width: 100
+        width: 80
+      // }, {
+      //   label: '上下文数量',
+      //   slot: 'count',
+      //   width: 100
       }, {
         label: '创建时间',
         prop: 'createTime',
@@ -91,12 +91,14 @@ export default {
       },
       detailModel: {
         id: null,
-        name: null,
-        avatar: null,
+        name: '',
+        avatar: '',
         state: null,
         lang: null,
-        count: null,
-        contexts: [],
+        // count: null,
+        type: '',
+        modelConfigJson: '',
+        contextJson: '',
         createTime: null,
         updateTime: null
       }
@@ -117,7 +119,8 @@ export default {
             avatar: item.avatar,
             lang: item.lang,
             type: item.type,
-            contexts: item.contexts,
+            modelConfigJson: item.modelConfigJson,
+            contextJson: item.contextJson,
             createTime: item.createTime,
             updateTime: item.updateTime
           }
@@ -135,12 +138,13 @@ export default {
     },
     updateDetail(row) {
       this.detailModel.id = row.id
-      this.detailModel.name = row.name
-      this.detailModel.avatar = row.avatar
-      this.detailModel.lang = row.lang
-      this.detailModel.state = row.state
-      this.detailModel.type = row.type
-      this.detailModel.contexts = row.contexts || []
+      this.detailModel.name = row.name || ''
+      this.detailModel.avatar = row.avatar || ''
+      this.detailModel.lang = row.lang || ''
+      this.detailModel.state = row.state || 0
+      this.detailModel.type = row.type || ''
+      this.detailModel.modelConfigJson = row.modelConfigJson || ''
+      this.detailModel.contextJson = row.contextJson || ''
       this.detailModel.createTime = row.createTime
       this.detailModel.updateTime = row.updateTime
       this.$nextTick(() => {
@@ -159,7 +163,8 @@ export default {
         lang: '',
         state: 0,
         type: '',
-        contexts: [],
+        modelConfigJson: '',
+        contextJson: '',
         createTime: null,
         updateTime: null
       })
@@ -177,7 +182,9 @@ export default {
     },
     getStateText(state) {
       if (state === 0) {
-        return '正常'
+        return '草稿'
+      } else if (state === 10) {
+        return '已发布'
       } else {
         return state
       }

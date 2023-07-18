@@ -31,3 +31,16 @@ export function deleteMask(maskId) {
   })
 }
 
+export function toDraft(maskId) {
+  return request({
+    url: `/mask/${maskId}/toDraft`,
+    method: 'put'
+  })
+}
+
+export function toNormal(maskId) {
+  return request({
+    url: `/mask/${maskId}/toNormal`,
+    method: 'put'
+  })
+}
