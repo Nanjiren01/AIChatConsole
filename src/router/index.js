@@ -282,6 +282,21 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/mask',
+    component: Layout,
+    redirect: '/mask/list',
+    alwaysShow: false, // will always show the root menu
+    name: 'mask',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/mask/index'),
+        name: 'maskList',
+        meta: { title: '面具管理', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/website',
     component: Layout,
     alwaysShow: false,
