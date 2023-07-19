@@ -17,12 +17,17 @@
         </el-form-item>
         <el-form-item label="头像">
           <!-- <el-input v-model="maskEntity.avatar" :disabled="disabled" /> -->
-          <img
-            class="emoji"
-            style="cursor: pointer;width: 50px; height: 50px;"
-            :src="`https://cdn.staticfile.org/emoji-datasource-apple/14.0.0/img/apple/64/${maskEntity.avatar}.png`"
-            @click="showEmojiDialog = !showEmojiDialog"
-          >
+          <div style="display: flex; margin-bottom: 10px;">
+            <img
+              class="emoji"
+              style="cursor: pointer;width: 50px; height: 50px;"
+              :src="`https://cdn.staticfile.org/emoji-datasource-apple/14.0.0/img/apple/64/${maskEntity.avatar}.png`"
+              @click="showEmojiDialog = !showEmojiDialog"
+            >
+            <span v-if="showEmojiDialog" style="margin-left: 20px;">
+              <el-button type="primary" plain @click="showEmojiDialog = false">关闭</el-button>
+            </span>
+          </div>
           <div>
             <VEmojiPicker
               v-show="showEmojiDialog"
@@ -86,7 +91,7 @@
                 <el-option label="用户" value="user" />
                 <el-option label="AI" value="assistant" />
               </el-select>
-              ：<i class="el-icon-delete" style="color: #F56C6C; cursor: pointer;" @click="handleDeleteMessage(index)">删除此消息</i>
+              ：<i class="el-icon-delete delete-message-button" @click="handleDeleteMessage(index)">删除此消息</i>
               <el-input
                 v-model="message.content"
                 style="margin-top: 2px;"
@@ -398,5 +403,13 @@ export default {
   border: var(--border-in-light);
   position: relative;
   transition: all .3s ease;
+}
+
+.delete-message-button {
+  color: #F56C6C;
+  cursor: pointer;float: right;
+  top: 6px;
+  right: 5px;
+  position: relative;
 }
 </style>
