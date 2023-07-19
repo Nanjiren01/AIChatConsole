@@ -17,7 +17,7 @@
       </template>
 
       <template v-slot:state="props">
-        <el-tag>{{ getStateText(props.row.state) }}</el-tag>
+        <el-tag :type="props.row.state === 0 ? 'info' : 'success'">{{ getStateText(props.row.state) }}</el-tag>
       </template>
 
       <template v-slot:count="props">
@@ -27,9 +27,11 @@
     </ai-table>
 
     <detail
+      v-if="detailModel"
       ref="detail"
       :show="showDetail"
       :mask-entity="detailModel"
+      :models="ALL_MODELS"
       @changed="handleChanged"
       @close="handleCloseDetail"
     />
@@ -40,6 +42,7 @@
 import AiTable from '@/components/Table'
 import { getMasks } from '@/api/mask'
 import Detail from './detail'
+import { getAiModels } from '@/api/aiModel.js'
 
 export default {
   name: 'MaskIndex',
@@ -101,11 +104,13 @@ export default {
         contextJson: '',
         createTime: null,
         updateTime: null
-      }
+      },
+      ALL_MODELS: []
     }
   },
   mounted() {
     this.reload()
+    this.loadModels()
   },
   methods: {
     reload() {
@@ -136,6 +141,36 @@ export default {
         }
       })
     },
+    loadModels() {
+      getAiModels().then(resp => {
+        console.log('resp', resp)
+        const models = resp.data || []
+        this.ALL_MODELS.splice(0, this.ALL_MODELS.length)
+        models.forEach(model => {
+          const exists = this.ALL_MODELS.filter(m => m.name === model.name).length > 0
+          if (!exists) {
+            this.ALL_MODELS.push({
+              id: model.id,
+              name: model.name
+            })
+          }
+          // return {
+          //   id: model.id,
+          //   name: model.name,
+          //   showName: model.showName,
+          //   platformId: model.platformId,
+          //   platformName: model.platformName,
+          //   state: model.state,
+          //   level: model.level,
+          //   levelId: model.levelId,
+          //   path: model.path,
+          //   remark: model.remark,
+          //   createTime: model.createTime
+          //   // updateTime: key.updateTime
+          // }
+        })
+      })
+    },
     updateDetail(row) {
       this.detailModel.id = row.id
       this.detailModel.name = row.name || ''
@@ -159,11 +194,20 @@ export default {
       this.updateDetail({
         id: null,
         name: '',
-        avatar: '',
-        lang: '',
+        avatar: '1f600',
+        lang: 'cn',
         state: 0,
         type: '',
-        modelConfigJson: '',
+        modelConfigJson: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          temperature: 1.0,
+          max_tokens: 2000,
+          presence_penalty: 0,
+          frequency_penalty: 0,
+          sendMemory: true,
+          historyMessageCount: 8,
+          compressMessageLengthThreshold: 1000
+        }),
         contextJson: '',
         createTime: null,
         updateTime: null
