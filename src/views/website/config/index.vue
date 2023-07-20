@@ -16,7 +16,7 @@
             <el-form-item label="网站副标题（HTML）">
               <el-input v-model="form.subTitle" />
             </el-form-item>
-            <el-form-item label="网站自定义（HTML）">
+            <el-form-item label="网站自定义内容（HTML）">
               <el-input v-model="form.icp" type="textarea" autosize />
             </el-form-item>
             <el-form-item label="登录页副标题">
@@ -59,6 +59,24 @@
             </el-form-item>
             <el-form-item label="套餐页副标题">
               <el-input v-model="form.pricingPageSubTitle" />
+            </el-form-item>
+            <el-form-item label="兑换码页标题">
+              <el-input v-model="form.redeemCodePageTitle" />
+            </el-form-item>
+            <el-form-item label="兑换码副标题">
+              <el-input v-model="form.redeemCodePageSubTitle" />
+            </el-form-item>
+            <el-form-item label="兑换码Banner（HTML）">
+              <el-input v-model="form.redeemCodePageBanner" type="textarea" autosize />
+            </el-form-item>
+            <el-form-item label="兑换码顶部（HTML）">
+              <el-input v-model="form.redeemCodePageTop" type="textarea" autosize />
+            </el-form-item>
+            <el-form-item label="兑换码主体（HTML）">
+              <el-input v-model="form.redeemCodePageIndex" type="textarea" autosize />
+            </el-form-item>
+            <el-form-item label="兑换码底部（HTML）">
+              <el-input v-model="form.redeemCodePageBottom" type="textarea" autosize />
             </el-form-item>
             <el-form-item label="隐藏Github按钮">
               <el-switch v-model="form.hideGithubIcon" />
@@ -122,7 +140,13 @@ export default {
         sensitiveWordsTip: '',
         balanceNotEnough: '',
         hideGithubIcon: false,
-        botHello: ''
+        botHello: '',
+        redeemCodePageTitle: null,
+        redeemCodePageSubTitle: null,
+        redeemCodePageBanner: null,
+        redeemCodePageTop: null,
+        redeemCodePageIndex: null,
+        redeemCodePageBottom: null
       },
       loading: false
     }
@@ -151,6 +175,12 @@ export default {
         this.form.hideGithubIcon = config.websiteContent.hideGithubIcon
         this.form.botHello = config.websiteContent.botHello
         this.form.registerForInviteCodeOnly = config.websiteContent.registerForInviteCodeOnly || false
+        this.form.redeemCodePageTitle = config.websiteContent.redeemCodePageTitle || ''
+        this.form.redeemCodePageSubTitle = config.websiteContent.redeemCodePageSubTitle || ''
+        this.form.redeemCodePageBanner = config.websiteContent.redeemCodePageBanner || ''
+        this.form.redeemCodePageTop = config.websiteContent.redeemCodePageTop || ''
+        this.form.redeemCodePageIndex = config.websiteContent.redeemCodePageIndex || ''
+        this.form.redeemCodePageBottom = config.websiteContent.redeemCodePageBottom || ''
 
         const types = config.websiteContent.registerTypes
         this.form.registerTypes.splice(0, this.form.registerTypes.length)
@@ -181,7 +211,13 @@ export default {
         sensitiveWordsTip: this.form.sensitiveWordsTip,
         balanceNotEnough: this.form.balanceNotEnough,
         hideGithubIcon: this.form.hideGithubIcon,
-        botHello: this.form.botHello
+        botHello: this.form.botHello,
+        redeemCodePageTitle: this.form.redeemCodePageTitle || '',
+        redeemCodePageSubTitle: this.form.redeemCodePageSubTitle || '',
+        redeemCodePageBanner: this.form.redeemCodePageBanner || '',
+        redeemCodePageTop: this.form.redeemCodePageTop || '',
+        redeemCodePageIndex: this.form.redeemCodePageIndex || '',
+        redeemCodePageBottom: this.form.redeemCodePageBottom || ''
       }).then(() => {
         this.$message.success('修改成功！')
       }).finally(() => {
