@@ -39,6 +39,9 @@
                 <el-checkbox label="Close">关闭注册</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
+            <el-form-item label="仅限邀请码注册">
+              <el-switch v-model="form.registerForInviteCodeOnly" />
+            </el-form-item>
             <el-form-item label="聊天页副标题">
               <el-input v-model="form.chatPageSubTitle" />
             </el-form-item>
@@ -112,6 +115,7 @@ export default {
         loginPageSubTitle: '',
         registerPageSubTitle: '',
         registerTypes: [],
+        registerForInviteCodeOnly: false,
         pricingPageTitle: null,
         pricingPageSubTitle: null,
         chatPageSubTitle: '',
@@ -146,6 +150,7 @@ export default {
         this.form.balanceNotEnough = config.websiteContent.balanceNotEnough
         this.form.hideGithubIcon = config.websiteContent.hideGithubIcon
         this.form.botHello = config.websiteContent.botHello
+        this.form.registerForInviteCodeOnly = config.websiteContent.registerForInviteCodeOnly || false
 
         const types = config.websiteContent.registerTypes
         this.form.registerTypes.splice(0, this.form.registerTypes.length)
@@ -169,6 +174,7 @@ export default {
         loginPageSubTitle: this.form.loginPageSubTitle,
         registerPageSubTitle: this.form.registerPageSubTitle,
         registerTypes: this.form.registerTypes,
+        registerForInviteCodeOnly: this.form.registerForInviteCodeOnly,
         pricingPageTitle: this.form.pricingPageTitle,
         pricingPageSubTitle: this.form.pricingPageSubTitle,
         chatPageSubTitle: this.form.chatPageSubTitle,
