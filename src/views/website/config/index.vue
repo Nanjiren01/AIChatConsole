@@ -42,6 +42,9 @@
             <el-form-item label="仅限邀请码注册">
               <el-switch v-model="form.registerForInviteCodeOnly" />
             </el-form-item>
+            <el-form-item label="未登录时隐藏聊天内容">
+              <el-switch v-model="form.hideChatLogWhenNotLogin" />
+            </el-form-item>
             <el-form-item label="聊天页副标题">
               <el-input v-model="form.chatPageSubTitle" />
             </el-form-item>
@@ -141,6 +144,7 @@ export default {
         balanceNotEnough: '',
         hideGithubIcon: false,
         botHello: '',
+        hideChatLogWhenNotLogin: false,
         redeemCodePageTitle: null,
         redeemCodePageSubTitle: null,
         redeemCodePageBanner: null,
@@ -160,6 +164,7 @@ export default {
       getWebsiteConfig().then(resp => {
         // console.log('resp.data', resp.data)
         const config = resp.data
+        console.log('config.hideChatLogWhenNotLogin', config.hideChatLogWhenNotLogin)
         this.form.frontBaseUrl = config.websiteContent.frontBaseUrl
         this.form.title = config.websiteContent.title
         this.form.mainTitle = config.websiteContent.mainTitle
@@ -174,6 +179,7 @@ export default {
         this.form.balanceNotEnough = config.websiteContent.balanceNotEnough
         this.form.hideGithubIcon = config.websiteContent.hideGithubIcon
         this.form.botHello = config.websiteContent.botHello
+        this.form.hideChatLogWhenNotLogin = !!config.websiteContent.hideChatLogWhenNotLogin
         this.form.registerForInviteCodeOnly = config.websiteContent.registerForInviteCodeOnly || false
         this.form.redeemCodePageTitle = config.websiteContent.redeemCodePageTitle || ''
         this.form.redeemCodePageSubTitle = config.websiteContent.redeemCodePageSubTitle || ''
@@ -212,6 +218,7 @@ export default {
         balanceNotEnough: this.form.balanceNotEnough,
         hideGithubIcon: this.form.hideGithubIcon,
         botHello: this.form.botHello,
+        hideChatLogWhenNotLogin: !!this.form.hideChatLogWhenNotLogin,
         redeemCodePageTitle: this.form.redeemCodePageTitle || '',
         redeemCodePageSubTitle: this.form.redeemCodePageSubTitle || '',
         redeemCodePageBanner: this.form.redeemCodePageBanner || '',
