@@ -36,6 +36,7 @@
                 <el-checkbox label="OnlyUsername">仅用户名</el-checkbox>
                 <el-checkbox label="OnlyUsernameWithCaptcha">仅用户名（带图形验证码）</el-checkbox>
                 <el-checkbox label="UsernameAndEmailWithCaptchaAndCode">用户名+邮箱验证码</el-checkbox>
+                <el-checkbox label="PhoneWithCaptchaAndCode">手机号+短信验证码</el-checkbox>
                 <el-checkbox label="Close">关闭注册</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
@@ -93,6 +94,9 @@
       <el-tab-pane label="邮箱配置">
         <email-config />
       </el-tab-pane>
+      <el-tab-pane label="短信配置">
+        <phone-config />
+      </el-tab-pane>
       <el-tab-pane label="敏感词配置">
         <sensitive-words-config />
       </el-tab-pane>
@@ -116,6 +120,7 @@
 
 import { getWebsiteConfig, saveWebsiteConfig } from '@/api/globalConfig'
 import EmailConfig from './emailConfig'
+import PhoneConfig from './phoneConfig'
 import SensitiveWordsConfig from './sensitiveWords'
 import NoticeConfig from './noticeConfig'
 import PayConfig from './payConfig'
@@ -124,7 +129,7 @@ import ChatConfig from './chatConfig'
 
 export default {
   name: 'WebsiteConfig',
-  components: { EmailConfig, SensitiveWordsConfig, NoticeConfig, PayConfig, WechatConfig, ChatConfig },
+  components: { EmailConfig, PhoneConfig, SensitiveWordsConfig, NoticeConfig, PayConfig, WechatConfig, ChatConfig },
   data() {
     return {
       form: {

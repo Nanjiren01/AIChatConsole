@@ -36,6 +36,24 @@ export function saveEmailConfig(content) {
   })
 }
 
+export function getPhoneConfig() {
+  return request({
+    url: '/globalConfig/phone',
+    method: 'get'
+  })
+}
+
+export function savePhoneConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'Phone',
+      ...content
+    }
+  })
+}
+
 export function getRegisterQuotaConfig() {
   return request({
     url: '/globalConfig/registerQuota',
