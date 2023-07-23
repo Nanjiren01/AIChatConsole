@@ -27,6 +27,12 @@
         <el-form-item label="微信Open Id">
           <el-input v-model="member.wechatOpenId" disabled />
         </el-form-item>
+        <el-form-item label="QQ">
+          <el-input v-model="member.qq" disabled />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="member.remark" disabled />
+        </el-form-item>
         <el-form-item label="状态">
           <el-tag v-if="member.state == 1" type="success">正常</el-tag>
           <el-tag v-else type="danger">停用</el-tag>

@@ -9,20 +9,26 @@
   >
     <div style="padding: 20px; overflow-y: auto;">
       <el-form ref="form" label-width="260px" style="padding-right: 180px">
-        <el-form-item label="用户名">
-          <el-input v-model="member.username" />
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="member.password" />
-        </el-form-item>
         <el-form-item label="昵称">
           <el-input v-model="member.name" />
+        </el-form-item>
+        <el-form-item label="用户名">
+          <el-input v-model="member.username" />
         </el-form-item>
         <el-form-item label="邮箱">
           <el-input v-model="member.email" />
         </el-form-item>
         <el-form-item label="手机号">
           <el-input v-model="member.phone" />
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="member.password" type="password" placeholder="必填" />
+        </el-form-item>
+        <el-form-item label="QQ">
+          <el-input v-model="member.qq" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="member.remark" />
         </el-form-item>
         <!-- <el-form-item label="状态">
           <el-select v-model="member.state">
@@ -63,7 +69,9 @@ export default {
         username: null,
         password: null,
         email: null,
-        phone: null
+        phone: null,
+        qq: null,
+        remark: null
         // state: 1
       }
     }
@@ -101,6 +109,8 @@ export default {
       this.member.password = null
       this.member.email = null
       this.member.phone = null
+      this.member.qq = null
+      this.member.remark = null
     }
   }
 }
