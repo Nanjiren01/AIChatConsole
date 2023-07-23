@@ -88,6 +88,7 @@
         <el-tag type="primary" class="username-tag">{{ props.row.username }}</el-tag>
         <el-tag v-if="props.row.email" type="primary" class="username-tag">{{ props.row.email }}</el-tag>
         <el-tag v-if="props.row.phone" type="primary" class="username-tag">{{ props.row.phone }}</el-tag>
+        <el-tag v-if="props.row.wechatOpenId" type="primary" class="username-tag">{{ props.row.wechatOpenId.substring(0, 6) + '...' }}</el-tag>
       </template>
 
     </ai-table>
@@ -241,6 +242,7 @@ export default {
             state: user.state,
             email: user.email,
             phone: user.phone,
+            wechatOpenId: user.wechatOpenId,
             balance: user.balances && user.balances[0] || null,
             balances: user.balances || [],
             // chatCount: user.chatCount,
@@ -277,6 +279,7 @@ export default {
         // tokens: row.tokens,
         email: row.email,
         phone: row.phone,
+        wechatOpenId: row.wechatOpenId,
         // chatCount: row.chatCount,
         // advancedChatCount: row.advancedChatCount,
         // drawCount: row.drawCount,
