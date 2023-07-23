@@ -21,6 +21,9 @@
         <el-form-item label="邮箱">
           <el-input v-model="member.email" disabled />
         </el-form-item>
+        <el-form-item label="手机号">
+          <el-input v-model="member.phone" disabled />
+        </el-form-item>
         <el-form-item label="状态">
           <el-tag v-if="member.state == 1" type="success">正常</el-tag>
           <el-tag v-else type="danger">停用</el-tag>
