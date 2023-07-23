@@ -29,7 +29,7 @@
         </el-row>
       </template>
       <template #topActions>
-      <!-- <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button> -->
+        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
 
       <!-- <el-button type="danger" icon="el-icon-delete" disabled>删除</el-button> -->
       </template>
@@ -93,6 +93,13 @@
 
     </ai-table>
 
+    <create
+      ref="create"
+      :show="showCreate"
+      @close="handleCloseCreate"
+      @created="handleCreated"
+    />
+
     <detail
       ref="detail"
       :show="showDetail"
@@ -109,13 +116,15 @@ import AiTable from '@/components/Table'
 import { getMembers } from '@/api/member'
 import { enableUser } from '@/api/user'
 import Detail from './detail'
+import Create from './create'
 
 export default {
   name: 'MemberIndex',
-  components: { AiTable, Detail },
+  components: { AiTable, Detail, Create },
   data() {
     return {
       loading: false,
+      showCreate: false,
       showDetail: false,
       tableActions: [{
         key: 'increase-tokens',
@@ -308,7 +317,9 @@ export default {
       this.reload()
     },
     handleCreate() {
-      this.$message.warning('开发中……')
+      // this.$message.warning('开发中……')
+      this.showCreate = true
+      this.$refs.create.clear()
     },
     handleEdit(row) {
       this.showDetail = true
@@ -317,7 +328,14 @@ export default {
     handleCloseDetail() {
       this.showDetail = false
     },
+    handleCloseCreate() {
+      this.showCreate = false
+    },
     handleChanged() {
+      this.reload()
+    },
+    handleCreated() {
+      this.handleCloseCreate()
       this.reload()
     },
     handleToggleEnable(row) {
