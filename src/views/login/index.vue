@@ -173,6 +173,8 @@ export default {
                       dangerouslyUseHTMLString: true
                     })
                   }
+                }).catch(e => {
+                  console.error(e)
                 })
             })
             .catch(() => {
