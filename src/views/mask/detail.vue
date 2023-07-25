@@ -47,6 +47,9 @@
         <el-form-item label="类型">
           <el-input v-model="maskEntity.type" :disabled="disabled" />
         </el-form-item>
+        <el-form-item label="隐藏上下文">
+          <el-switch v-model="maskEntity.hideContext" :disabled="disabled" />
+        </el-form-item>
         <!-- <el-form-item label="配置">
           <el-input v-model="maskEntity.modelConfigJson" type="textarea" :rows="10" autosize :disabled="true" />
         </el-form-item> -->
@@ -293,6 +296,7 @@ export default {
           avatar: this.maskEntity.avatar,
           lang: this.maskEntity.lang,
           type: this.maskEntity.type,
+          hideContext: this.maskEntity.hideContext,
           modelConfigJson: this.maskEntity.modelConfigJson,
           contextJson: this.maskEntity.contextJson
         }).then((resp) => {
