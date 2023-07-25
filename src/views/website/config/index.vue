@@ -16,6 +16,9 @@
             <el-form-item label="网站副标题（HTML）">
               <el-input v-model="form.subTitle" />
             </el-form-item>
+            <el-form-item label="网站自定义内容（HTML）">
+              <el-input v-model="form.icp" type="textarea" autosize />
+            </el-form-item>
             <el-form-item label="登录页副标题">
               <el-input v-model="form.loginPageSubTitle" />
             </el-form-item>
@@ -33,7 +36,14 @@
                 <el-checkbox label="OnlyUsername">仅用户名</el-checkbox>
                 <el-checkbox label="OnlyUsernameWithCaptcha">仅用户名（带图形验证码）</el-checkbox>
                 <el-checkbox label="UsernameAndEmailWithCaptchaAndCode">用户名+邮箱验证码</el-checkbox>
+                <el-checkbox label="Close">关闭注册</el-checkbox>
               </el-checkbox-group>
+            </el-form-item>
+            <el-form-item label="仅限邀请码注册">
+              <el-switch v-model="form.registerForInviteCodeOnly" />
+            </el-form-item>
+            <el-form-item label="未登录时隐藏聊天内容">
+              <el-switch v-model="form.hideChatLogWhenNotLogin" />
             </el-form-item>
             <el-form-item label="聊天页副标题">
               <el-input v-model="form.chatPageSubTitle" />
@@ -52,6 +62,24 @@
             </el-form-item>
             <el-form-item label="套餐页副标题">
               <el-input v-model="form.pricingPageSubTitle" />
+            </el-form-item>
+            <el-form-item label="兑换码页标题">
+              <el-input v-model="form.redeemCodePageTitle" />
+            </el-form-item>
+            <el-form-item label="兑换码副标题">
+              <el-input v-model="form.redeemCodePageSubTitle" />
+            </el-form-item>
+            <el-form-item label="兑换码Banner（HTML）">
+              <el-input v-model="form.redeemCodePageBanner" type="textarea" autosize />
+            </el-form-item>
+            <el-form-item label="兑换码顶部（HTML）">
+              <el-input v-model="form.redeemCodePageTop" type="textarea" autosize />
+            </el-form-item>
+            <el-form-item label="兑换码主体（HTML）">
+              <el-input v-model="form.redeemCodePageIndex" type="textarea" autosize />
+            </el-form-item>
+            <el-form-item label="兑换码底部（HTML）">
+              <el-input v-model="form.redeemCodePageBottom" type="textarea" autosize />
             </el-form-item>
             <el-form-item label="隐藏Github按钮">
               <el-switch v-model="form.hideGithubIcon" />
@@ -104,16 +132,25 @@ export default {
         title: '',
         mainTitle: '',
         subTitle: '',
+        icp: '',
         loginPageSubTitle: '',
         registerPageSubTitle: '',
         registerTypes: [],
+        registerForInviteCodeOnly: false,
         pricingPageTitle: null,
         pricingPageSubTitle: null,
         chatPageSubTitle: '',
         sensitiveWordsTip: '',
         balanceNotEnough: '',
         hideGithubIcon: false,
-        botHello: ''
+        botHello: '',
+        hideChatLogWhenNotLogin: false,
+        redeemCodePageTitle: null,
+        redeemCodePageSubTitle: null,
+        redeemCodePageBanner: null,
+        redeemCodePageTop: null,
+        redeemCodePageIndex: null,
+        redeemCodePageBottom: null
       },
       loading: false
     }
@@ -127,10 +164,12 @@ export default {
       getWebsiteConfig().then(resp => {
         // console.log('resp.data', resp.data)
         const config = resp.data
+        console.log('config.hideChatLogWhenNotLogin', config.hideChatLogWhenNotLogin)
         this.form.frontBaseUrl = config.websiteContent.frontBaseUrl
         this.form.title = config.websiteContent.title
         this.form.mainTitle = config.websiteContent.mainTitle
         this.form.subTitle = config.websiteContent.subTitle
+        this.form.icp = config.websiteContent.icp
         this.form.loginPageSubTitle = config.websiteContent.loginPageSubTitle
         this.form.registerPageSubTitle = config.websiteContent.registerPageSubTitle
         this.form.pricingPageTitle = config.websiteContent.pricingPageTitle
@@ -140,6 +179,14 @@ export default {
         this.form.balanceNotEnough = config.websiteContent.balanceNotEnough
         this.form.hideGithubIcon = config.websiteContent.hideGithubIcon
         this.form.botHello = config.websiteContent.botHello
+        this.form.hideChatLogWhenNotLogin = !!config.websiteContent.hideChatLogWhenNotLogin
+        this.form.registerForInviteCodeOnly = config.websiteContent.registerForInviteCodeOnly || false
+        this.form.redeemCodePageTitle = config.websiteContent.redeemCodePageTitle || ''
+        this.form.redeemCodePageSubTitle = config.websiteContent.redeemCodePageSubTitle || ''
+        this.form.redeemCodePageBanner = config.websiteContent.redeemCodePageBanner || ''
+        this.form.redeemCodePageTop = config.websiteContent.redeemCodePageTop || ''
+        this.form.redeemCodePageIndex = config.websiteContent.redeemCodePageIndex || ''
+        this.form.redeemCodePageBottom = config.websiteContent.redeemCodePageBottom || ''
 
         const types = config.websiteContent.registerTypes
         this.form.registerTypes.splice(0, this.form.registerTypes.length)
@@ -159,16 +206,25 @@ export default {
         title: this.form.title,
         mainTitle: this.form.mainTitle,
         subTitle: this.form.subTitle,
+        icp: this.form.icp,
         loginPageSubTitle: this.form.loginPageSubTitle,
         registerPageSubTitle: this.form.registerPageSubTitle,
         registerTypes: this.form.registerTypes,
+        registerForInviteCodeOnly: this.form.registerForInviteCodeOnly,
         pricingPageTitle: this.form.pricingPageTitle,
         pricingPageSubTitle: this.form.pricingPageSubTitle,
         chatPageSubTitle: this.form.chatPageSubTitle,
         sensitiveWordsTip: this.form.sensitiveWordsTip,
         balanceNotEnough: this.form.balanceNotEnough,
         hideGithubIcon: this.form.hideGithubIcon,
-        botHello: this.form.botHello
+        botHello: this.form.botHello,
+        hideChatLogWhenNotLogin: !!this.form.hideChatLogWhenNotLogin,
+        redeemCodePageTitle: this.form.redeemCodePageTitle || '',
+        redeemCodePageSubTitle: this.form.redeemCodePageSubTitle || '',
+        redeemCodePageBanner: this.form.redeemCodePageBanner || '',
+        redeemCodePageTop: this.form.redeemCodePageTop || '',
+        redeemCodePageIndex: this.form.redeemCodePageIndex || '',
+        redeemCodePageBottom: this.form.redeemCodePageBottom || ''
       }).then(() => {
         this.$message.success('修改成功！')
       }).finally(() => {

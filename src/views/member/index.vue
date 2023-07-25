@@ -40,7 +40,19 @@
         <el-table-column type="selection" width="55" />
       </template> -->
 
-      <template v-slot:tokens="slotProps">
+      <template v-slot:balances="props">
+        <template v-if="props.row.balance">
+          <span>
+            {{ props.row.balance.tokens }} /
+            {{ props.row.balance.chatCount }} /
+            {{ props.row.balance.advancedChatCount }}/
+            {{ props.row.balance.drawCount }}，
+            {{ props.row.balance.expireTime }}
+          </span>
+          <span>，有效套餐数：{{ props.row.balances.length }}</span>
+        </template>
+      </template>
+      <!-- <template v-slot:tokens="slotProps">
         <el-tag v-if="slotProps.row.tokens == -1" type="success">无限制</el-tag>
         <el-tag v-else-if="slotProps.row.tokens === 0" type="danger">{{ slotProps.row.tokens }}</el-tag>
         <el-tag v-else-if="slotProps.row.tokens < 50" type="warning">{{ slotProps.row.tokens }}</el-tag>
@@ -63,7 +75,7 @@
         <el-tag v-else-if="slotProps.row.drawCount === 0" type="danger">{{ slotProps.row.drawCount }}</el-tag>
         <el-tag v-else-if="slotProps.row.drawCount < 5" type="warning">{{ slotProps.row.drawCount }}</el-tag>
         <el-tag v-else type="success">{{ slotProps.row.drawCount }}</el-tag>
-      </template>
+      </template> -->
       <template v-slot:state="slotProps">
         <el-tag v-if="slotProps.row.state == 1" type="success">正常</el-tag>
         <el-tag v-else type="danger">停用</el-tag>
@@ -124,29 +136,32 @@ export default {
         prop: 'email'
       }, {
         label: '状态',
-        prop: 'state',
         slot: 'state',
         width: 60
       }, {
-        label: '剩余tokens',
-        prop: 'tokens',
-        slot: 'tokens',
-        width: 120
-      }, {
-        label: '剩余聊天次数',
-        prop: 'chatCount',
-        slot: 'chatCount',
-        width: 120
-      }, {
-        label: '剩余高级聊天次数',
-        prop: 'advancedChatCount',
-        slot: 'advancedChatCount',
-        width: 120
-      }, {
-        label: '剩余绘画次数',
-        prop: 'drawCount',
-        slot: 'drawCount',
-        width: 120
+        label: '套餐',
+        slot: 'balances',
+        width: 380
+      // }, {
+      //   label: '剩余tokens',
+      //   prop: 'tokens',
+      //   slot: 'tokens',
+      //   width: 120
+      // }, {
+      //   label: '剩余聊天次数',
+      //   prop: 'chatCount',
+      //   slot: 'chatCount',
+      //   width: 120
+      // }, {
+      //   label: '剩余高级聊天次数',
+      //   prop: 'advancedChatCount',
+      //   slot: 'advancedChatCount',
+      //   width: 120
+      // }, {
+      //   label: '剩余绘画次数',
+      //   prop: 'drawCount',
+      //   slot: 'drawCount',
+      //   width: 120
       }, {
         label: '创建时间',
         prop: 'createTime',
@@ -156,7 +171,7 @@ export default {
       //   prop: 'update_time'
       }],
       tableActionColumn: {
-        width: 165
+        width: 185
       },
       tableData: [],
       pagination: {
@@ -176,10 +191,11 @@ export default {
         state: null,
         role: null,
         email: null,
-        tokens: null,
-        chatCount: null,
-        advancedChatCount: null,
-        drawCount: null,
+        balances: null,
+        // tokens: null,
+        // chatCount: null,
+        // advancedChatCount: null,
+        // drawCount: null,
         createTime: null
       }
     }
@@ -211,13 +227,15 @@ export default {
             id: user.id,
             username: user.username,
             name: user.name,
-            tokens: user.tokens,
+            // tokens: user.tokens,
             role: user.role,
             state: user.state,
             email: user.email,
-            chatCount: user.chatCount,
-            advancedChatCount: user.advancedChatCount,
-            drawCount: user.drawCount,
+            balance: user.balances && user.balances[0] || null,
+            balances: user.balances || [],
+            // chatCount: user.chatCount,
+            // advancedChatCount: user.advancedChatCount,
+            // drawCount: user.drawCount,
             createTime: user.createTime,
             updateTime: user.updateTime
           }
@@ -246,11 +264,11 @@ export default {
         username: row.username,
         state: row.state,
         role: row.role,
-        tokens: row.tokens,
+        // tokens: row.tokens,
         email: row.email,
-        chatCount: row.chatCount,
-        advancedChatCount: row.advancedChatCount,
-        drawCount: row.drawCount,
+        // chatCount: row.chatCount,
+        // advancedChatCount: row.advancedChatCount,
+        // drawCount: row.drawCount,
         createTime: row.createTime
       }
       this.$nextTick(() => {

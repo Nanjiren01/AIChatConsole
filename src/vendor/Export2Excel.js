@@ -5,29 +5,39 @@ import XLSX from 'xlsx'
 function generateArray(table) {
   var out = [];
   var rows = table.querySelectorAll('tr');
+  // console.log('rows', rows)
   var ranges = [];
   for (var R = 0; R < rows.length; ++R) {
     var outRow = [];
     var row = rows[R];
+    // console.log('R', R)
     var columns = row.querySelectorAll('td');
+    // console.log('columns', columns)
     for (var C = 0; C < columns.length; ++C) {
       var cell = columns[C];
+      // console.log('----------C-----------', C)
       var colspan = cell.getAttribute('colspan');
       var rowspan = cell.getAttribute('rowspan');
       var cellValue = cell.innerText;
       if (cellValue !== "" && cellValue == +cellValue) cellValue = +cellValue;
-
+      // console.log('cellValue', cellValue)
+      // console.log('ranges', ranges)
       //Skip ranges
-      ranges.forEach(function (range) {
+      ranges.forEach(function (range, i) {
+        // console.log('foreach range: ', JSON.stringify(range), 'i=' + i, 'R=' + R, 'outRow.length' + outRow.length)
         if (R >= range.s.r && R <= range.e.r && outRow.length >= range.s.c && outRow.length <= range.e.c) {
           for (var i = 0; i <= range.e.c - range.s.c; ++i) outRow.push(null);
         }
+        // console.log('foreach end, outRow.length=' + outRow.length)
       });
 
+      // console.log('rowspan, colspan', rowspan, colspan, 'R=' + R, ' outRow.length='+ outRow.length)
       //Handle Row Span
       if (rowspan || colspan) {
         rowspan = rowspan || 1;
         colspan = colspan || 1;
+        rowspan = +rowspan
+        colspan = +colspan
         ranges.push({
           s: {
             r: R,
@@ -40,15 +50,20 @@ function generateArray(table) {
         });
       };
 
+      // console.log('ranges', JSON.stringify(ranges))
       //Handle Value
       outRow.push(cellValue !== "" ? cellValue : null);
 
+      // console.log('outRow, colspan before', outRow, colspan)
       //Handle Colspan
-      if (colspan)
+      if (colspan) {
         for (var k = 0; k < colspan - 1; ++k) outRow.push(null);
+      }
+      // console.log('outRow, colspan after', outRow, colspan)
     }
     out.push(outRow);
   }
+  // console.log(out, ranges)
   return [out, ranges];
 };
 
@@ -113,7 +128,7 @@ function s2ab(s) {
   return buf;
 }
 
-export function export_table_to_excel(id) {
+export function export_table_to_excel(id, fileName) {
   var theTable = document.getElementById(id);
   var oo = generateArray(theTable);
   var ranges = oo[1];
@@ -141,7 +156,7 @@ export function export_table_to_excel(id) {
 
   saveAs(new Blob([s2ab(wbout)], {
     type: "application/octet-stream"
-  }), "test.xlsx")
+  }), fileName || "test.xlsx")
 }
 
 export function export_json_to_excel({

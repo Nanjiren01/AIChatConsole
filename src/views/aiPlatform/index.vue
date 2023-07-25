@@ -29,6 +29,14 @@
         <el-tag v-if="slotProps.row.state == 1" type="success">启用</el-tag>
         <el-tag v-else type="danger">停用</el-tag>
       </template>
+      <template v-slot:balanceProtocol="props">
+        <el-tag
+          v-if="props.row.balanceProtocol == 'OpenAI' || props.row.baseUrl && props.row.baseUrl.startsWith('https://gptapi.nextweb.fun/')"
+          type="success"
+        >OpenAI</el-tag>
+        <el-tag v-else-if="props.row.balanceProtocol == 'Other'" type="primary">其他</el-tag>
+        <el-tag v-else type="info">未知</el-tag>
+      </template>
 
       <template v-slot:baseUrl="props">
         <span v-if="props.row.baseUrl">{{ props.row.baseUrl }}</span>
@@ -38,7 +46,7 @@
     </ai-table>
 
     <el-dialog
-      title="平台修改"
+      title="平台创建/修改"
       :visible.sync="dialogVisible"
       width="500px"
     >
@@ -49,6 +57,12 @@
           </el-form-item>
           <el-form-item label="BASE_URL">
             <el-input v-model="form.baseUrl" />
+          </el-form-item>
+          <el-form-item label="余额协议">
+            <el-select v-model="form.balanceProtocol">
+              <el-option label="OpenAI" value="OpenAI" />
+              <el-option label="其他" value="Other" />
+            </el-select>
           </el-form-item>
           <el-form-item label="备注">
             <el-input v-model="form.remark" />
@@ -86,6 +100,10 @@ export default {
         label: 'BASE_URL',
         slot: 'baseUrl'
       }, {
+        label: '余额协议',
+        slot: 'balanceProtocol',
+        width: 85
+      }, {
         label: '模型总数',
         prop: 'modelsCount',
         width: 75
@@ -117,7 +135,8 @@ export default {
         id: null,
         name: null,
         baseUrl: null,
-        remark: null
+        remark: null,
+        balanceProtocol: null
       }
     }
   },
@@ -138,6 +157,7 @@ export default {
             state: platform.state,
             baseUrl: platform.baseUrl,
             remark: platform.remark,
+            balanceProtocol: platform.balanceProtocol,
             modelsCount: platform.modelsCount,
             createTime: platform.createTime
             // updateTime: key.updateTime
@@ -156,6 +176,7 @@ export default {
       this.form.state = 0
       this.form.baseUrl = ''
       this.form.remark = ''
+      this.form.balanceProtocol = ''
     },
     // handleEdit(row) {
     //   console.log('edit', row)
@@ -170,6 +191,7 @@ export default {
       this.form.state = row.state
       this.form.baseUrl = row.baseUrl || ''
       this.form.remark = row.remark || ''
+      this.form.balanceProtocol = row.balanceProtocol || ''
     },
     handleEditSubmit() {
       if (!this.form.name) {
@@ -189,7 +211,8 @@ export default {
           name: this.form.name,
           state: this.form.state,
           baseUrl: this.form.baseUrl,
-          remark: this.form.remark
+          remark: this.form.remark,
+          balanceProtocol: this.form.balanceProtocol
         }).then(() => {
           this.$message.success('操作成功！')
           this.reload()
@@ -204,7 +227,8 @@ export default {
         name: this.form.name,
         state: this.form.state,
         baseUrl: this.form.baseUrl,
-        remark: this.form.remark
+        remark: this.form.remark,
+        balanceProtocol: this.form.balanceProtocol
       }).then(() => {
         this.$message.success('操作成功！')
         this.reload()
