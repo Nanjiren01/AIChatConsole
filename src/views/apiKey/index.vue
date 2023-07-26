@@ -13,7 +13,7 @@
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
-        <el-button icon="el-icon-delete" disabled @click.stop="handleDelete(slotProps.row)">删除</el-button>
+        <el-button icon="el-icon-delete" @click.stop="handleDelete(slotProps.row)">删除</el-button>
       </template>
       <!-- <template #columns>
         <el-table-column type="selection" width="55" />
@@ -86,7 +86,7 @@
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
 import ApiKeyEdit from './edit'
-import { getApiKeys, storeApiKey } from '@/api/apiKey.js'
+import { getApiKeys, storeApiKey, deleteApiKey } from '@/api/apiKey.js'
 
 export default {
   name: 'UserIndex',
@@ -210,7 +210,19 @@ export default {
       this.edit.createTime = row.createTime
     },
     handleDelete(row) {
-      console.log('delete', row)
+      this.$confirm('确定删除' + row.key + '？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        deleteApiKey(row.id).then(resp => {
+          console.log('resp', resp)
+          this.$message.success('操作成功！')
+          this.reload()
+        })
+      })
     },
     toggleEnable(row) {
       // console.log('toggle', row)
