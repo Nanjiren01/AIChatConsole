@@ -19,6 +19,9 @@
       <template v-slot:state="props">
         <el-tag :type="props.row.state === 0 ? 'info' : 'success'">{{ getStateText(props.row.state) }}</el-tag>
       </template>
+      <template v-slot:lang="props">
+        <span>{{ getLangText(props.row.lang) }}</span>
+      </template>
 
       <template v-slot:count="props">
         <el-tag>{{ props.row.contexts.length }}</el-tag>
@@ -55,13 +58,13 @@ export default {
       tableColumns: [{
         label: '#',
         prop: 'id',
-        width: 55
+        width: 100
       }, {
         label: '名称',
         prop: 'name'
       }, {
         label: '语言',
-        prop: 'lang',
+        slot: 'lang',
         width: 75
       }, {
         label: '类型',
@@ -98,6 +101,7 @@ export default {
         avatar: '',
         state: null,
         lang: null,
+        hideContext: null,
         // count: null,
         type: '',
         modelConfigJson: '',
@@ -124,6 +128,7 @@ export default {
             avatar: item.avatar,
             lang: item.lang,
             type: item.type,
+            hideContext: item.hideContext,
             modelConfigJson: item.modelConfigJson,
             contextJson: item.contextJson,
             createTime: item.createTime,
@@ -178,6 +183,7 @@ export default {
       this.detailModel.lang = row.lang || ''
       this.detailModel.state = row.state || 0
       this.detailModel.type = row.type || ''
+      this.detailModel.hideContext = row.hideContext || false
       this.detailModel.modelConfigJson = row.modelConfigJson || ''
       this.detailModel.contextJson = row.contextJson || ''
       this.detailModel.createTime = row.createTime
@@ -198,6 +204,7 @@ export default {
         lang: 'cn',
         state: 0,
         type: '',
+        hideContext: false,
         modelConfigJson: JSON.stringify({
           model: 'gpt-3.5-turbo',
           temperature: 1.0,
@@ -232,6 +239,12 @@ export default {
       } else {
         return state
       }
+    },
+    getLangText(lang) {
+      return ({
+        cn: '中文',
+        en: '英文'
+      })[lang] || lang
     }
   }
 }

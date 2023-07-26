@@ -58,7 +58,7 @@ export default {
     return {
       loading: false,
       form: {
-        appTypes: null,
+        appTypes: [],
         webAppId: null,
         webAppSecret: null,
         websiteAppId: null,
@@ -77,7 +77,7 @@ export default {
       getWechatConfig().then(resp => {
         // console.log('resp', resp)
         const content = resp.data.wechatContent
-        this.form.appTypes = content.appTypes
+        this.form.appTypes = content.appTypes || []
         this.form.webAppId = content.webAppId
         this.form.webAppSecret = content.webAppSecret
         this.form.websiteAppId = content.websiteAppId
