@@ -171,6 +171,12 @@ export const asyncRoutes = [
         component: () => import('@/views/aiPlatform/index'),
         name: 'aiPlatformList',
         meta: { title: 'AI平台列表', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'plugin',
+        component: () => import('@/views/plugin/index'),
+        name: 'aiPluginList',
+        meta: { title: '插件列表', icon: 'dashboard', affix: true }
       }
     ]
   },
