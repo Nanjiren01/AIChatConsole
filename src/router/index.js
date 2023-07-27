@@ -221,6 +221,21 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/loginRecord',
+    component: Layout,
+    redirect: '/loginRecord/list',
+    alwaysShow: false, // will always show the root menu
+    name: 'loginRecord',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/login/record'),
+        name: 'loginRecordList',
+        meta: { title: '登录记录', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/website',
     component: Layout,
     alwaysShow: true,
