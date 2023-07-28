@@ -71,6 +71,9 @@
       <el-tab-pane label="公告配置">
         <notice-config />
       </el-tab-pane>
+      <el-tab-pane label="聊天配置">
+        <chat-config />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -81,10 +84,11 @@ import { getWebsiteConfig, saveWebsiteConfig } from '@/api/globalConfig'
 import EmailConfig from './emailConfig'
 import SensitiveWordsConfig from './sensitiveWords'
 import NoticeConfig from './noticeConfig'
+import ChatConfig from './chatConfig'
 
 export default {
   name: 'WebsiteConfig',
-  components: { EmailConfig, SensitiveWordsConfig, NoticeConfig },
+  components: { EmailConfig, SensitiveWordsConfig, NoticeConfig, ChatConfig },
   data() {
     return {
       form: {
