@@ -30,9 +30,19 @@
         <el-tag v-else type="danger">停用</el-tag>
       </template>
 
+      <template v-slot:chatProtocol="slotProps">
+        <el-tag v-if="slotProps.row.chatProtocol === 'OpenAiChat'">OpenAI聊天协议</el-tag>
+        <el-tag v-if="slotProps.row.chatProtocol === 'BaiduChat'">百度聊天协议</el-tag>
+      </template>
+
       <template v-slot:baseUrl="props">
         <span v-if="props.row.baseUrl">{{ props.row.baseUrl }}</span>
-        <i v-else style="color: #888">系统默认（https://api.openai.com）</i>
+        <i v-else style="color: #888">
+          系统默认（
+          <template v-if="props.row.chatProtocol === 'OpenAiChat'">https://api.openai.com</template>
+          <template v-if="props.row.chatProtocol === 'BaiduChat'">https://aip.baidubce.com/rpc/2.0/ai_custom</template>
+          ）
+        </i>
       </template>
 
     </ai-table>
@@ -49,6 +59,12 @@
           </el-form-item>
           <el-form-item label="BASE_URL">
             <el-input v-model="form.baseUrl" />
+          </el-form-item>
+          <el-form-item label="聊天协议">
+            <el-select v-model="form.chatProtocol">
+              <el-option label="OpenAI聊天协议" value="OpenAiChat" />
+              <el-option label="百度聊天协议" value="BaiduChat" />
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -80,6 +96,9 @@ export default {
         label: '平台名称',
         prop: 'name'
       }, {
+        label: '聊天协议',
+        slot: 'chatProtocol'
+      }, {
         label: 'BASE_URL',
         slot: 'baseUrl'
       }, {
@@ -110,7 +129,8 @@ export default {
       form: {
         id: null,
         name: null,
-        baseUrl: null
+        baseUrl: null,
+        chatProtocol: null
       }
     }
   },
@@ -130,6 +150,7 @@ export default {
             name: platform.name,
             state: platform.state,
             baseUrl: platform.baseUrl,
+            chatProtocol: platform.chatProtocol,
             modelsCount: platform.modelsCount,
             createTime: platform.createTime
             // updateTime: key.updateTime
@@ -156,6 +177,7 @@ export default {
       this.form.name = row.name
       this.form.state = row.state
       this.form.baseUrl = row.baseUrl || ''
+      this.form.chatProtocol = row.chatProtocol || ''
     },
     handleEditSubmit() {
       if (!this.form.name) {
@@ -173,7 +195,8 @@ export default {
         id: this.form.id,
         name: this.form.name,
         state: this.form.state,
-        baseUrl: this.form.baseUrl
+        baseUrl: this.form.baseUrl,
+        chatProtocol: this.form.chatProtocol
       }).then(() => {
         this.$message.success('操作成功！')
         this.reload()
@@ -189,7 +212,8 @@ export default {
         id: row.id,
         name: row.name,
         state: row.state === 1 ? 2 : 1,
-        baseUrl: row.baseUrl
+        baseUrl: row.baseUrl,
+        chatProtocol: row.chatProtocol
       }).then(() => {
         this.$message.success('操作成功！')
         this.reload()
