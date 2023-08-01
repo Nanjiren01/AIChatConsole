@@ -2,8 +2,8 @@
   <div>
     <div style="margin: 0 auto; width: 500px;">
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item title="默认Prompt">
-          <el-input v-model="form.defaultSystemPrompt" :disabled="loading" />
+        <el-form-item label="默认Prompt">
+          <el-input v-model="form.defaultSystemTemplate" :disabled="loading" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="loading" @click="handleSubmit">
@@ -25,7 +25,7 @@ export default {
     return {
       loading: false,
       form: {
-        defaultSystemPrompt: null
+        defaultSystemTemplate: null
       }
     }
   },
@@ -38,7 +38,7 @@ export default {
       getChatConfig().then(resp => {
         // console.log('resp', resp)
         const content = resp.data.chatContent
-        this.form.defaultSystemPrompt = content.defaultSystemPrompt
+        this.form.defaultSystemTemplate = content.defaultSystemTemplate
       }).finally(() => {
         this.loading = false
       })
@@ -46,7 +46,7 @@ export default {
     handleSubmit() {
       this.loading = true
       saveChatConfig({
-        defaultSystemPrompt: this.form.defaultSystemPrompt
+        defaultSystemTemplate: this.form.defaultSystemTemplate
       }).then(() => {
         this.$message.success('保存成功！')
       }).finally(() => {
