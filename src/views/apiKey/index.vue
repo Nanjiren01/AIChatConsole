@@ -64,14 +64,14 @@
         </div>
         <div style="margin: 5px 0">
           <el-alert
-            title="账户状态及余额后台每小时更新一次（仅支持OpenAI），如需要立即更新，可以点击编辑后直接保存（然后过10秒钟刷新本页面）"
+            title="账号状态及余额后台每小时更新一次（仅支持OpenAI），如需要立即更新，可以点击编辑后直接保存（然后过10秒钟刷新本页面）"
             type="info"
             :closable="false"
           />
         </div>
         <div style="margin: 5px 0">
           <el-alert
-            title="账户状态异常时，系统不会将此key禁用，需要管理员手动操作"
+            title="账号状态异常时，系统不会将此key禁用，需要管理员手动操作"
             type="info"
             :closable="false"
           />
@@ -133,7 +133,7 @@ export default {
         label: '适用模型',
         slot: 'model'
       }, {
-        label: '账户状态',
+        label: '账号状态',
         slot: 'billingState',
         width: 75
       }, {

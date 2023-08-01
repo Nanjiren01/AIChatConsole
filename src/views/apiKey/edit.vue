@@ -47,7 +47,7 @@
               <el-radio :label="2">禁用</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="账户状态">
+          <el-form-item label="账号状态">
             <el-tag v-if="model.billingState == 0" type="warning">未知</el-tag>
             <el-tag v-else-if="model.billingState == 1" type="success">正常</el-tag>
             <el-tag v-else-if="model.billingState == 10" type="danger">异常</el-tag>
