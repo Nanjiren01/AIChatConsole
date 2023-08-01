@@ -33,6 +33,7 @@
       <template v-slot:chatProtocol="slotProps">
         <el-tag v-if="slotProps.row.chatProtocol === 'OpenAiChat'">OpenAI聊天协议</el-tag>
         <el-tag v-if="slotProps.row.chatProtocol === 'BaiduChat'">百度聊天协议</el-tag>
+        <el-tag v-if="slotProps.row.chatProtocol === 'AliQwenChat'">阿里千问聊天协议</el-tag>
       </template>
 
       <template v-slot:baseUrl="props">
@@ -41,6 +42,7 @@
           系统默认（
           <template v-if="props.row.chatProtocol === 'OpenAiChat'">https://api.openai.com</template>
           <template v-if="props.row.chatProtocol === 'BaiduChat'">https://aip.baidubce.com/rpc/2.0/ai_custom</template>
+          <template v-if="props.row.chatProtocol === 'AliQwenChat'">×</template>
           ）
         </i>
       </template>
@@ -64,6 +66,7 @@
             <el-select v-model="form.chatProtocol">
               <el-option label="OpenAI聊天协议" value="OpenAiChat" />
               <el-option label="百度聊天协议" value="BaiduChat" />
+              <el-option label="阿里千问聊天协议" value="AliQwenChat" />
             </el-select>
           </el-form-item>
         </el-form>
