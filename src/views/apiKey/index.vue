@@ -84,7 +84,6 @@
       v-if="editShow"
       :api-key="edit"
       :all-models="allModels"
-      :platforms="platforms"
       @close="handleCloseEditDialog"
       @created="handleCreated"
     />

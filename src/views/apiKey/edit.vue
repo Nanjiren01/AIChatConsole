@@ -17,13 +17,18 @@
         <el-table-column property="name" label="Name" width="200" />
         <el-table-column property="address" label="Address" />
       </el-table> -->
-      <el-form ref="form" :model="model" label-width="80px">
+      <el-form ref="form" :model="model" label-width="120px">
         <el-form-item label="平台">
           <el-select v-model="model.platformId">
-            <el-option v-for="p in platforms" :key="p.id" :label="p.name" :value="p.id" />
+            <el-option
+              v-for="platform in platforms"
+              :key="platform.id"
+              :label="platform.name"
+              :value="platform.id"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="API KEY">
+        <el-form-item :label="selectedPlatform && selectedPlatform.chatProtocol === 'BaiduChat' ? 'Access Token' : 'API KEY'">
           <el-input v-model="model.key" />
         </el-form-item>
         <el-form-item label="适用模型">
@@ -80,6 +85,7 @@
 <script>
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 import { storeApiKey } from '@/api/apiKey.js'
+import { getAiPlatforms } from '@/api/aiPlatform.js'
 
 export default {
   name: 'ApiKeyEdit',
@@ -89,10 +95,10 @@ export default {
       type: Object,
       default: () => {}
     },
-    platforms: {
-      type: Array,
-      default: () => []
-    },
+    // platforms: {
+    //   type: Array,
+    //   default: () => []
+    // },
     allModels: {
       type: Array,
       default: () => []
@@ -101,6 +107,7 @@ export default {
   data() {
     return {
       dialogTableVisible: true,
+      platforms: [],
       model: {
         id: null,
         platformId: null,
@@ -117,6 +124,9 @@ export default {
   computed: {
     title() {
       return this.model.id ? 'API KEY编辑' : 'API KEY添加'
+    },
+    selectedPlatform() {
+      return (this.platforms || []).filter(p => p.id === this.model.platformId)[0]
     }
   },
   created() {
@@ -131,6 +141,11 @@ export default {
     this.model.billingSubs = this.apiKey && this.apiKey.billingSubs || -1
     this.model.creatorName = this.apiKey && this.apiKey.creatorName || ''
     this.model.createTime = this.apiKey && this.apiKey.createTime || ''
+  },
+  mounted() {
+    getAiPlatforms().then(resp => {
+      this.platforms.splice(0, this.platforms.length, ...(resp.data || []))
+    })
   },
   methods: {
     // v-el-drag-dialog onDrag callback function
