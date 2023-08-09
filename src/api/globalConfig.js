@@ -107,3 +107,21 @@ export function saveChatConfig(content) {
     }
   })
 }
+
+export function getDrawConfig() {
+  return request({
+    url: '/globalConfig/draw',
+    method: 'get'
+  })
+}
+
+export function saveDrawConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'Draw',
+      ...content
+    }
+  })
+}
