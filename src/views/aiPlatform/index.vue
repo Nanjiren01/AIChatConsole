@@ -40,8 +40,11 @@
 
       <template v-slot:chatProtocol="slotProps">
         <el-tag v-if="slotProps.row.chatProtocol === 'OpenAiChat'">OpenAI聊天协议</el-tag>
-        <el-tag v-if="slotProps.row.chatProtocol === 'BaiduChat'">百度聊天协议</el-tag>
-        <el-tag v-if="slotProps.row.chatProtocol === 'AliQwenChat'">阿里千问聊天协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'BaiduChat'">百度聊天协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'AliQwenChat'">阿里千问聊天协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'EmbeddingMjProxyDraw'">内置MJ-Proxy绘画协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'MjProxyDraw'">MJ-Proxy绘画协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'GoApiDraw'">GoApi绘画协议</el-tag>
       </template>
 
       <template v-slot:baseUrl="props">
@@ -49,8 +52,11 @@
         <i v-else style="color: #888">
           系统默认（
           <template v-if="props.row.chatProtocol === 'OpenAiChat'">https://api.openai.com</template>
-          <template v-if="props.row.chatProtocol === 'BaiduChat'">https://aip.baidubce.com/rpc/2.0/ai_custom</template>
-          <template v-if="props.row.chatProtocol === 'AliQwenChat'">×</template>
+          <template v-else-if="props.row.chatProtocol === 'BaiduChat'">https://aip.baidubce.com/rpc/2.0/ai_custom</template>
+          <template v-else-if="props.row.chatProtocol === 'AliQwenChat'">×</template>
+          <template v-else-if="props.row.chatProtocol === 'EmbeddingMjProxyDraw'">×</template>
+          <template v-else-if="props.row.chatProtocol === 'MjProxyDraw'">×</template>
+          <template v-else-if="props.row.chatProtocol === 'GoApiDraw'">https://api.midjourneyapi.xyz</template>
           ）
         </i>
       </template>
@@ -75,6 +81,9 @@
               <el-option label="OpenAI聊天协议" value="OpenAiChat" />
               <el-option label="百度聊天协议" value="BaiduChat" />
               <el-option label="阿里千问聊天协议" value="AliQwenChat" />
+              <el-option label="内置MJ-Proxy绘画协议" value="EmbeddingMjProxyDraw" />
+              <el-option label="MJ-Proxy绘画协议" value="MjProxyDraw" />
+              <el-option label="GoApi绘画协议" value="GoApiDraw" />
             </el-select>
           </el-form-item>
           <el-form-item label="余额协议">

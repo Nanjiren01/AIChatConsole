@@ -99,7 +99,7 @@ import { getAiPlatforms } from '@/api/aiPlatform.js'
 import { getAiModels } from '@/api/aiModel.js'
 
 export default {
-  name: 'UserIndex',
+  name: 'ApiKeyIndex',
   components: { AiTable, ApiKeyEdit },
   data() {
     return {

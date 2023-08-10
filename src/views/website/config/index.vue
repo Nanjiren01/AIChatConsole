@@ -112,6 +112,9 @@
       <el-tab-pane label="聊天配置">
         <chat-config />
       </el-tab-pane>
+      <el-tab-pane label="绘画配置">
+        <draw-config />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -126,10 +129,11 @@ import NoticeConfig from './noticeConfig'
 import PayConfig from './payConfig'
 import WechatConfig from './wechatConfig'
 import ChatConfig from './chatConfig'
+import DrawConfig from './drawConfig'
 
 export default {
   name: 'WebsiteConfig',
-  components: { EmailConfig, PhoneConfig, SensitiveWordsConfig, NoticeConfig, PayConfig, WechatConfig, ChatConfig },
+  components: { EmailConfig, PhoneConfig, SensitiveWordsConfig, NoticeConfig, PayConfig, WechatConfig, ChatConfig, DrawConfig },
   data() {
     return {
       form: {
