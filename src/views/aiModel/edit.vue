@@ -8,8 +8,8 @@
     <div style="padding: 20px">
       <el-form ref="form" label-width="260px" style="padding-right: 180px">
         <el-form-item label="平台">
-          <el-select v-model="model.platformId" disabled>
-            <el-option :value="1" label="OpenAI" />
+          <el-select v-model="model.platformId" :disabled="!!model.id">
+            <el-option v-for="p in platforms" :key="p.id" :value="p.id" :label="p.name" />
           </el-select>
         </el-form-item>
         <el-form-item label="名称">
@@ -30,7 +30,18 @@
             <el-option :value="4" label="绘画" />
           </el-select>
         </el-form-item>
-        <el-form-item label="创建时间">
+        <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'">
+          <el-form-item label="翻译用ChatGPT BaseUrl">
+            <el-input v-model="modelConfig.gptApiUrl" />
+          </el-form-item>
+          <el-form-item label="翻译用ChatGPT Key">
+            <el-input v-model="modelConfig.gptApiKey" />
+          </el-form-item>
+          <el-form-item label="翻译用ChatGPT模型名称">
+            <el-input v-model="modelConfig.model" />
+          </el-form-item>
+        </template>
+        <el-form-item v-if="model.createTime" label="创建时间">
           <el-input v-model="model.createTime" disabled />
         </el-form-item>
         <el-form-item>
@@ -52,6 +63,10 @@ export default {
   name: 'MemberDetail',
   components: { },
   props: {
+    platforms: {
+      type: Array,
+      default: () => []
+    },
     model: {
       type: Object,
       default: () => []
@@ -63,12 +78,27 @@ export default {
   },
   data() {
     return {
-      loading: false
+      loading: false,
+      modelConfig: {}
     }
   },
   computed: {
     title() {
       return this.model.name ? (this.model.name + '模型信息') : '新建模型'
+    },
+    selectedPlatform() {
+      if (this.model.platformId && this.platforms) {
+        return this.platforms.filter(p => p.id === this.model.platformId)[0]
+      }
+      return null
+    }
+  },
+  watch: {
+    'model.config': {
+      handler(config) {
+        console.log('model.config', config)
+        this.modelConfig = config ? JSON.parse(config) : {}
+      }
     }
   },
   mounted() {
@@ -86,7 +116,8 @@ export default {
         name: this.model.name,
         state: this.model.state,
         levelId: this.model.levelId,
-        path: this.model.path
+        path: this.model.path,
+        config: JSON.stringify(this.modelConfig || {})
       }).then(() => {
         this.$message.success('操作成功！')
         this.$emit('changed')
