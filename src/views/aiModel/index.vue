@@ -113,6 +113,7 @@ export default {
         level: null,
         levelId: null,
         path: null,
+        config: null,
         remark: null,
         createTime: null
       },
@@ -146,6 +147,7 @@ export default {
             // state: key.state,
             // creatorName: key.creatorName,
             path: model.path,
+            config: model.config,
             remark: model.remark,
             createTime: model.createTime
             // updateTime: key.updateTime
@@ -173,6 +175,7 @@ export default {
       this.editModel.levelId = null
       this.editModel.state = null
       this.editModel.path = null
+      this.editModel.config = null
       this.editModel.remark = null
       this.showEdit = true
     },
@@ -187,6 +190,7 @@ export default {
       this.editModel.levelId = row.levelId
       this.editModel.state = row.state
       this.editModel.path = row.path
+      this.editModel.config = row.config
       this.editModel.remark = row.remark
       this.editModel.createTime = row.createTime
       this.showEdit = true

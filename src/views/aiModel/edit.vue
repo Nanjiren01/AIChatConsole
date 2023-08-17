@@ -36,6 +36,17 @@
             <el-option :value="4" label="绘画" />
           </el-select>
         </el-form-item>
+        <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'">
+          <el-form-item label="翻译用ChatGPT BaseUrl">
+            <el-input v-model="modelConfig.gptApiUrl" />
+          </el-form-item>
+          <el-form-item label="翻译用ChatGPT Key">
+            <el-input v-model="modelConfig.gptApiKey" />
+          </el-form-item>
+          <el-form-item label="翻译用ChatGPT模型名称">
+            <el-input v-model="modelConfig.model" />
+          </el-form-item>
+        </template>
         <el-form-item v-if="model.createTime" label="创建时间">
           <el-input v-model="model.createTime" disabled />
         </el-form-item>
@@ -73,12 +84,26 @@ export default {
   },
   data() {
     return {
-      loading: false
+      loading: false,
+      modelConfig: {}
     }
   },
   computed: {
     title() {
       return this.model.name ? (this.model.name + '模型信息') : '新建模型'
+    },
+    selectedPlatform() {
+      if (this.model.platformId && this.platforms) {
+        return this.platforms.filter(p => p.id === this.model.platformId)[0]
+      }
+      return null
+    }
+  },
+  watch: {
+    'model.config': {
+      handler(config) {
+        this.$set(this.modelConfig, config ? JSON.parse(config) : {})
+      }
     }
   },
   mounted() {
@@ -100,6 +125,7 @@ export default {
           state: 0,
           levelId: this.model.levelId,
           path: this.model.path,
+          config: this.model.config,
           remark: this.model.remark
         }).then(() => {
           this.$message.success('操作成功！')
@@ -117,6 +143,7 @@ export default {
         state: this.model.state,
         levelId: this.model.levelId,
         path: this.model.path,
+        config: this.model.config,
         remark: this.model.remark
       }).then(() => {
         this.$message.success('操作成功！')
