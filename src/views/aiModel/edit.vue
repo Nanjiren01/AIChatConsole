@@ -102,7 +102,7 @@ export default {
   watch: {
     'model.config': {
       handler(config) {
-        this.$set(this.modelConfig, config ? JSON.parse(config) : {})
+        this.modelConfig = config ? JSON.parse(config) : {}
       }
     }
   },
@@ -143,7 +143,7 @@ export default {
         state: this.model.state,
         levelId: this.model.levelId,
         path: this.model.path,
-        config: this.model.config,
+        config: JSON.stringify(this.modelConfig || {}),
         remark: this.model.remark
       }).then(() => {
         this.$message.success('操作成功！')

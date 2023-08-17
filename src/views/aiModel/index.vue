@@ -213,6 +213,7 @@ export default {
         state: row.state === 1 ? 2 : 1,
         levelId: row.levelId,
         path: row.path,
+        config: row.config,
         remark: row.remark
       }).then(() => {
         this.$message.success('操作成功！')
