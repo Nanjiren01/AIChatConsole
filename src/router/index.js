@@ -288,6 +288,21 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/draw',
+    component: Layout,
+    redirect: '/draw/task',
+    alwaysShow: false, // will always show the root menu
+    name: 'draw',
+    children: [
+      {
+        path: 'task',
+        component: () => import('@/views/drawTask/index'),
+        name: 'drawTask',
+        meta: { title: '绘画记录', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/mask',
     component: Layout,
     redirect: '/mask/list',
