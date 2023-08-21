@@ -47,7 +47,7 @@
             <el-input v-model="modelConfig.model" />
           </el-form-item>
           <el-form-item label="回调地址">
-            <el-input v-model="modelConfig.webhookEndpoint" placeholder="webhook ednpoint" />
+            <el-input v-model="modelConfig.webhookEndpoint" placeholder="webhook endpoint" />
           </el-form-item>
           <el-form-item label="回调密码">
             <el-input v-model="modelConfig.webhookSecret" placeholder="webhook secret" />
