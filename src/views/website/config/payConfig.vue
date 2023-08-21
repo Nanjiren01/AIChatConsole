@@ -14,6 +14,12 @@
         <el-form-item label="虎皮椒AppSecret">
           <el-input v-model="form.xunhuAppSecret" type="password" />
         </el-form-item>
+        <el-form-item label="虎皮椒支付网关">
+          <el-input v-model="form.xunhuGateway" placeholder="默认https://api.xunhupay.com/payment/do.html" />
+        </el-form-item>
+        <el-form-item label="虎皮椒订单回查地址">
+          <el-input v-model="form.xunhuQueryUrl" placeholder="一般无需填写" />
+        </el-form-item>
         <el-form-item label="蓝兔商户号">
           <el-input v-model="form.lantuAppId" />
         </el-form-item>
@@ -43,6 +49,8 @@ export default {
         thirdpartName: '',
         xunhuAppId: '',
         xunhuAppSecret: '',
+        xunhuGateway: null,
+        xunhuQueryUrl: null,
         lantuAppId: '',
         lantuAppSecret: ''
       }
@@ -60,6 +68,8 @@ export default {
         this.form.thirdpartName = content.thirdpartName
         this.form.xunhuAppId = content.xunhuAppId
         this.form.xunhuAppSecret = content.xunhuAppSecret
+        this.form.xunhuGateway = content.xunhuGateway
+        this.form.xunhuQueryUrl = content.xunhuQueryUrl
         this.form.lantuAppId = content.lantuAppId
         this.form.lantuAppSecret = content.lantuAppSecret
       }).finally(() => {
@@ -72,6 +82,8 @@ export default {
         thirdpartPayName: this.form.thirdpartName,
         xunhuAppId: this.form.xunhuAppId,
         xunhuAppSecret: this.form.xunhuAppSecret,
+        xunhuGateway: this.form.xunhuGateway,
+        xunhuQueryUrl: this.form.xunhuQueryUrl,
         lantuAppId: this.form.lantuAppId,
         lantuAppSecret: this.form.lantuAppSecret
       }).then(() => {
