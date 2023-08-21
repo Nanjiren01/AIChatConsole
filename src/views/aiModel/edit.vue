@@ -46,6 +46,12 @@
           <el-form-item label="翻译用ChatGPT模型名称">
             <el-input v-model="modelConfig.model" />
           </el-form-item>
+          <el-form-item label="回调地址">
+            <el-input v-model="modelConfig.webhookEndpoint" placeholder="webhook ednpoint" />
+          </el-form-item>
+          <el-form-item label="回调密码">
+            <el-input v-model="modelConfig.webhookSecret" placeholder="webhook secret" />
+          </el-form-item>
         </template>
         <el-form-item v-if="model.createTime" label="创建时间">
           <el-input v-model="model.createTime" disabled />
