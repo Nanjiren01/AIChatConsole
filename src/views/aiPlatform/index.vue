@@ -34,6 +34,7 @@
           v-if="props.row.balanceProtocol == 'OpenAI' || props.row.baseUrl && props.row.baseUrl.startsWith('https://gptapi.nextweb.fun/')"
           type="success"
         >OpenAI</el-tag>
+        <el-tag v-else-if="props.row.balanceProtocol == 'GoApi'" type="success">GoApi</el-tag>
         <el-tag v-else-if="props.row.balanceProtocol == 'Other'" type="primary">其他</el-tag>
         <el-tag v-else type="info">未知</el-tag>
       </template>
@@ -89,6 +90,7 @@
           <el-form-item label="余额协议">
             <el-select v-model="form.balanceProtocol">
               <el-option label="OpenAI" value="OpenAI" />
+              <el-option label="GoApi" value="GoApi" />
               <el-option label="其他" value="Other" />
             </el-select>
           </el-form-item>
