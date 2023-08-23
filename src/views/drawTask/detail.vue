@@ -35,7 +35,7 @@
         </el-form-item>
         <el-form-item label="类型">
           <span class="order-form-item">
-            {{ drawTaskEntity.type }}<span v-if="drawTaskEntity.targetIndex">::{{ drawTaskEntity.targetIndex }}</span>
+            {{ drawTaskEntity.type }}<span v-if="drawTaskEntity.targetIndex || drawTaskEntity.zoomRatio">::{{ drawTaskEntity.targetIndex || drawTaskEntity.zoomRatio }}</span>
             <span v-if="drawTaskEntity.targetTaskId">::{{ drawTaskEntity.targetTaskId }}</span>
           </span>
         </el-form-item>

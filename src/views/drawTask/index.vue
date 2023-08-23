@@ -42,7 +42,7 @@
 
       <template v-slot:type="props">
         <span v-if="props.row.type === 'imagine' ">{{ props.row.type }}</span>
-        <span v-else>{{ props.row.type }}::{{ props.row.targetIndex }}</span>
+        <span v-else>{{ props.row.type }}::{{ props.row.targetIndex || props.row.zoomRatio }}</span>
       </template>
 
       <template v-slot:state="slotProps">
