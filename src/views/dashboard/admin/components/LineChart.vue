@@ -10,6 +10,10 @@ import resize from './mixins/resize'
 export default {
   mixins: [resize],
   props: {
+    title: {
+      type: String,
+      default: ''
+    },
     className: {
       type: String,
       default: 'chart'
@@ -25,6 +29,11 @@ export default {
     autoResize: {
       type: Boolean,
       default: true
+    },
+    dates: {
+      type: Array,
+      default: () => [],
+      require: true
     },
     chartData: {
       type: Object,
@@ -61,10 +70,10 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ data, itemStyle } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['2023-05-01', '2023-05-02', '2023-05-03', '2023-05-04', '2023-05-05', '2023-05-06', '2023-05-07'],
+          data: this.dates,
           boundaryGap: false,
           axisTick: {
             show: false
@@ -90,47 +99,20 @@ export default {
           }
         },
         legend: {
-          data: ['会员总数', 'VIP数']
+          data: [this.title]
         },
         title: {
           text: ''
         },
         series: [{
-          name: '会员总数', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
-          },
+          name: this.title, itemStyle: itemStyle,
           smooth: true,
           type: 'line',
-          data: expectedData,
+          data: data,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'VIP数',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
+        }
+        ]
       })
     }
   }
