@@ -210,6 +210,7 @@ export default {
       updateAiModel({
         id: row.id,
         name: row.name,
+        showName: row.showName,
         state: row.state === 1 ? 2 : 1,
         levelId: row.levelId,
         path: row.path,
