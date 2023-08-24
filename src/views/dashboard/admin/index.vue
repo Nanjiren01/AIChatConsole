@@ -24,6 +24,10 @@
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :dates="dates" :chart-data="orderFeeData" title="订单金额（元）" />
     </el-row>
+
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <line-chart :dates="dates" :chart-data="userData" title="用户总数" />
+    </el-row>
     <!--
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
@@ -85,6 +89,18 @@ export default {
   },
   data() {
     return {
+      userData: {
+        data: [],
+        itemStyle: {
+          normal: {
+            color: '#FF005A',
+            lineStyle: {
+              color: '#FF005A',
+              width: 2
+            }
+          }
+        }
+      },
       orderData: {
         data: [],
         itemStyle: {
@@ -162,6 +178,20 @@ export default {
           }
         })
         console.log(this.dates, this.orderData.data, this.orderFeeData.data)
+
+        const userMap = {}
+        data.userInfos.forEach(info => {
+          userMap[info.date] = info
+        })
+        this.userData.data.splice(0, this.userData.data.length)
+        this.dates.forEach(date => {
+          if (userMap[date]) {
+            this.userData.data.push(userMap[date].count)
+          } else {
+            this.userData.data.push(0)
+          }
+        })
+        console.log(this.dates, this.userData.data)
       })
     }
   }
