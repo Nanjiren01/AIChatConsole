@@ -74,6 +74,9 @@ export default {
         label: '邮箱',
         prop: 'email'
       }, {
+        label: '手机号',
+        prop: 'phone'
+      }, {
         label: 'ip',
         prop: 'ip'
       }, {
@@ -129,6 +132,7 @@ export default {
             username: user.username,
             name: user.name,
             email: user.email,
+            phone: user.phone,
             ip: user.ip,
             entryId: user.entryId,
             createTime: user.createTime,
