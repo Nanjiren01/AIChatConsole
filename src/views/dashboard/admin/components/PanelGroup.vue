@@ -33,9 +33,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            充值金额
+            订单总数
           </div>
-          <count-to :start-val="0" :end-val="126" :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="0" :duration="3200" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -46,9 +46,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            消耗tokens总数
+            订单金额
           </div>
-          <count-to :start-val="0" :end-val="103600" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="0" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
