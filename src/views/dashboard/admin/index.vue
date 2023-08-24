@@ -18,15 +18,19 @@
     />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :dates="dates" :chart-data="orderData" title="订单总数" />
+      <line-chart :dates="dates" :chart-data="orderData" title="每日订单总数" />
     </el-row>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :dates="dates" :chart-data="orderFeeData" title="订单金额（元）" />
+      <line-chart :dates="dates" :chart-data="orderFeeData" title="每日订单金额（元）" />
     </el-row>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :dates="dates" :chart-data="userData" title="用户总数" />
+      <line-chart :dates="dates" :chart-data="userData" title="每日用户总数" />
+    </el-row>
+
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <line-chart :dates="dates" :chart-data="chatData" title="每日聊天总数" />
     </el-row>
     <!--
     <el-row :gutter="32">
@@ -90,6 +94,18 @@ export default {
   data() {
     return {
       userData: {
+        data: [],
+        itemStyle: {
+          normal: {
+            color: '#FF005A',
+            lineStyle: {
+              color: '#FF005A',
+              width: 2
+            }
+          }
+        }
+      },
+      chatData: {
         data: [],
         itemStyle: {
           normal: {
@@ -192,6 +208,20 @@ export default {
           }
         })
         console.log(this.dates, this.userData.data)
+
+        const chatMap = {}
+        data.chatInfos.forEach(info => {
+          chatMap[info.date] = info
+        })
+        this.chatData.data.splice(0, this.chatData.data.length)
+        this.dates.forEach(date => {
+          if (chatMap[date]) {
+            this.chatData.data.push(chatMap[date].count)
+          } else {
+            this.chatData.data.push(0)
+          }
+        })
+        console.log(this.dates, this.chatData.data)
       })
     }
   }
