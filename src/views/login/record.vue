@@ -35,9 +35,9 @@
         </el-tag>
       </template>
 
-      <!-- <template v-slot:role="slotProps">
-        {{ getRoleName(slotProps.row.role) }}
-      </template> -->
+      <template v-slot:username="props">
+        {{ props.row.username }}(#{{ props.row.userId }})
+      </template>
     </ai-table>
   </div>
 </template>
@@ -61,15 +61,15 @@ export default {
         label: '#',
         prop: 'id',
         width: 55
-      }, {
-        label: '用户id',
-        prop: 'userId'
+      // }, {
+      //   label: '用户id',
+      //   prop: 'userId'
       // }, {
       //   label: '昵称',
       //   prop: 'name'
       }, {
         label: '用户名（账号）',
-        prop: 'username'
+        slot: 'username'
       }, {
         label: '邮箱',
         prop: 'email'
@@ -128,7 +128,7 @@ export default {
         this.tableData = users.map(user => {
           return {
             id: user.id,
-            userId: user.id,
+            userId: user.userId,
             username: user.username,
             name: user.name,
             email: user.email,
