@@ -31,6 +31,11 @@
             {{ loading ? '保存中……' : '提 交' }}
           </el-button>
         </el-form-item>
+        <el-alert type="success">
+          蓝兔支付（签约费￥50）注册地址：<a href="https://www.ltzf.cn/?invite=jpxnwd" target="_blank">
+            https://www.ltzf.cn/?invite=jpxnwd
+          </a>
+        </el-alert>
       </el-form>
     </div>
   </div>
