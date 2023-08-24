@@ -40,6 +40,9 @@
                 <el-checkbox label="Close">关闭注册</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
+            <el-form-item label="邮箱后缀限制">
+              <el-switch v-model="form.registerEmailSuffix" placeholder="多个后缀请用英文逗号隔开" />
+            </el-form-item>
             <el-form-item label="仅限邀请码注册">
               <el-switch v-model="form.registerForInviteCodeOnly" />
             </el-form-item>
@@ -146,6 +149,7 @@ export default {
         registerPageSubTitle: '',
         registerTypes: [],
         registerForInviteCodeOnly: false,
+        registerEmailSuffix: null,
         pricingPageTitle: null,
         pricingPageSubTitle: null,
         chatPageSubTitle: '',
@@ -190,6 +194,7 @@ export default {
         this.form.botHello = config.websiteContent.botHello
         this.form.hideChatLogWhenNotLogin = !!config.websiteContent.hideChatLogWhenNotLogin
         this.form.registerForInviteCodeOnly = config.websiteContent.registerForInviteCodeOnly || false
+        this.form.registerEmailSuffix = config.websiteContent.registerEmailSuffix
         this.form.redeemCodePageTitle = config.websiteContent.redeemCodePageTitle || ''
         this.form.redeemCodePageSubTitle = config.websiteContent.redeemCodePageSubTitle || ''
         this.form.redeemCodePageBanner = config.websiteContent.redeemCodePageBanner || ''
@@ -220,6 +225,7 @@ export default {
         registerPageSubTitle: this.form.registerPageSubTitle,
         registerTypes: this.form.registerTypes,
         registerForInviteCodeOnly: this.form.registerForInviteCodeOnly,
+        registerEmailSuffix: this.form.registerEmailSuffix,
         pricingPageTitle: this.form.pricingPageTitle,
         pricingPageSubTitle: this.form.pricingPageSubTitle,
         chatPageSubTitle: this.form.chatPageSubTitle,
