@@ -36,6 +36,7 @@
             订单总数
           </div>
           <count-to :start-val="0" :end-val="basicData.orderCount" :duration="3000" class="card-panel-num" />
+
         </div>
       </div>
     </el-col>
