@@ -41,7 +41,7 @@
               </el-checkbox-group>
             </el-form-item>
             <el-form-item label="邮箱后缀限制">
-              <el-switch v-model="form.registerEmailSuffix" placeholder="多个后缀请用英文逗号隔开" />
+              <el-input v-model="form.registerEmailSuffix" placeholder="多个后缀请用英文逗号隔开" />
             </el-form-item>
             <el-form-item label="仅限邀请码注册">
               <el-switch v-model="form.registerForInviteCodeOnly" />
