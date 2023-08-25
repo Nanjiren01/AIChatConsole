@@ -190,34 +190,6 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/history',
-    component: Layout,
-    redirect: '/history/log',
-    alwaysShow: true, // will always show the root menu
-    name: 'chat',
-    meta: { title: '历史记录', icon: 'dashboard', affix: true },
-    children: [
-      {
-        path: 'chat',
-        component: () => import('@/views/chat/index'),
-        name: 'chatLog',
-        meta: { title: '聊天记录', icon: 'dashboard', affix: true }
-      },
-      {
-        path: 'task',
-        component: () => import('@/views/drawTask/index'),
-        name: 'drawTask',
-        meta: { title: '绘画记录', icon: 'dashboard', affix: true }
-      },
-      {
-        path: 'login',
-        component: () => import('@/views/login/record'),
-        name: 'loginRecordList',
-        meta: { title: '登录记录', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
     path: '/ai',
     component: Layout,
     // redirect: '/ai/apiKey',
@@ -264,6 +236,34 @@ export const asyncRoutes = [
         component: () => import('@/views/plugin/index'),
         name: 'aiPluginList',
         meta: { title: '插件列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/history',
+    component: Layout,
+    redirect: '/history/log',
+    alwaysShow: true, // will always show the root menu
+    name: 'chat',
+    meta: { title: '历史日志', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: 'chat',
+        component: () => import('@/views/chat/index'),
+        name: 'chatLog',
+        meta: { title: '聊天日志', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'task',
+        component: () => import('@/views/drawTask/index'),
+        name: 'drawTask',
+        meta: { title: '绘画日志', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'login',
+        component: () => import('@/views/login/record'),
+        name: 'loginRecordList',
+        meta: { title: '登录日志', icon: 'dashboard', affix: true }
       }
     ]
   },
