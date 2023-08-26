@@ -25,7 +25,7 @@
           <el-input v-model="model.remark" type="textarea" :row="1" autosize />
         </el-form-item>
         <el-form-item v-if="model.id" label="状态">
-          <el-tag v-if="model.state == 1" type="success">正常</el-tag>
+          <el-tag v-if="model.state == 1" type="success">启用</el-tag>
           <el-tag v-else type="danger">停用</el-tag>
         </el-form-item>
         <el-form-item label="计费方式">

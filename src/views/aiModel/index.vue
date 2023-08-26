@@ -172,6 +172,7 @@ export default {
         const models = resp.data || []
         const platforms = []
 
+        this.oldTableData.splice(0, this.oldTableData.length)
         models.forEach(model => {
           let platform = platforms.find(p => p.id === model.platformId)
           console.log('platform', platform)
@@ -183,8 +184,8 @@ export default {
             }
             platforms.push(platform)
           }
-          platform.models.push({ ... model })
-          this.oldTableData.push({ ... model })
+          platform.models.push(model)
+          this.oldTableData.push(model)
         })
         console.log('platforms', platforms)
         this.tableData.splice(0, this.tableData.length, ...platforms)
@@ -241,7 +242,7 @@ export default {
     },
     toggleEnable(row) {
       this.loading = true
-      this.$message.info('处理中……')
+      this.$message.info(row.state === 1 ? '停用中……' : '启用中……')
       updateAiModel({
         id: row.id,
         name: row.name,
@@ -252,7 +253,7 @@ export default {
         config: row.config,
         remark: row.remark
       }).then(() => {
-        this.$message.success('操作成功！')
+        this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
         this.reload()
       }).finally(() => {
         this.loading = false
@@ -289,16 +290,16 @@ export default {
   user-select: none;
 }
 .model-tag.el-tag--danger:hover {
-  background-color: darken(#ffeded, 5%);
+  background-color: darken(#ffeded, 10%);
 }
 .model-tag.el-tag--success:hover {
-  background-color: darken(#e7faf0, 5%);
+  background-color: darken(#e7faf0, 10%);
 }
 .model-tag.el-tag--primary:hover {
-  background-color: darken(#e8f4ff, 5%);
+  background-color: darken(#e8f4ff, 10%);
 }
 .model-tag.el-tag--info:hover {
-  background-color: darken(#f4f4f5, 5%);
+  background-color: darken(#f4f4f5, 10%);
 }
 
 </style>
