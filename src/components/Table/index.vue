@@ -39,7 +39,7 @@
           :label="col.label"
           :width="col.width"
           :type="col.type"
-          show-overflow-tooltip
+          :show-overflow-tooltip="col.showOverflowTooltip === undefined || col.showOverflowTooltip === null ? true : col.showOverflowTooltip"
         >
           <slot slot-scope="scope" :name="col.slot" :row="scope.row">
             {{ scope.row[col.prop] }}

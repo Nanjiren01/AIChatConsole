@@ -2,31 +2,53 @@
   <div class="page-container">
     <ai-table
       :table-actions="tableActions"
-      :table-columns="tableColumns"
-      :table-data="tableData"
+      :table-columns="oldView ? oldTableColumns : tableColumns"
+      :table-data="oldView ? oldTableData : tableData"
       :table-action-column="tableActionColumn"
       :pagination="pagination"
       @refresh="handleRefresh"
     >
       <template #topActions>
-        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleCreate(null)">添加模型</el-button>
+        <el-switch v-model="oldView" style="margin-left: 10px" active-text="全列表视图" />
       </template>
       <template v-slot:rowActions="slotProps">
-        <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">查看</el-button>
-        <el-button
-          :type="slotProps.row.state == 1 ? 'danger' : 'success'"
-          plain
-          icon="el-icon-disabled"
-          :disalbed="loading"
-          @click.stop="toggleEnable(slotProps.row)"
-        >
-          {{ slotProps.row.state == 1 ? '禁用' : '启用' }}
-        </el-button>
-        <!-- <el-button type="danger" icon="el-icon-delete" @click="handleDelete(slotProps.row)">删除</el-button> -->
+        <template v-if="oldView">
+          <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">查看</el-button>
+          <el-button
+            :type="slotProps.row.state == 1 ? 'danger' : 'success'"
+            plain
+            icon="el-icon-disabled"
+            :disalbed="loading"
+            @click.stop="toggleEnable(slotProps.row)"
+          >
+            {{ slotProps.row.state == 1 ? '禁用' : '启用' }}
+          </el-button>
+          <!-- <el-button type="danger" icon="el-icon-delete" @click="handleDelete(slotProps.row)">删除</el-button> -->
+        </template>
       </template>
       <!-- <template #columns>
         <el-table-column type="selection" width="55" />
       </template> -->
+
+      <template v-slot:models="pp">
+        <el-tag
+          v-for="mdl in pp.row.models"
+          :key="mdl.id"
+          :type="mdl.state == 1 ? 'success' : 'danger'"
+          size="middle"
+          class="model-tag"
+          @click.stop="handleEdit(mdl)"
+        >
+          {{ mdl.name || '未设置' }}{{ mdl.showName ? `(${mdl.showName})` : '' }}
+        </el-tag>
+        <el-tag
+          type="info"
+          size="middle"
+          class="model-tag"
+          @click.stop="handleCreate(pp.row.id)"
+        ><i class="el-icon-plus" />添加模型</el-tag>
+      </template>
 
       <template v-slot:levelId="slotProps">
         <el-tag>{{ getLevelText(slotProps.row.levelId) }}</el-tag>
@@ -60,9 +82,10 @@ export default {
   components: { AiTable, Edit },
   data() {
     return {
+      oldView: false,
       platforms: [],
       tableActions: [],
-      tableColumns: [{
+      oldTableColumns: [{
         label: '#',
         prop: 'id',
         width: 55
@@ -94,10 +117,25 @@ export default {
         prop: 'createTime',
         width: 135
       }],
+      tableColumns: [{
+        label: '#',
+        prop: 'id',
+        width: 55
+      }, {
+        label: '平台名称',
+        prop: 'name',
+        width: 150
+      }, {
+        label: '模型',
+        slot: 'models',
+        showOverflowTooltip: false
+      }],
       tableActionColumn: {
         width: 170
       },
+
       tableData: [],
+      oldTableData: [],
       pagination: {
         total: 0,
         showDetail: false
@@ -132,27 +170,24 @@ export default {
       getAiModels().then(resp => {
         console.log('resp', resp)
         const models = resp.data || []
-        this.tableData = models.map(model => {
-          return {
-            id: model.id,
-            name: model.name,
-            showName: model.showName,
-            platformId: model.platformId,
-            platformName: model.platformName,
-            state: model.state,
-            level: model.level,
-            levelId: model.levelId,
-            // models: key.models,
-            // quota: key.quota,
-            // state: key.state,
-            // creatorName: key.creatorName,
-            path: model.path,
-            config: model.config,
-            remark: model.remark,
-            createTime: model.createTime
-            // updateTime: key.updateTime
+        const platforms = []
+
+        models.forEach(model => {
+          let platform = platforms.find(p => p.id === model.platformId)
+          console.log('platform', platform)
+          if (!platform) {
+            platform = {
+              id: model.platformId,
+              name: model.platformName,
+              models: []
+            }
+            platforms.push(platform)
           }
+          platform.models.push({ ... model })
+          this.oldTableData.push({ ... model })
         })
+        console.log('platforms', platforms)
+        this.tableData.splice(0, this.tableData.length, ...platforms)
         this.pagination.total = this.tableData.length
       })
     },
@@ -165,11 +200,11 @@ export default {
     handleRefresh() {
       this.reload()
     },
-    handleCreate() {
+    handleCreate(platformId) {
       this.editModel.id = null
       this.editModel.name = ''
       this.editModel.showName = ''
-      this.editModel.platformId = null
+      this.editModel.platformId = platformId || null
       this.editModel.platformName = null
       this.editModel.level = null
       this.editModel.levelId = null
@@ -244,6 +279,26 @@ export default {
 <style lang="scss" scoped>
 .dashboard-container {
   padding: 10px;
+}
+.model-tag {
+  margin-right: 5px;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+.model-tag:hover {
+  user-select: none;
+}
+.model-tag.el-tag--danger:hover {
+  background-color: darken(#ffeded, 5%);
+}
+.model-tag.el-tag--success:hover {
+  background-color: darken(#e7faf0, 5%);
+}
+.model-tag.el-tag--primary:hover {
+  background-color: darken(#e8f4ff, 5%);
+}
+.model-tag.el-tag--info:hover {
+  background-color: darken(#f4f4f5, 5%);
 }
 
 </style>
