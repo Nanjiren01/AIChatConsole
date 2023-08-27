@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getLogins(params) {
   return request({
-    url: '/login',
+    url: '/login/record',
     method: 'get',
     params
   })
