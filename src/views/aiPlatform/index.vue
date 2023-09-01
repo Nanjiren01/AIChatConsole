@@ -208,7 +208,7 @@ export default {
       this.dialogVisible = true
       this.form.id = null
       this.form.name = ''
-      this.form.state = 0
+      this.form.state = 1
       this.form.baseUrl = ''
       this.form.remark = ''
       this.form.balanceProtocol = ''

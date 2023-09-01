@@ -140,7 +140,7 @@ export default {
           platformId: this.model.platformId,
           name: this.model.name,
           showName: this.model.showName,
-          state: 0,
+          state: 1,
           levelId: this.model.levelId,
           path: this.model.path,
           config: this.model.config,
