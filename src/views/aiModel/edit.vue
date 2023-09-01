@@ -27,6 +27,16 @@
         <el-form-item v-if="model.id" label="状态">
           <el-tag v-if="model.state == 1" type="success">启用</el-tag>
           <el-tag v-else type="danger">停用</el-tag>
+          <el-button
+            :type="model.state == 1 ? 'danger' : 'success'"
+            plain
+            icon="el-icon-disabled"
+            :disalbed="loading"
+            style="margin-left: 10px"
+            @click.stop="toggleEnable(model)"
+          >
+            {{ model.state == 1 ? '禁用' : '启用' }}
+          </el-button>
         </el-form-item>
         <el-form-item label="计费方式">
           <el-select v-model="model.levelId">
@@ -57,8 +67,8 @@
           <el-input v-model="model.createTime" disabled />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleSave">
-            {{ loading ? '保存中……' : '保 存' }}
+          <el-button type="primary" :disabled="loading" @click="handleSave">
+            {{ saving ? '操作中……' : '保 存' }}
           </el-button>
         </el-form-item>
       </el-form>
@@ -91,6 +101,7 @@ export default {
   data() {
     return {
       loading: false,
+      saving: false,
       modelConfig: {}
     }
   },
@@ -122,6 +133,7 @@ export default {
     },
     handleSave() {
       this.loading = true
+      this.saving = true
       if (!this.model.id) {
         createAiModel({
           id: this.model.id,
@@ -139,6 +151,7 @@ export default {
           this.$emit('close')
         }).finally(() => {
           this.loading = false
+          this.saving = false
         })
         return
       }
@@ -155,6 +168,28 @@ export default {
         this.$message.success('操作成功！')
         this.$emit('changed')
         this.$emit('close')
+      }).finally(() => {
+        this.loading = false
+        this.saving = false
+      })
+    },
+    toggleEnable(row) {
+      this.loading = true
+      this.$message.info(row.state === 1 ? '停用中……' : '启用中……')
+      const state = row.state === 1 ? 2 : 1
+      updateAiModel({
+        id: row.id,
+        name: row.name,
+        showName: row.showName,
+        state,
+        levelId: row.levelId,
+        path: row.path,
+        config: row.config,
+        remark: row.remark
+      }).then(() => {
+        this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
+        this.$emit('changed')
+        this.model.state = state
       }).finally(() => {
         this.loading = false
       })
