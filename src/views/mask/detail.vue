@@ -94,6 +94,7 @@
                 <el-option label="用户" value="user" />
                 <el-option label="AI" value="assistant" />
               </el-select>
+              <el-checkbox v-model="message.private">私有</el-checkbox>
               ：<i class="el-icon-delete delete-message-button" @click="handleDeleteMessage(index)">删除此消息</i>
               <el-input
                 v-model="message.content"
@@ -108,7 +109,7 @@
             <i
               class="el-icon-plus"
               style="color: #67C23A; cursor: pointer"
-              @click="context.push({role: 'system', content: '', date: ''}); handleRebuildContextJson()"
+              @click="context.push({role: 'system', content: '', date: '', private: false}); handleRebuildContextJson()"
             >
               添加新消息
             </i>

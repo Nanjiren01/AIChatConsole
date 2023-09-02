@@ -51,7 +51,7 @@
       </template>
 
       <template v-slot:username="props">
-        <span>{{ props.row.username || props.row.email }}(#{{ props.row.userId }})</span>
+        <span>{{ props.row.username || props.row.email || props.row.phone }}(#{{ props.row.userId }})</span>
       </template>
 
       <template v-slot:status="props">

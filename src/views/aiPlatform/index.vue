@@ -34,13 +34,32 @@
           v-if="props.row.balanceProtocol == 'OpenAI' || props.row.baseUrl && props.row.baseUrl.startsWith('https://gptapi.nextweb.fun/')"
           type="success"
         >OpenAI</el-tag>
+        <el-tag v-else-if="props.row.balanceProtocol == 'GoApi'" type="success">GoApi</el-tag>
         <el-tag v-else-if="props.row.balanceProtocol == 'Other'" type="primary">其他</el-tag>
         <el-tag v-else type="info">未知</el-tag>
       </template>
 
+      <template v-slot:chatProtocol="slotProps">
+        <el-tag v-if="slotProps.row.chatProtocol === 'OpenAiChat'">OpenAI聊天协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'BaiduChat'">百度聊天协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'AliQwenChat'">阿里千问聊天协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'EmbeddingMjProxyDraw'">内置MJ-Proxy绘画协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'MjProxyDraw'">MJ-Proxy绘画协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'GoApiDraw'">GoApi绘画协议</el-tag>
+      </template>
+
       <template v-slot:baseUrl="props">
         <span v-if="props.row.baseUrl">{{ props.row.baseUrl }}</span>
-        <i v-else style="color: #888">系统默认（https://api.openai.com）</i>
+        <i v-else style="color: #888">
+          系统默认（
+          <template v-if="props.row.chatProtocol === 'OpenAiChat'">https://api.openai.com</template>
+          <template v-else-if="props.row.chatProtocol === 'BaiduChat'">https://aip.baidubce.com/rpc/2.0/ai_custom</template>
+          <template v-else-if="props.row.chatProtocol === 'AliQwenChat'">×</template>
+          <template v-else-if="props.row.chatProtocol === 'EmbeddingMjProxyDraw'">×</template>
+          <template v-else-if="props.row.chatProtocol === 'MjProxyDraw'">×</template>
+          <template v-else-if="props.row.chatProtocol === 'GoApiDraw'">https://api.midjourneyapi.xyz</template>
+          ）
+        </i>
       </template>
 
     </ai-table>
@@ -58,9 +77,20 @@
           <el-form-item label="BASE_URL">
             <el-input v-model="form.baseUrl" />
           </el-form-item>
+          <el-form-item label="聊天协议">
+            <el-select v-model="form.chatProtocol">
+              <el-option label="OpenAI聊天协议" value="OpenAiChat" />
+              <el-option label="百度聊天协议" value="BaiduChat" />
+              <el-option label="阿里千问聊天协议" value="AliQwenChat" />
+              <el-option label="内置MJ-Proxy绘画协议" value="EmbeddingMjProxyDraw" />
+              <el-option label="MJ-Proxy绘画协议" value="MjProxyDraw" />
+              <el-option label="GoApi绘画协议" value="GoApiDraw" />
+            </el-select>
+          </el-form-item>
           <el-form-item label="余额协议">
             <el-select v-model="form.balanceProtocol">
               <el-option label="OpenAI" value="OpenAI" />
+              <el-option label="GoApi" value="GoApi" />
               <el-option label="其他" value="Other" />
             </el-select>
           </el-form-item>
@@ -96,6 +126,9 @@ export default {
       }, {
         label: '平台名称',
         prop: 'name'
+      }, {
+        label: '聊天协议',
+        slot: 'chatProtocol'
       }, {
         label: 'BASE_URL',
         slot: 'baseUrl'
@@ -136,7 +169,8 @@ export default {
         name: null,
         baseUrl: null,
         remark: null,
-        balanceProtocol: null
+        balanceProtocol: null,
+        chatProtocol: null
       }
     }
   },
@@ -158,6 +192,7 @@ export default {
             baseUrl: platform.baseUrl,
             remark: platform.remark,
             balanceProtocol: platform.balanceProtocol,
+            chatProtocol: platform.chatProtocol,
             modelsCount: platform.modelsCount,
             createTime: platform.createTime
             // updateTime: key.updateTime
@@ -173,7 +208,7 @@ export default {
       this.dialogVisible = true
       this.form.id = null
       this.form.name = ''
-      this.form.state = 0
+      this.form.state = 1
       this.form.baseUrl = ''
       this.form.remark = ''
       this.form.balanceProtocol = ''
@@ -192,6 +227,7 @@ export default {
       this.form.baseUrl = row.baseUrl || ''
       this.form.remark = row.remark || ''
       this.form.balanceProtocol = row.balanceProtocol || ''
+      this.form.chatProtocol = row.chatProtocol || ''
     },
     handleEditSubmit() {
       if (!this.form.name) {
@@ -228,7 +264,8 @@ export default {
         state: this.form.state,
         baseUrl: this.form.baseUrl,
         remark: this.form.remark,
-        balanceProtocol: this.form.balanceProtocol
+        balanceProtocol: this.form.balanceProtocol,
+        chatProtocol: this.form.chatProtocol
       }).then(() => {
         this.$message.success('操作成功！')
         this.reload()
@@ -245,7 +282,8 @@ export default {
         name: row.name,
         state: row.state === 1 ? 2 : 1,
         baseUrl: row.baseUrl,
-        remark: row.remark
+        remark: row.remark,
+        chatProtocol: row.chatProtocol
       }).then(() => {
         this.$message.success('操作成功！')
         this.reload()

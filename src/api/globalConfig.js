@@ -36,6 +36,24 @@ export function saveEmailConfig(content) {
   })
 }
 
+export function getPhoneConfig() {
+  return request({
+    url: '/globalConfig/phone',
+    method: 'get'
+  })
+}
+
+export function savePhoneConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'Phone',
+      ...content
+    }
+  })
+}
+
 export function getRegisterQuotaConfig() {
   return request({
     url: '/globalConfig/registerQuota',
@@ -157,6 +175,24 @@ export function saveChatConfig(content) {
     method: 'post',
     data: {
       type: 'Chat',
+      ...content
+    }
+  })
+}
+
+export function getDrawConfig() {
+  return request({
+    url: '/globalConfig/draw',
+    method: 'get'
+  })
+}
+
+export function saveDrawConfig(content) {
+  return request({
+    url: '/globalConfig',
+    method: 'post',
+    data: {
+      type: 'Draw',
       ...content
     }
   })

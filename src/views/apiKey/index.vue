@@ -64,14 +64,14 @@
         </div>
         <div style="margin: 5px 0">
           <el-alert
-            title="账户状态及余额后台每小时更新一次（仅支持OpenAI），如需要立即更新，可以点击编辑后直接保存（然后过10秒钟刷新本页面）"
+            title="账号状态及余额后台每小时更新一次（仅支持OpenAI），如需要立即更新，可以点击编辑后直接保存（然后过10秒钟刷新本页面）"
             type="info"
             :closable="false"
           />
         </div>
         <div style="margin: 5px 0">
           <el-alert
-            title="账户状态异常时，系统不会将此key禁用，需要管理员手动操作"
+            title="账号状态异常时，系统不会将此key禁用，需要管理员手动操作"
             type="info"
             :closable="false"
           />
@@ -84,7 +84,6 @@
       v-if="editShow"
       :api-key="edit"
       :all-models="allModels"
-      :platforms="platforms"
       @close="handleCloseEditDialog"
       @created="handleCreated"
     />
@@ -100,7 +99,7 @@ import { getAiPlatforms } from '@/api/aiPlatform.js'
 import { getAiModels } from '@/api/aiModel.js'
 
 export default {
-  name: 'UserIndex',
+  name: 'ApiKeyIndex',
   components: { AiTable, ApiKeyEdit },
   data() {
     return {
@@ -134,7 +133,7 @@ export default {
         label: '适用模型',
         slot: 'model'
       }, {
-        label: '账户状态',
+        label: '账号状态',
         slot: 'billingState',
         width: 75
       }, {
@@ -182,8 +181,8 @@ export default {
             platformId: key.platformId,
             platformName: key.platformName,
             key: key.key,
-            models: key.models,
-            modelIds: key.models.map(m => m.id),
+            models: key.models || [],
+            modelIds: (key.models || []).map(m => m.id),
             quota: key.quota,
             callCount: key.callCount,
             state: key.state,

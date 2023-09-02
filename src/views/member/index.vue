@@ -20,13 +20,16 @@
             <el-input v-model="filter.email" placeholder="请输入邮箱" />
           </el-col>
           <el-col :span="6" :xs="24">
+            <el-input v-model="filter.phone" placeholder="请输入手机号" />
+          </el-col>
+          <el-col :span="6" :xs="24">
             <el-button type="primary" plain :disabled="loading" @click="handleSearch">搜索</el-button>
             <el-button type="info" plain @click="handleResetFilter">重置</el-button>
           </el-col>
         </el-row>
       </template>
       <template #topActions>
-      <!-- <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button> -->
+        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
 
       <!-- <el-button type="danger" icon="el-icon-delete" disabled>删除</el-button> -->
       </template>
@@ -81,7 +84,21 @@
         <el-tag v-else type="danger">停用</el-tag>
       </template>
 
+      <template v-slot:username="props">
+        <el-tag type="primary" class="username-tag">{{ props.row.username }}</el-tag>
+        <el-tag v-if="props.row.email" type="primary" class="username-tag">{{ props.row.email }}</el-tag>
+        <el-tag v-if="props.row.phone" type="primary" class="username-tag">{{ props.row.phone }}</el-tag>
+        <el-tag v-if="props.row.wechatOpenId" type="primary" class="username-tag">{{ props.row.wechatOpenId.substring(0, 6) + '...' }}</el-tag>
+      </template>
+
     </ai-table>
+
+    <create
+      ref="create"
+      :show="showCreate"
+      @close="handleCloseCreate"
+      @created="handleCreated"
+    />
 
     <detail
       ref="detail"
@@ -99,13 +116,15 @@ import AiTable from '@/components/Table'
 import { getMembers } from '@/api/member'
 import { enableUser } from '@/api/user'
 import Detail from './detail'
+import Create from './create'
 
 export default {
   name: 'MemberIndex',
-  components: { AiTable, Detail },
+  components: { AiTable, Detail, Create },
   data() {
     return {
       loading: false,
+      showCreate: false,
       showDetail: false,
       tableActions: [{
         key: 'increase-tokens',
@@ -130,10 +149,7 @@ export default {
         prop: 'name'
       }, {
         label: '登录账号',
-        prop: 'username'
-      }, {
-        label: '登录邮箱',
-        prop: 'email'
+        slot: 'username'
       }, {
         label: '状态',
         slot: 'state',
@@ -182,7 +198,8 @@ export default {
       },
       filter: {
         username: null,
-        email: null
+        email: null,
+        phone: null
       },
       detailModel: {
         id: null,
@@ -191,6 +208,7 @@ export default {
         state: null,
         role: null,
         email: null,
+        phone: null,
         balances: null,
         // tokens: null,
         // chatCount: null,
@@ -216,6 +234,7 @@ export default {
       return getMembers({
         username: this.filter.username,
         email: this.filter.email,
+        phone: this.filter.phone,
         page: this.pagination.pageNum,
         size: this.pagination.pageSize
       }).then(resp => {
@@ -231,6 +250,10 @@ export default {
             role: user.role,
             state: user.state,
             email: user.email,
+            phone: user.phone,
+            qq: user.qq,
+            remark: user.remark,
+            wechatOpenId: user.wechatOpenId,
             balance: user.balances && user.balances[0] || null,
             balances: user.balances || [],
             // chatCount: user.chatCount,
@@ -266,6 +289,10 @@ export default {
         role: row.role,
         // tokens: row.tokens,
         email: row.email,
+        phone: row.phone,
+        qq: row.qq,
+        remark: row.remark,
+        wechatOpenId: row.wechatOpenId,
         // chatCount: row.chatCount,
         // advancedChatCount: row.advancedChatCount,
         // drawCount: row.drawCount,
@@ -294,7 +321,9 @@ export default {
       this.reload()
     },
     handleCreate() {
-      this.$message.warning('开发中……')
+      // this.$message.warning('开发中……')
+      this.showCreate = true
+      this.$refs.create.clear()
     },
     handleEdit(row) {
       this.showDetail = true
@@ -303,7 +332,14 @@ export default {
     handleCloseDetail() {
       this.showDetail = false
     },
+    handleCloseCreate() {
+      this.showCreate = false
+    },
     handleChanged() {
+      this.reload()
+    },
+    handleCreated() {
+      this.handleCloseCreate()
       this.reload()
     },
     handleToggleEnable(row) {
@@ -328,6 +364,7 @@ export default {
     handleResetFilter() {
       this.filter.username = ''
       this.filter.email = ''
+      this.filter.phone = ''
       this.pagination.pageNum = 1
       // this.pagination.pageSize = 20
       this.reload()
@@ -346,5 +383,7 @@ export default {
 .dashboard-container {
   padding: 10px;
 }
-
+.username-tag {
+  margin-right: 5px;
+}
 </style>

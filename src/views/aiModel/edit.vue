@@ -25,8 +25,18 @@
           <el-input v-model="model.remark" type="textarea" :row="1" autosize />
         </el-form-item>
         <el-form-item v-if="model.id" label="状态">
-          <el-tag v-if="model.state == 1" type="success">正常</el-tag>
+          <el-tag v-if="model.state == 1" type="success">启用</el-tag>
           <el-tag v-else type="danger">停用</el-tag>
+          <el-button
+            :type="model.state == 1 ? 'danger' : 'success'"
+            plain
+            icon="el-icon-disabled"
+            :disalbed="loading"
+            style="margin-left: 10px"
+            @click.stop="toggleEnable(model)"
+          >
+            {{ model.state == 1 ? '禁用' : '启用' }}
+          </el-button>
         </el-form-item>
         <el-form-item label="计费方式">
           <el-select v-model="model.levelId">
@@ -36,12 +46,29 @@
             <el-option :value="4" label="绘画" />
           </el-select>
         </el-form-item>
+        <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'">
+          <el-form-item label="翻译用ChatGPT BaseUrl">
+            <el-input v-model="modelConfig.gptApiUrl" />
+          </el-form-item>
+          <el-form-item label="翻译用ChatGPT Key">
+            <el-input v-model="modelConfig.gptApiKey" />
+          </el-form-item>
+          <el-form-item label="翻译用ChatGPT模型名称">
+            <el-input v-model="modelConfig.model" />
+          </el-form-item>
+          <el-form-item label="回调地址">
+            <el-input v-model="modelConfig.webhookEndpoint" placeholder="webhook endpoint" />
+          </el-form-item>
+          <el-form-item label="回调密码">
+            <el-input v-model="modelConfig.webhookSecret" placeholder="webhook secret" />
+          </el-form-item>
+        </template>
         <el-form-item v-if="model.createTime" label="创建时间">
           <el-input v-model="model.createTime" disabled />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleSave">
-            {{ loading ? '保存中……' : '保 存' }}
+          <el-button type="primary" :disabled="loading" @click="handleSave">
+            {{ saving ? '操作中……' : '保 存' }}
           </el-button>
         </el-form-item>
       </el-form>
@@ -73,12 +100,27 @@ export default {
   },
   data() {
     return {
-      loading: false
+      loading: false,
+      saving: false,
+      modelConfig: {}
     }
   },
   computed: {
     title() {
       return this.model.name ? (this.model.name + '模型信息') : '新建模型'
+    },
+    selectedPlatform() {
+      if (this.model.platformId && this.platforms) {
+        return this.platforms.filter(p => p.id === this.model.platformId)[0]
+      }
+      return null
+    }
+  },
+  watch: {
+    'model.config': {
+      handler(config) {
+        this.modelConfig = config ? JSON.parse(config) : {}
+      }
     }
   },
   mounted() {
@@ -91,15 +133,17 @@ export default {
     },
     handleSave() {
       this.loading = true
+      this.saving = true
       if (!this.model.id) {
         createAiModel({
           id: this.model.id,
           platformId: this.model.platformId,
           name: this.model.name,
           showName: this.model.showName,
-          state: 0,
+          state: 1,
           levelId: this.model.levelId,
           path: this.model.path,
+          config: this.model.config,
           remark: this.model.remark
         }).then(() => {
           this.$message.success('操作成功！')
@@ -107,6 +151,7 @@ export default {
           this.$emit('close')
         }).finally(() => {
           this.loading = false
+          this.saving = false
         })
         return
       }
@@ -117,11 +162,34 @@ export default {
         state: this.model.state,
         levelId: this.model.levelId,
         path: this.model.path,
+        config: JSON.stringify(this.modelConfig || {}),
         remark: this.model.remark
       }).then(() => {
         this.$message.success('操作成功！')
         this.$emit('changed')
         this.$emit('close')
+      }).finally(() => {
+        this.loading = false
+        this.saving = false
+      })
+    },
+    toggleEnable(row) {
+      this.loading = true
+      this.$message.info(row.state === 1 ? '停用中……' : '启用中……')
+      const state = row.state === 1 ? 2 : 1
+      updateAiModel({
+        id: row.id,
+        name: row.name,
+        showName: row.showName,
+        state,
+        levelId: row.levelId,
+        path: row.path,
+        config: row.config,
+        remark: row.remark
+      }).then(() => {
+        this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
+        this.$emit('changed')
+        this.model.state = state
       }).finally(() => {
         this.loading = false
       })

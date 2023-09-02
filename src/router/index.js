@@ -147,6 +147,49 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/order',
+    component: Layout,
+    redirect: '/order/list',
+    alwaysShow: false, // will always show the root menu
+    name: 'order',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/order/index'),
+        name: 'orderList',
+        meta: { title: '订单列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/sales',
+    component: Layout,
+    redirect: '/activity/list',
+    alwaysShow: true, // will always show the root menu
+    name: 'sales',
+    meta: { title: '营销管理', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: 'activity',
+        component: () => import('@/views/activity/index'),
+        name: 'activityList',
+        meta: { title: '活动列表', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'redeemCode',
+        component: () => import('@/views/redeemCode/index'),
+        name: 'redeemCodeList',
+        meta: { title: '兑换码列表', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'package',
+        component: () => import('@/views/package/index'),
+        name: 'packageList',
+        meta: { title: '套餐列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/ai',
     component: Layout,
     // redirect: '/ai/apiKey',
@@ -175,79 +218,52 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/users',
+    path: '/function',
     component: Layout,
-    redirect: '/users/list',
-    alwaysShow: false, // will always show the root menu
-    name: 'users',
+    redirect: '/function/list',
+    alwaysShow: true, // will always show the root menu
+    name: 'function',
+    meta: { title: '扩展模块', icon: 'dashboard', affix: true },
     children: [
       {
-        path: 'list',
-        component: () => import('@/views/user/index'),
-        name: 'usersList',
-        meta: { title: '管理员列表', icon: 'dashboard', affix: true }
+        path: 'mask',
+        component: () => import('@/views/mask/index'),
+        name: 'maskList',
+        meta: { title: '面具管理', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'plugin',
+        component: () => import('@/views/plugin/index'),
+        name: 'aiPluginList',
+        meta: { title: '插件列表', icon: 'dashboard', affix: true }
       }
     ]
   },
   {
-    path: '/activity',
+    path: '/history',
     component: Layout,
-    redirect: '/activity/list',
-    alwaysShow: false, // will always show the root menu
-    name: 'activity',
-    meta: { title: '活动管理', icon: 'dashboard', affix: true },
+    redirect: '/history/log',
+    alwaysShow: true, // will always show the root menu
+    name: 'chat',
+    meta: { title: '历史日志', icon: 'dashboard', affix: true },
     children: [
       {
-        path: 'list',
-        component: () => import('@/views/activity/index'),
-        name: 'activityList',
-        meta: { title: '活动列表', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/redeemCode',
-    component: Layout,
-    redirect: '/redeemCode/list',
-    alwaysShow: false, // will always show the root menu
-    name: 'redeemCode',
-    meta: { title: '活动管理', icon: 'dashboard', affix: true },
-    children: [
+        path: 'chat',
+        component: () => import('@/views/chat/index'),
+        name: 'chatLog',
+        meta: { title: '聊天日志', icon: 'dashboard', affix: true }
+      },
       {
-        path: 'list',
-        component: () => import('@/views/redeemCode/index'),
-        name: 'redeemCodeList',
-        meta: { title: '兑换码列表', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/package',
-    component: Layout,
-    redirect: '/package/list',
-    alwaysShow: false, // will always show the root menu
-    name: 'package',
-    children: [
+        path: 'task',
+        component: () => import('@/views/drawTask/index'),
+        name: 'drawTask',
+        meta: { title: '绘画日志', icon: 'dashboard', affix: true }
+      },
       {
-        path: 'list',
-        component: () => import('@/views/package/index'),
-        name: 'packageList',
-        meta: { title: '套餐列表', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/order',
-    component: Layout,
-    redirect: '/order/list',
-    alwaysShow: false, // will always show the root menu
-    name: 'order',
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/order/index'),
-        name: 'orderList',
-        meta: { title: '订单列表', icon: 'dashboard', affix: true }
+        path: 'login',
+        component: () => import('@/views/login/record'),
+        name: 'loginRecordList',
+        meta: { title: '登录日志', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -267,32 +283,17 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/chat',
+    path: '/users',
     component: Layout,
-    redirect: '/chat/log',
+    redirect: '/users/list',
     alwaysShow: false, // will always show the root menu
-    name: 'chat',
-    children: [
-      {
-        path: 'log',
-        component: () => import('@/views/chat/index'),
-        name: 'chatLog',
-        meta: { title: '聊天记录', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/mask',
-    component: Layout,
-    redirect: '/mask/list',
-    alwaysShow: false, // will always show the root menu
-    name: 'mask',
+    name: 'users',
     children: [
       {
         path: 'list',
-        component: () => import('@/views/mask/index'),
-        name: 'maskList',
-        meta: { title: '面具管理', icon: 'dashboard', affix: true }
+        component: () => import('@/views/user/index'),
+        name: 'usersList',
+        meta: { title: '管理员列表', icon: 'dashboard', affix: true }
       }
     ]
   },

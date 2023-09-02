@@ -11,6 +11,9 @@
         <el-form-item label="记录聊天内容">
           <el-switch v-model="form.recordLog" />
         </el-form-item>
+        <el-form-item label="默认Prompt">
+          <el-input v-model="form.defaultSystemTemplate" :disabled="loading" />
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="loading" @click="handleSubmit">
             {{ loading ? '保存中……' : '提 交' }}
@@ -31,7 +34,8 @@ export default {
     return {
       loading: false,
       form: {
-        recordLog: null
+        recordLog: null,
+        defaultSystemTemplate: null
       }
     }
   },
@@ -45,6 +49,7 @@ export default {
         // console.log('resp', resp)
         const content = resp.data.chatContent
         this.form.recordLog = !!content.recordLog
+        this.form.defaultSystemTemplate = content.defaultSystemTemplate
       }).finally(() => {
         this.loading = false
       })
@@ -52,7 +57,8 @@ export default {
     handleSubmit() {
       this.loading = true
       saveChatConfig({
-        chatRecordLog: !!this.form.recordLog
+        chatRecordLog: !!this.form.recordLog,
+        defaultSystemTemplate: this.form.defaultSystemTemplate
       }).then(() => {
         this.$message.success('保存成功！')
       }).finally(() => {

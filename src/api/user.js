@@ -60,3 +60,11 @@ export function createUser(name, username, password) {
     }
   })
 }
+
+export function createMember(member) {
+  return request({
+    url: '/member',
+    method: 'post',
+    data: member
+  })
+}

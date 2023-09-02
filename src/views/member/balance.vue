@@ -305,7 +305,8 @@ export default {
         2: '每日签到',
         3: '邀请新用户',
         4: '购买',
-        5: '后台操作'
+        5: '后台操作',
+        6: '兑换'
       })[sourceId]
     },
     getCalcTypeText(calcTypeId) {
