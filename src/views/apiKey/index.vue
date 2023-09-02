@@ -89,7 +89,7 @@ import ApiKeyEdit from './edit'
 import { getApiKeys, storeApiKey, deleteApiKey } from '@/api/apiKey.js'
 
 export default {
-  name: 'UserIndex',
+  name: 'ApiKeyIndex',
   components: { AiTable, ApiKeyEdit },
   data() {
     return {

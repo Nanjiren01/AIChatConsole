@@ -1,16 +1,24 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <el-alert
+    <!-- <el-alert
       title="此页面数据为假数据，后续版本将会接入真实数据"
       type="warning"
       :closable="false"
+    /> -->
+
+    <panel-group :basic-data="basicData" />
+    <!--  @handleSetLineChartData="handleSetLineChartData" -->
+
+    <el-alert
+      title="订单总数、金额仅统计已支付的订单。订单金额仅保留整数部分。"
+      type="warning"
+      :closable="false"
+      style="margin-bottom: 20px;"
     />
 
-    <panel-group :basic-data="basicData" @handleSetLineChartData="handleSetLineChartData" />
-
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
+      <line-chart :dates="dates" :chart-data="userData" title="用户总数" />
     </el-row>
     <!--
     <el-row :gutter="32">
@@ -58,25 +66,6 @@ import LineChart from './components/LineChart'
 // import BoxCard from './components/BoxCard'
 import { getBasic } from '@/api/dashboard'
 
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 180, 200, 250, 280],
-    actualData: [20, 40, 51, 78, 100, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
-
 export default {
   name: 'DashboardAdmin',
   components: {
@@ -92,11 +81,36 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis,
+      userData: {
+        data: [],
+        itemStyle: {
+          normal: {
+            color: '#FF005A',
+            lineStyle: {
+              color: '#FF005A',
+              width: 2
+            }
+          }
+        }
+      },
       basicData: {
         memberCount: 0,
         apiCallCount: 0
       }
+    }
+  },
+  computed: {
+    dates() {
+      const dates = []
+      for (let i = 0; i < 30; i++) {
+        const date = new Date()
+        date.setDate(date.getDate() - i)
+        const year = date.getFullYear()
+        const month = ('0' + (date.getMonth() + 1)).slice(-2)
+        const day = ('0' + date.getDate()).slice(-2)
+        dates.push(year + '-' + month + '-' + day)
+      }
+      return dates.reverse()
     }
   },
   mounted() {
@@ -108,10 +122,21 @@ export default {
         const data = resp.data
         this.basicData.memberCount = data.memberCount
         this.basicData.apiCallCount = data.apiCallCount
+
+        const userMap = {}
+        data.userInfos.forEach(info => {
+          userMap[info.date] = info
+        })
+        this.userData.data.splice(0, this.userData.data.length)
+        this.dates.forEach(date => {
+          if (userMap[date]) {
+            this.userData.data.push(userMap[date].count)
+          } else {
+            this.userData.data.push(0)
+          }
+        })
+        console.log(this.dates, this.userData.data)
       })
-    },
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
     }
   }
 }

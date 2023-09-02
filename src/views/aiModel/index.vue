@@ -38,7 +38,13 @@
 
     </ai-table>
 
-    <edit :show="showEdit" :model="editModel" @close="handleCloseEdit" @changed="handleChanged" />
+    <edit
+      :show="showEdit"
+      :model="editModel"
+      :platforms="platforms"
+      @close="handleCloseEdit"
+      @changed="handleChanged"
+    />
   </div>
 </template>
 
@@ -46,6 +52,7 @@
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
 import { getAiModels, updateAiModel } from '@/api/aiModel.js'
+import { getAiPlatforms } from '@/api/aiPlatform.js'
 import Edit from './edit'
 
 export default {
@@ -53,6 +60,7 @@ export default {
   components: { AiTable, Edit },
   data() {
     return {
+      platforms: [],
       tableActions: [],
       tableColumns: [{
         label: '#',
@@ -98,6 +106,7 @@ export default {
         level: null,
         levelId: null,
         path: null,
+        config: null,
         createTime: null
       },
 
@@ -108,6 +117,7 @@ export default {
   },
   mounted() {
     this.reload()
+    this.reloadPlatforms()
   },
   methods: {
     reload() {
@@ -128,11 +138,18 @@ export default {
             // state: key.state,
             // creatorName: key.creatorName,
             path: model.path,
+            config: model.config,
             createTime: model.createTime
             // updateTime: key.updateTime
           }
         })
         this.pagination.total = this.tableData.length
+      })
+    },
+    reloadPlatforms() {
+      getAiPlatforms().then(resp => {
+        this.platforms.splice(0, this.platforms.length)
+        this.platforms.push(... (resp.data || []))
       })
     },
     handleRefresh() {
@@ -151,6 +168,7 @@ export default {
       this.editModel.levelId = row.levelId
       this.editModel.state = row.state
       this.editModel.path = row.path
+      this.editModel.config = row.config
       this.editModel.createTime = row.createTime
       this.showEdit = true
     },
@@ -171,7 +189,8 @@ export default {
         name: row.name,
         state: row.state === 1 ? 2 : 1,
         levelId: row.levelId,
-        path: row.path
+        path: row.path,
+        config: row.config
       }).then(() => {
         this.$message.success('操作成功！')
         this.reload()

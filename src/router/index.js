@@ -171,6 +171,12 @@ export const asyncRoutes = [
         component: () => import('@/views/aiPlatform/index'),
         name: 'aiPlatformList',
         meta: { title: 'AI平台列表', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'plugin',
+        component: () => import('@/views/plugin/index'),
+        name: 'aiPluginList',
+        meta: { title: '插件列表', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -217,6 +223,21 @@ export const asyncRoutes = [
         component: () => import('@/views/package/index'),
         name: 'packageList',
         meta: { title: '套餐列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/loginRecord',
+    component: Layout,
+    redirect: '/loginRecord/list',
+    alwaysShow: false, // will always show the root menu
+    name: 'loginRecord',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/login/record'),
+        name: 'loginRecordList',
+        meta: { title: '登录记录', icon: 'dashboard', affix: true }
       }
     ]
   },
