@@ -56,6 +56,13 @@
           <el-form-item label="翻译用ChatGPT模型名称">
             <el-input v-model="modelConfig.model" />
           </el-form-item>
+          <el-form-item label="处理模式">
+            <el-select v-model="modelConfig.processMode" placeholder="未设置时默认为mixed">
+              <el-option label="mixed" value="mixed" />
+              <el-option label="fast" value="fast" />
+              <el-option label="turbo" value="turbo" />
+            </el-select>
+          </el-form-item>
           <el-form-item label="回调地址">
             <el-input v-model="modelConfig.webhookEndpoint" placeholder="webhook endpoint" />
           </el-form-item>
@@ -72,6 +79,18 @@
           </el-button>
         </el-form-item>
       </el-form>
+
+      <el-alert
+        v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
+        type="success"
+        title="GoApi文档"
+        :closable="false"
+        show-icon
+      >
+        <slot name="description">
+          <a href="https://docs.goapi.ai/docs/midjourney-api/midjourney-api-v2" target="_blank">https://docs.goapi.ai/docs/midjourney-api/midjourney-api-v2</a>
+        </slot>
+      </el-alert>
 
     </div>
   </el-drawer>
