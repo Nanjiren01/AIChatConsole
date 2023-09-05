@@ -5,7 +5,7 @@
     :visible="show"
     :before-close="handleClose"
   >
-    <div style="padding: 20px">
+    <div style="padding: 20px; height: calc(100% - 77px); overflow-y: auto;">
       <el-form ref="form" label-width="260px" style="padding-right: 180px">
         <el-form-item label="平台">
           <el-select v-model="model.platformId" :disabled="!!model.id">
@@ -83,6 +83,64 @@
       <el-alert
         v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
         type="success"
+        title="好望角文档：[GOAPI]Midjourney API 接入与购买说明"
+        :closable="false"
+        show-icon
+        effect="dark"
+        style="margin-bottom: 10px;"
+      >
+        <slot name="description">
+          <a href="https://jiao.nanjiren.online/t/topic/289" target="_blank">https://jiao.nanjiren.online/t/topic/289</a>
+        </slot>
+      </el-alert>
+
+      <el-alert
+        v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
+        type="success"
+        title="立即购买（$5 ~ $45）"
+        :closable="false"
+        show-icon
+        style="margin-bottom: 10px;"
+      >
+        <slot name="description">
+          <div>
+            <el-button type="text" @click="handleCopy('7JCFAGJ8', $event)">
+              ① 复制促销码7JCFAGJ8
+            </el-button>
+          </div>
+          <div>
+            <el-button type="text">
+              ② <a href="https://buy.stripe.com/6oEbLI13mbqvgykbIK" target="_blank">点此前往购买https://buy.stripe.com/6oEbLI13mbqvgykbIK</a>
+            </el-button>
+          </div>
+        </slot>
+      </el-alert>
+
+      <el-alert
+        v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
+        type="success"
+        title="立即购买（$50+）"
+        :closable="false"
+        show-icon
+        style="margin-bottom: 10px;"
+      >
+        <slot name="description">
+          <div>
+            <el-button type="text" @click="handleCopy('7JCFAGJ8', $event)">
+              ① 复制促销码7JCFAGJ8
+            </el-button>
+          </div>
+          <div>
+            <el-button type="text">
+              ② <a href="https://buy.stripe.com/4gw5nkeUc7af0zmcMP" target="_blank">点此前往购买https://buy.stripe.com/4gw5nkeUc7af0zmcMP</a>
+            </el-button>
+          </div>
+        </slot>
+      </el-alert>
+
+      <el-alert
+        v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
+        type="info"
         title="GoApi文档"
         :closable="false"
         show-icon
@@ -98,6 +156,7 @@
 
 <script>
 
+import clip from '@/utils/clipboard' // use clipboard directly
 import { updateAiModel, createAiModel } from '@/api/aiModel.js'
 
 export default {
@@ -212,6 +271,9 @@ export default {
       }).finally(() => {
         this.loading = false
       })
+    },
+    handleCopy(text, event) {
+      clip(text, event)
     }
   }
 }
