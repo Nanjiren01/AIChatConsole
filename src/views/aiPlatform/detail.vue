@@ -6,7 +6,7 @@
     @close="handleClose"
   >
     <div style="margin: 0 auto;">
-      <el-form ref="form" label-width="120px">
+      <el-form ref="form" label-width="180px">
         <el-form-item label="名称">
           <el-input v-model="form.name" />
         </el-form-item>
@@ -30,6 +30,17 @@
             <el-option label="其他" value="Other" />
           </el-select>
         </el-form-item>
+        <template v-if="form && form.chatProtocol === 'MjProxyDraw'">
+          <el-form-item label="Midjourney-Proxy主机">
+            <el-input v-model="modelConfig.mjProxyHost" />
+          </el-form-item>
+          <el-form-item label="Midjourney-Proxy端口">
+            <el-input v-model="modelConfig.mjProxyPort" />
+          </el-form-item>
+          <el-form-item label="Midjourney-Proxy Secret">
+            <el-input v-model="modelConfig.mjProxySecret" placeholder="选填" />
+          </el-form-item>
+        </template>
         <el-form-item label="备注">
           <el-input v-model="form.remark" />
         </el-form-item>
@@ -60,6 +71,7 @@ export default {
   },
   data() {
     return {
+      modelConfig: {},
       form: {
         id: null,
         name: null,
@@ -81,6 +93,11 @@ export default {
         this.form.balanceProtocol = this.platform.balanceProtocol
         this.form.chatProtocol = this.platform.chatProtocol
         this.form.config = this.platform.config
+      }
+    },
+    'platform.config': {
+      handler(config) {
+        this.modelConfig = config ? JSON.parse(config) : {}
       }
     }
   },
@@ -104,7 +121,9 @@ export default {
           state: this.form.state,
           baseUrl: this.form.baseUrl,
           remark: this.form.remark,
-          balanceProtocol: this.form.balanceProtocol
+          balanceProtocol: this.form.balanceProtocol,
+          chatProtocol: this.form.chatProtocol,
+          config: JSON.stringify(this.modelConfig || {})
         }).then(() => {
           this.$message.success('操作成功！')
           // this.reload()
@@ -122,7 +141,8 @@ export default {
         baseUrl: this.form.baseUrl,
         remark: this.form.remark,
         balanceProtocol: this.form.balanceProtocol,
-        chatProtocol: this.form.chatProtocol
+        chatProtocol: this.form.chatProtocol,
+        config: JSON.stringify(this.modelConfig || {})
       }).then(() => {
         this.$message.success('操作成功！')
         // this.reload()

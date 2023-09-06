@@ -136,7 +136,8 @@ export default {
         baseUrl: null,
         remark: null,
         balanceProtocol: null,
-        chatProtocol: null
+        chatProtocol: null,
+        config: null
       }
     }
   },
@@ -159,6 +160,7 @@ export default {
             remark: platform.remark,
             balanceProtocol: platform.balanceProtocol,
             chatProtocol: platform.chatProtocol,
+            config: platform.config,
             modelsCount: platform.modelsCount,
             createTime: platform.createTime
             // updateTime: key.updateTime
@@ -178,6 +180,7 @@ export default {
       this.form.baseUrl = ''
       this.form.remark = ''
       this.form.balanceProtocol = ''
+      this.form.config = null
     },
     // handleEdit(row) {
     //   console.log('edit', row)
@@ -194,6 +197,7 @@ export default {
       this.form.remark = row.remark || ''
       this.form.balanceProtocol = row.balanceProtocol || ''
       this.form.chatProtocol = row.chatProtocol || ''
+      this.form.config = row.config || ''
     },
     handleChanged() {
       this.reload()
@@ -211,7 +215,9 @@ export default {
         state: row.state === 1 ? 2 : 1,
         baseUrl: row.baseUrl,
         remark: row.remark,
-        chatProtocol: row.chatProtocol
+        chatProtocol: row.chatProtocol,
+        balanceProtocol: row.balanceProtocol,
+        config: row.config
       }).then(() => {
         this.$message.success('操作成功！')
         this.reload()
