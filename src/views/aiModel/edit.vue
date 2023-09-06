@@ -77,12 +77,12 @@
               <el-option label="turbo" value="turbo" />
             </el-select>
           </el-form-item>
-          <el-form-item label="回调地址">
+          <!-- <el-form-item label="回调地址">
             <el-input v-model="modelConfig.webhookEndpoint" placeholder="webhook endpoint" />
           </el-form-item>
           <el-form-item label="回调密码">
             <el-input v-model="modelConfig.webhookSecret" placeholder="webhook secret" />
-          </el-form-item>
+          </el-form-item> -->
         </template>
         <el-form-item v-if="model.createTime" label="创建时间">
           <el-input v-model="model.createTime" disabled />
@@ -93,45 +93,6 @@
           </el-button>
         </el-form-item>
       </el-form>
-
-      <el-alert
-        v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
-        type="success"
-        title="立即购买"
-        :closable="false"
-        show-icon
-        effect="dark"
-        style="margin-bottom: 10px;"
-      >
-        <slot name="description">
-          <a href="https://aichat.builtopia.net/ " target="_blank">点此前往购买https://aichat.builtopia.net/ </a>
-        </slot>
-      </el-alert>
-
-      <el-alert
-        v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
-        type="success"
-        title="好望角文档：[GOAPI]Midjourney API 接入与购买说明"
-        :closable="false"
-        show-icon
-        style="margin-bottom: 10px;"
-      >
-        <slot name="description">
-          <a href="https://jiao.nanjiren.online/t/topic/289" target="_blank">https://jiao.nanjiren.online/t/topic/289</a>
-        </slot>
-      </el-alert>
-
-      <el-alert
-        v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
-        type="info"
-        title="GoApi文档"
-        :closable="false"
-        show-icon
-      >
-        <slot name="description">
-          <a href="https://docs.goapi.ai/docs/midjourney-api/midjourney-api-v2" target="_blank">https://docs.goapi.ai/docs/midjourney-api/midjourney-api-v2</a>
-        </slot>
-      </el-alert>
 
     </div>
   </el-drawer>
