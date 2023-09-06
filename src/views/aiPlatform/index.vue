@@ -64,46 +64,11 @@
 
     </ai-table>
 
-    <el-dialog
-      title="平台创建/修改"
-      :visible.sync="dialogVisible"
-      width="500px"
-    >
-      <div style="margin: 0 auto;">
-        <el-form ref="form" :model="form" label-width="120px">
-          <el-form-item label="名称">
-            <el-input v-model="form.name" />
-          </el-form-item>
-          <el-form-item label="BASE_URL">
-            <el-input v-model="form.baseUrl" />
-          </el-form-item>
-          <el-form-item label="聊天协议">
-            <el-select v-model="form.chatProtocol">
-              <el-option label="OpenAI聊天协议" value="OpenAiChat" />
-              <el-option label="百度聊天协议" value="BaiduChat" />
-              <el-option label="阿里千问聊天协议" value="AliQwenChat" />
-              <el-option label="内置MJ-Proxy绘画协议" value="EmbeddingMjProxyDraw" />
-              <el-option label="MJ-Proxy绘画协议" value="MjProxyDraw" />
-              <el-option label="GoApi绘画协议" value="GoApiDraw" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="余额协议">
-            <el-select v-model="form.balanceProtocol">
-              <el-option label="OpenAI" value="OpenAI" />
-              <el-option label="GoApi" value="GoApi" />
-              <el-option label="其他" value="Other" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="备注">
-            <el-input v-model="form.remark" />
-          </el-form-item>
-        </el-form>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleEditSubmit">确 定</el-button>
-      </span>
-    </el-dialog>
+    <detail
+      :platform="form"
+      :dialog-visible.sync="dialogVisible"
+      @changed="handleChanged"
+    />
 
   </div>
 </template>
@@ -111,11 +76,12 @@
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getAiPlatforms, updateAiPlatform, createAiPlatform } from '@/api/aiPlatform.js'
+import { getAiPlatforms, updateAiPlatform } from '@/api/aiPlatform.js'
+import Detail from './detail'
 
 export default {
   name: 'AiPlatformIndex',
-  components: { AiTable },
+  components: { AiTable, Detail },
   data() {
     return {
       tableActions: [],
@@ -229,50 +195,12 @@ export default {
       this.form.balanceProtocol = row.balanceProtocol || ''
       this.form.chatProtocol = row.chatProtocol || ''
     },
-    handleEditSubmit() {
-      if (!this.form.name) {
-        this.$message.error('名称不能为空！')
-        return
-      }
-      if (this.form.baseUrl) {
-        if (!this.form.baseUrl.startsWith('http')) {
-          this.$message.error('BASE_URL必须以http开头')
-          return
-        }
-      }
-      this.loading = true
-      if (!this.form.id) {
-        createAiPlatform({
-          // id: this.form.id,
-          name: this.form.name,
-          state: this.form.state,
-          baseUrl: this.form.baseUrl,
-          remark: this.form.remark,
-          balanceProtocol: this.form.balanceProtocol
-        }).then(() => {
-          this.$message.success('操作成功！')
-          this.reload()
-          this.dialogVisible = false
-        }).finally(() => {
-          this.loading = false
-        })
-        return
-      }
-      updateAiPlatform({
-        id: this.form.id,
-        name: this.form.name,
-        state: this.form.state,
-        baseUrl: this.form.baseUrl,
-        remark: this.form.remark,
-        balanceProtocol: this.form.balanceProtocol,
-        chatProtocol: this.form.chatProtocol
-      }).then(() => {
-        this.$message.success('操作成功！')
-        this.reload()
-        this.dialogVisible = false
-      }).finally(() => {
-        this.loading = false
-      })
+    handleChanged() {
+      this.reload()
+      this.dialogVisible = false
+    },
+    handleCancel() {
+      this.dialogVisible = false
     },
     toggleEnable(row) {
       this.loading = true

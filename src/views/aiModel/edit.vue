@@ -46,7 +46,7 @@
             <el-option :value="4" label="绘画" />
           </el-select>
         </el-form-item>
-        <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'MjProxyDraw'">
+        <!-- <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'MjProxyDraw'">
           <el-form-item label="Midjourney-Proxy主机">
             <el-input v-model="modelConfig.mjProxyHost" />
           </el-form-item>
@@ -56,7 +56,7 @@
           <el-form-item label="Midjourney-Proxy Secret">
             <el-input v-model="modelConfig.mjProxySecret" placeholder="选填" />
           </el-form-item>
-        </template>
+        </template> -->
         <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'">
           <el-form-item label="翻译用ChatGPT BaseUrl">
             <el-input v-model="modelConfig.gptApiUrl" />
