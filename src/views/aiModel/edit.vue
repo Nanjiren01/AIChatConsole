@@ -46,6 +46,17 @@
             <el-option :value="4" label="绘画" />
           </el-select>
         </el-form-item>
+        <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'MjProxyDraw'">
+          <el-form-item label="Midjourney-Proxy主机">
+            <el-input v-model="modelConfig.mjProxyHost" />
+          </el-form-item>
+          <el-form-item label="Midjourney-Proxy端口">
+            <el-input v-model="modelConfig.mjProxyPort" />
+          </el-form-item>
+          <el-form-item label="Midjourney-Proxy Secret">
+            <el-input v-model="modelConfig.mjProxySecret" placeholder="选填" />
+          </el-form-item>
+        </template>
         <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'">
           <el-form-item label="翻译用ChatGPT BaseUrl">
             <el-input v-model="modelConfig.gptApiUrl" />
@@ -55,6 +66,9 @@
           </el-form-item>
           <el-form-item label="翻译用ChatGPT模型名称">
             <el-input v-model="modelConfig.model" />
+          </el-form-item>
+          <el-form-item label="翻译Prompt">
+            <el-input v-model="modelConfig.translatePrompt" />
           </el-form-item>
           <el-form-item label="处理模式">
             <el-select v-model="modelConfig.processMode" placeholder="未设置时默认为mixed">
@@ -83,58 +97,27 @@
       <el-alert
         v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
         type="success"
-        title="好望角文档：[GOAPI]Midjourney API 接入与购买说明"
+        title="立即购买"
         :closable="false"
         show-icon
         effect="dark"
         style="margin-bottom: 10px;"
       >
         <slot name="description">
+          <a href="https://aichat.builtopia.net/ " target="_blank">点此前往购买https://aichat.builtopia.net/ </a>
+        </slot>
+      </el-alert>
+
+      <el-alert
+        v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
+        type="success"
+        title="好望角文档：[GOAPI]Midjourney API 接入与购买说明"
+        :closable="false"
+        show-icon
+        style="margin-bottom: 10px;"
+      >
+        <slot name="description">
           <a href="https://jiao.nanjiren.online/t/topic/289" target="_blank">https://jiao.nanjiren.online/t/topic/289</a>
-        </slot>
-      </el-alert>
-
-      <el-alert
-        v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
-        type="success"
-        title="立即购买（$5 ~ $45）"
-        :closable="false"
-        show-icon
-        style="margin-bottom: 10px;"
-      >
-        <slot name="description">
-          <div>
-            <el-button type="text" @click="handleCopy('7JCFAGJ8', $event)">
-              ① 复制促销码7JCFAGJ8
-            </el-button>
-          </div>
-          <div>
-            <el-button type="text">
-              ② <a href="https://buy.stripe.com/6oEbLI13mbqvgykbIK" target="_blank">点此前往购买https://buy.stripe.com/6oEbLI13mbqvgykbIK</a>
-            </el-button>
-          </div>
-        </slot>
-      </el-alert>
-
-      <el-alert
-        v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'"
-        type="success"
-        title="立即购买（$50+）"
-        :closable="false"
-        show-icon
-        style="margin-bottom: 10px;"
-      >
-        <slot name="description">
-          <div>
-            <el-button type="text" @click="handleCopy('7JCFAGJ8', $event)">
-              ① 复制促销码7JCFAGJ8
-            </el-button>
-          </div>
-          <div>
-            <el-button type="text">
-              ② <a href="https://buy.stripe.com/4gw5nkeUc7af0zmcMP" target="_blank">点此前往购买https://buy.stripe.com/4gw5nkeUc7af0zmcMP</a>
-            </el-button>
-          </div>
         </slot>
       </el-alert>
 
