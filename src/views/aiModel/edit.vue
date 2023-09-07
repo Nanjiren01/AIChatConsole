@@ -5,7 +5,7 @@
     :visible="show"
     :before-close="handleClose"
   >
-    <div style="padding: 20px">
+    <div style="padding: 20px; height: calc(100% - 77px); overflow-y: auto;">
       <el-form ref="form" label-width="260px" style="padding-right: 180px">
         <el-form-item label="平台">
           <el-select v-model="model.platformId" :disabled="!!model.id">
@@ -46,6 +46,17 @@
             <el-option :value="4" label="绘画" />
           </el-select>
         </el-form-item>
+        <!-- <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'MjProxyDraw'">
+          <el-form-item label="Midjourney-Proxy主机">
+            <el-input v-model="modelConfig.mjProxyHost" />
+          </el-form-item>
+          <el-form-item label="Midjourney-Proxy端口">
+            <el-input v-model="modelConfig.mjProxyPort" />
+          </el-form-item>
+          <el-form-item label="Midjourney-Proxy Secret">
+            <el-input v-model="modelConfig.mjProxySecret" placeholder="选填" />
+          </el-form-item>
+        </template> -->
         <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'">
           <el-form-item label="翻译用ChatGPT BaseUrl">
             <el-input v-model="modelConfig.gptApiUrl" />
@@ -56,12 +67,22 @@
           <el-form-item label="翻译用ChatGPT模型名称">
             <el-input v-model="modelConfig.model" />
           </el-form-item>
-          <el-form-item label="回调地址">
+          <el-form-item label="翻译Prompt">
+            <el-input v-model="modelConfig.translatePrompt" />
+          </el-form-item>
+          <el-form-item label="处理模式">
+            <el-select v-model="modelConfig.processMode" placeholder="未设置时默认为mixed">
+              <el-option label="mixed" value="mixed" />
+              <el-option label="fast" value="fast" />
+              <el-option label="turbo" value="turbo" />
+            </el-select>
+          </el-form-item>
+          <!-- <el-form-item label="回调地址">
             <el-input v-model="modelConfig.webhookEndpoint" placeholder="webhook endpoint" />
           </el-form-item>
           <el-form-item label="回调密码">
             <el-input v-model="modelConfig.webhookSecret" placeholder="webhook secret" />
-          </el-form-item>
+          </el-form-item> -->
         </template>
         <el-form-item v-if="model.createTime" label="创建时间">
           <el-input v-model="model.createTime" disabled />
@@ -79,6 +100,7 @@
 
 <script>
 
+import clip from '@/utils/clipboard' // use clipboard directly
 import { updateAiModel, createAiModel } from '@/api/aiModel.js'
 
 export default {
@@ -193,6 +215,9 @@ export default {
       }).finally(() => {
         this.loading = false
       })
+    },
+    handleCopy(text, event) {
+      clip(text, event)
     }
   }
 }

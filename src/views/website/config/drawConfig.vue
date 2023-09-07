@@ -62,6 +62,9 @@
             <el-form-item label="Temperature">
               <el-input-number v-model="form.gptTemperature" :disabled="loading" placeholder="" />
             </el-form-item>
+            <el-form-item label="翻译Prompt">
+              <el-input v-model="form.gptTranslatePrompt" :disabled="loading" placeholder="" />
+            </el-form-item>
           </template>
           <template v-if="form.translateWay === 'BAIDU'">
             <el-form-item label="百度翻译AppId">
@@ -113,6 +116,7 @@ export default {
         gptTimeoutSeconds: null,
         gptMaxTokens: null,
         gptTemperature: null,
+        gptTranslatePrompt: null,
         baiduTranslateAppId: null,
         baiduTranslateAppSecret: null
       }
@@ -146,6 +150,7 @@ export default {
         this.form.gptTimeoutSeconds = content.gptTimeoutSeconds
         this.form.gptMaxTokens = content.gptMaxTokens
         this.form.gptTemperature = content.gptTemperature
+        this.form.gptTranslatePrompt = content.gptTranslatePrompt
         this.form.baiduTranslateAppId = content.baiduTranslateAppId
         this.form.baiduTranslateAppSecret = content.baiduTranslateAppSecret
       }).finally(() => {
@@ -174,6 +179,7 @@ export default {
         gptTimeoutSeconds: this.form.gptTimeoutSeconds,
         gptMaxTokens: this.form.gptMaxTokens,
         gptTemperature: this.form.gptTemperature,
+        gptTranslatePrompt: this.form.gptTranslatePrompt,
         baiduTranslateAppId: this.form.baiduTranslateAppId,
         baiduTranslateAppSecret: this.form.baiduTranslateAppSecret
       }).then(() => {
