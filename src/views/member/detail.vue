@@ -43,17 +43,17 @@
         <!-- <el-form-item label="剩余tokens">
           <el-input v-model="member.tokens" disabled />
         </el-form-item>
-        <el-form-item label="剩余聊天次数">
+        <el-form-item label="剩余聊天积分">
           <el-input v-model="member.chatCount" disabled />
         </el-form-item>
-        <el-form-item label="剩余高级聊天次数（GPT4）">
+        <el-form-item label="剩余高级聊天积分">
           <el-input v-model="member.advancedChatCount" disabled />
         </el-form-item>
-        <el-form-item label="剩余绘图次数">
+        <el-form-item label="剩余绘图积分">
           <el-input v-model="member.drawCount" disabled />
         </el-form-item>
         <el-form-item label="操作">
-          <el-button type="primary" @click="handleShowQuotaEditDialog">手动添加次数</el-button>
+          <el-button type="primary" @click="handleShowQuotaEditDialog">手动添加积分</el-button>
         </el-form-item> -->
       </el-form>
 

@@ -127,17 +127,17 @@ export default {
         slot: 'tokens',
         width: 70
       }, {
-        label: '普通聊天次数',
+        label: '普通聊天积分',
         prop: 'chatCount',
         slot: 'chatCount',
         width: 95
       }, {
-        label: '高级聊天次数',
+        label: '高级聊天积分',
         prop: 'advancedChatCount',
         slot: 'advancedChatCount',
         width: 95
       }, {
-        label: '绘画次数',
+        label: '绘画积分',
         prop: 'drawCount',
         slot: 'drawCount',
         width: 70

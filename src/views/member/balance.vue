@@ -16,13 +16,13 @@
               <el-form-item label="tokens">
                 <span>{{ props.row.tokens }}</span>
               </el-form-item>
-              <el-form-item label="普通聊天次数">
+              <el-form-item label="普通聊天积分">
                 <span>{{ props.row.chatCount }}</span>
               </el-form-item>
-              <el-form-item label="高级聊天次数">
+              <el-form-item label="高级聊天积分">
                 <span>{{ props.row.advancedChatCount }}</span>
               </el-form-item>
-              <el-form-item label="绘画次数">
+              <el-form-item label="绘画积分">
                 <span>{{ props.row.drawCount }}</span>
               </el-form-item>
             </el-form>
@@ -72,13 +72,13 @@
       <el-form label-width="80px">
         <el-form-item label="类型">
           <el-select v-model="increaseType">
-            <el-option label="聊天次数" :value="1" />
-            <el-option label="高级聊天次数（GPT4）" :value="2" />
+            <el-option label="基础聊天积分" :value="1" />
+            <el-option label="高级聊天积分" :value="2" />
             <el-option label="tokens" :value="3" />
-            <el-option label="绘画次数" :value="4" />
+            <el-option label="绘画积分" :value="4" />
           </el-select>
         </el-form-item>
-        <el-form-item label="次数">
+        <el-form-item label="积分">
           <el-input-number v-model="increaseCount" />
         </el-form-item>
       </el-form>
@@ -150,7 +150,7 @@ export default {
         prop: 'calcTypeId',
         slot: 'calcTypeId'
       }, {
-        label: '次数',
+        label: '积分',
         slot: 'count',
         width: 150
       }, {
@@ -262,11 +262,11 @@ export default {
     handleQuotaAdd() {
       const count = +this.increaseCount
       if (count === 0) {
-        this.$message.error('次数不能为0！')
+        this.$message.error('积分不能为0！')
         return
       }
       // if (count <= 0) {
-      //   this.$message.error('次数必须是一个大于0的数！')
+      //   this.$message.error('积分必须是一个大于0的数！')
       //   return
       // }
       this.increasing = true

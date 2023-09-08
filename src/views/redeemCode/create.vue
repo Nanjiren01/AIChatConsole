@@ -12,13 +12,13 @@
         <el-form-item label="tokens">
           <el-input-number v-model="member.tokens" />
         </el-form-item>
-        <el-form-item label="普通聊天次数">
+        <el-form-item label="普通聊天积分">
           <el-input-number v-model="member.chatCount" />
         </el-form-item>
-        <el-form-item label="高级聊天次数">
+        <el-form-item label="高级聊天积分">
           <el-input-number v-model="member.advancedChatCount" />
         </el-form-item>
-        <el-form-item label="AI绘图次数">
+        <el-form-item label="绘图积分">
           <el-input-number v-model="member.drawCount" />
         </el-form-item>
         <el-form-item label="类型">

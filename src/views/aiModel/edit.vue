@@ -46,6 +46,9 @@
             <el-option :value="4" label="绘画" />
           </el-select>
         </el-form-item>
+        <el-form-item label="倍率">
+          <el-input-number v-model="model.multiple" />
+        </el-form-item>
         <!-- <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'MjProxyDraw'">
           <el-form-item label="Midjourney-Proxy主机">
             <el-input v-model="modelConfig.mjProxyHost" />
@@ -164,6 +167,7 @@ export default {
           showName: this.model.showName,
           state: 1,
           levelId: this.model.levelId,
+          multiple: this.model.multiple,
           path: this.model.path,
           config: this.model.config,
           remark: this.model.remark
@@ -183,6 +187,7 @@ export default {
         showName: this.model.showName,
         state: this.model.state,
         levelId: this.model.levelId,
+        multiple: this.model.multiple,
         path: this.model.path,
         config: JSON.stringify(this.modelConfig || {}),
         remark: this.model.remark
@@ -205,6 +210,7 @@ export default {
         showName: row.showName,
         state,
         levelId: row.levelId,
+        multiple: row.multiple,
         path: row.path,
         config: row.config,
         remark: row.remark
