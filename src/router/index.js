@@ -312,6 +312,21 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/info',
+    component: Layout,
+    alwaysShow: false,
+    redirect: '/info/about',
+    // meta: { title: '配置管理', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: '/info/about',
+        component: () => import('@/views/info/about'),
+        name: 'Dashboard',
+        meta: { title: '关于AIChat', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
   /*
   {
     path: '/permission',
