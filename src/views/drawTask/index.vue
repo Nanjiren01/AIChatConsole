@@ -100,6 +100,10 @@ export default {
         slot: 'type',
         width: 100
       }, {
+        label: '模式',
+        prop: 'processMode',
+        width: 100
+      }, {
         label: 'prompt',
         prop: 'prompt'
       }, {
@@ -133,6 +137,7 @@ export default {
         email: null,
         type: null,
         state: null,
+        processMode: null,
         createTime: null,
         updateTime: null
       }

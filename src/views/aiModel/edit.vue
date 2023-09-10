@@ -40,11 +40,19 @@
         </el-form-item>
         <el-form-item label="计费方式">
           <el-select v-model="model.levelId">
-            <el-option :value="1" label="普通聊天（GPT3.5）" />
-            <el-option :value="2" label="高级聊天（GPT4）" />
-            <el-option :value="3" label="tokens" />
-            <el-option :value="4" label="绘画" />
+            <el-option :value="1" label="扣减普通聊天积分" />
+            <el-option :value="2" label="扣减高级聊天积分" />
+            <el-option :value="3" label="扣减tokens" />
+            <el-option :value="4" label="扣减绘画积分" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="倍率">
+          <el-input-number v-model="model.multiple" />
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >token默认按实际使用扣减，其他默认每次扣减1积分。您可以针对不同的模型设置不同的倍率。</el-alert>
         </el-form-item>
         <!-- <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'MjProxyDraw'">
           <el-form-item label="Midjourney-Proxy主机">
@@ -164,6 +172,7 @@ export default {
           showName: this.model.showName,
           state: 1,
           levelId: this.model.levelId,
+          multiple: this.model.multiple,
           path: this.model.path,
           config: this.model.config,
           remark: this.model.remark
@@ -183,6 +192,7 @@ export default {
         showName: this.model.showName,
         state: this.model.state,
         levelId: this.model.levelId,
+        multiple: this.model.multiple,
         path: this.model.path,
         config: JSON.stringify(this.modelConfig || {}),
         remark: this.model.remark
@@ -205,6 +215,7 @@ export default {
         showName: row.showName,
         state,
         levelId: row.levelId,
+        multiple: row.multiple,
         path: row.path,
         config: row.config,
         remark: row.remark

@@ -39,6 +39,9 @@
             <span v-if="drawTaskEntity.targetTaskId">::{{ drawTaskEntity.targetTaskId }}</span>
           </span>
         </el-form-item>
+        <el-form-item label="处理模式">
+          <span class="order-form-item">{{ drawTaskEntity.processMode }}</span>
+        </el-form-item>
         <el-form-item label="prompt">
           <span class="order-form-item">{{ drawTaskEntity.prompt }}</span>
         </el-form-item>

@@ -3,7 +3,7 @@
     <div style="margin: 0 auto;">
       <el-form ref="form" :model="form" label-width="120px">
         <el-alert title="注册即赠送额度" :closable="false" style="padding: 5px 10px; margin-bottom: 10px;" />
-        <el-alert title="当某个次数大于0时表示启用" :closable="false" style="padding: 5px 10px; margin-bottom: 10px;" />
+        <el-alert title="当某个积分大于0时表示启用" :closable="false" style="padding: 5px 10px; margin-bottom: 10px;" />
         <el-alert title="天数设置为-1表示不限制有效期" :closable="false" style="padding: 5px 10px; margin-bottom: 10px;" />
         <el-form-item label="开启">
           <el-switch v-model="form.open" />
@@ -17,13 +17,13 @@
             <el-form-item label="tokens">
               <el-input-number v-model="form.tokens" />
             </el-form-item>
-            <el-form-item label="普通聊天次数">
+            <el-form-item label="普通聊天积分">
               <el-input-number v-model="form.chatCount" />
             </el-form-item>
-            <el-form-item label="高级聊天次数">
+            <el-form-item label="高级聊天积分">
               <el-input-number v-model="form.advancedChatCount" />
             </el-form-item>
-            <el-form-item label="AI绘图次数">
+            <el-form-item label="绘图积分">
               <el-input-number v-model="form.drawCount" />
             </el-form-item>
             <el-form-item label="类型">
@@ -43,13 +43,13 @@
             <el-form-item label="tokens">
               <el-input-number v-model="form.tokens2" />
             </el-form-item>
-            <el-form-item label="普通聊天次数">
+            <el-form-item label="普通聊天积分">
               <el-input-number v-model="form.chatCount2" />
             </el-form-item>
-            <el-form-item label="高级聊天次数">
+            <el-form-item label="高级聊天积分">
               <el-input-number v-model="form.advancedChatCount2" />
             </el-form-item>
-            <el-form-item label="AI绘图次数">
+            <el-form-item label="绘图积分">
               <el-input-number v-model="form.drawCount2" />
             </el-form-item>
             <el-form-item label="类型">
@@ -140,15 +140,15 @@ export default {
         return
       }
       if (this.form.chatCount < 0) {
-        this.$message.error('普通聊天次数不能小于0')
+        this.$message.error('普通聊天积分不能小于0')
         return
       }
       if (this.form.advancedChatCount < 0) {
-        this.$message.error('高级聊天次数不能小于0')
+        this.$message.error('高级聊天积分不能小于0')
         return
       }
       if (this.form.drawCount < 0) {
-        this.$message.error('AI绘画次数不能小于0')
+        this.$message.error('绘画积分不能小于0')
         return
       }
       if (this.form.days2 <= 0 && this.form.days2 !== -1) {
@@ -160,15 +160,15 @@ export default {
         return
       }
       if (this.form.chatCount2 < 0) {
-        this.$message.error('普通聊天次数不能小于0')
+        this.$message.error('普通聊天积分不能小于0')
         return
       }
       if (this.form.advancedChatCount2 < 0) {
-        this.$message.error('高级聊天次数不能小于0')
+        this.$message.error('高级聊天积分不能小于0')
         return
       }
       if (this.form.drawCount2 < 0) {
-        this.$message.error('AI绘画次数不能小于0')
+        this.$message.error('绘画积分不能小于0')
         return
       }
       this.loading = true

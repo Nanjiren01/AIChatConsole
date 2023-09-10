@@ -164,17 +164,17 @@ export default {
       //   slot: 'tokens',
       //   width: 120
       // }, {
-      //   label: '剩余聊天次数',
+      //   label: '剩余基础聊天积分',
       //   prop: 'chatCount',
       //   slot: 'chatCount',
       //   width: 120
       // }, {
-      //   label: '剩余高级聊天次数',
+      //   label: '剩余高级聊天积分',
       //   prop: 'advancedChatCount',
       //   slot: 'advancedChatCount',
       //   width: 120
       // }, {
-      //   label: '剩余绘画次数',
+      //   label: '剩余绘画积分',
       //   prop: 'drawCount',
       //   slot: 'drawCount',
       //   width: 120

@@ -43,13 +43,13 @@
         <el-form-item label="tokens">
           <el-input-number v-model="packageEntity.tokens" :disabled="disabled" />
         </el-form-item>
-        <el-form-item label="普通聊天次数（GPT3.5）">
+        <el-form-item label="普通聊天积分">
           <el-input-number v-model="packageEntity.chatCount" :disabled="disabled" />
         </el-form-item>
-        <el-form-item label="高级聊天次数（GPT4）">
+        <el-form-item label="高级聊天积分">
           <el-input-number v-model="packageEntity.advancedChatCount" :disabled="disabled" />
         </el-form-item>
-        <el-form-item label="绘图次数">
+        <el-form-item label="绘图积分">
           <el-input-number v-model="packageEntity.drawCount" :disabled="disabled" />
         </el-form-item>
         <el-form-item label="天数">
@@ -70,7 +70,7 @@
           style="margin-bottom: 100px;"
         >
           <el-alert
-            title="以上所有次数（及tokens）均表示每天的次数。每天剩余使用次数将被清零，不结转至下一个自然日。"
+            title="以上所有积分（及tokens）均表示每天的积分。每天剩余使用积分将被清零，不结转至下一个自然日。"
             type="info"
             style="margin-bottom: 5px;"
             :closable="false"

@@ -51,7 +51,7 @@
       </template>
 
       <template v-slot:levelId="slotProps">
-        <el-tag>{{ getLevelText(slotProps.row.levelId) }}</el-tag>
+        <el-tag>{{ getLevelText(slotProps.row.levelId) }}×{{ slotProps.row.multiple }}</el-tag>
       </template>
       <template v-slot:state="slotProps">
         <el-tag v-if="slotProps.row.state == 1" type="success">启用</el-tag>
@@ -103,8 +103,8 @@ export default {
         prop: 'path'
       }, {
         label: '计费方式',
-        slot: 'levelId',
-        width: 85
+        slot: 'levelId'
+        // width: 105
       }, {
         label: '状态',
         slot: 'state',
@@ -150,6 +150,7 @@ export default {
         state: null,
         level: null,
         levelId: null,
+        multiple: null,
         path: null,
         config: null,
         remark: null,
@@ -209,6 +210,7 @@ export default {
       this.editModel.platformName = null
       this.editModel.level = null
       this.editModel.levelId = null
+      this.editModel.multiple = null
       this.editModel.state = null
       this.editModel.path = null
       this.editModel.config = null
@@ -224,6 +226,7 @@ export default {
       this.editModel.platformName = row.platformName
       this.editModel.level = row.level
       this.editModel.levelId = row.levelId
+      this.editModel.multiple = row.multiple
       this.editModel.state = row.state
       this.editModel.path = row.path
       this.editModel.config = row.config
@@ -249,6 +252,7 @@ export default {
         showName: row.showName,
         state: row.state === 1 ? 2 : 1,
         levelId: row.levelId,
+        multiple: row.multiple,
         path: row.path,
         config: row.config,
         remark: row.remark

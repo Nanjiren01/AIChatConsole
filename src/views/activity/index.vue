@@ -8,7 +8,7 @@
             <el-button style="float: right; padding: 3px 0" type="text" @click="handleShowRegisterQuotaActivity">配置</el-button>
           </div>
           <el-alert title="注册即赠送额度" :closable="false" style="padding: 5px 10px; margin-bottom: 10px;" />
-          <el-alert title="当某个次数大于0时表示启用" :closable="false" style="padding: 5px 10px; margin-bottom: 10px;" />
+          <el-alert title="当某个积分大于0时表示启用" :closable="false" style="padding: 5px 10px; margin-bottom: 10px;" />
           <el-alert title="天数设置为-1表示不限制有效期" :closable="false" style="padding: 5px 10px; margin-bottom: 10px;" />
           <div>
             <el-form ref="form" label-width="120px">
@@ -18,13 +18,13 @@
               <el-form-item label="tokens">
                 <el-input-number v-model="registerQuotaConfig.tokens" disabled />
               </el-form-item>
-              <el-form-item label="普通聊天次数">
+              <el-form-item label="普通聊天积分">
                 <el-input-number v-model="registerQuotaConfig.chatCount" disabled />
               </el-form-item>
-              <el-form-item label="高级聊天次数">
+              <el-form-item label="高级聊天积分">
                 <el-input-number v-model="registerQuotaConfig.advancedChatCount" disabled />
               </el-form-item>
-              <el-form-item label="AI绘图次数">
+              <el-form-item label="绘图积分">
                 <el-input-number v-model="registerQuotaConfig.drawCount" disabled />
               </el-form-item>
               <el-form-item label="类型">
@@ -62,13 +62,13 @@
               <el-form-item label="tokens">
                 <el-input-number v-model="inviteRegisterConfig.tokens" disabled />
               </el-form-item>
-              <el-form-item label="普通聊天次数">
+              <el-form-item label="普通聊天积分">
                 <el-input-number v-model="inviteRegisterConfig.chatCount" disabled />
               </el-form-item>
-              <el-form-item label="高级聊天次数">
+              <el-form-item label="高级聊天积分">
                 <el-input-number v-model="inviteRegisterConfig.advancedChatCount" disabled />
               </el-form-item>
-              <el-form-item label="AI绘图次数">
+              <el-form-item label="绘图积分">
                 <el-input-number v-model="inviteRegisterConfig.drawCount" disabled />
               </el-form-item>
               <el-form-item label="类型">
