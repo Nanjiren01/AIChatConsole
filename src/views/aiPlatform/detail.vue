@@ -21,12 +21,14 @@
             <el-option label="内置MJ-Proxy绘画协议" value="EmbeddingMjProxyDraw" />
             <el-option label="MJ-Proxy绘画协议" value="MjProxyDraw" />
             <el-option label="GoApi绘画协议" value="GoApiDraw" />
+            <el-option label="AImage绘画协议" value="AimageDraw" />
           </el-select>
         </el-form-item>
         <el-form-item label="余额协议">
           <el-select v-model="form.balanceProtocol">
             <el-option label="OpenAI" value="OpenAI" />
             <el-option label="GoApi" value="GoApi" />
+            <el-option label="AImage" value="Aimage" />
             <el-option label="其他" value="Other" />
           </el-select>
         </el-form-item>
