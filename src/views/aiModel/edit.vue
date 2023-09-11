@@ -46,13 +46,34 @@
             <el-option :value="4" label="扣减绘画积分" />
           </el-select>
         </el-form-item>
-        <el-form-item label="倍率">
+        <el-form-item label="粗略倍率">
           <el-input-number v-model="model.multiple" />
           <el-alert
             type="success"
             style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
             :closable="false"
           >token默认按实际使用扣减，其他默认每次扣减1积分。您可以针对不同的模型设置不同的倍率。</el-alert>
+        </el-form-item>
+        <el-form-item v-if="modelMultiples" label="精细倍率">
+          <div style="border: 1px solid #DCDFE6; border-radius: 4px; padding: 10px">
+            <div style="line-height: 30px;margin-bottom: 4px;">
+              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">IMAGINE: </span><el-input-number v-model="modelMultiples.imagine" />
+            </div>
+            <div style="line-height: 30px;margin-bottom: 4px;">
+              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">UPSCALE: </span><el-input-number v-model="modelMultiples.upscale" />
+            </div>
+            <div style="line-height: 30px;margin-bottom: 4px;">
+              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">VARIATION: </span><el-input-number v-model="modelMultiples.variation" />
+            </div>
+            <div style="line-height: 30px;margin-bottom: 4px;">
+              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">ZOOMOUT: </span><el-input-number v-model="modelMultiples.zoomout" />
+            </div>
+          </div>
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >系统会优先使用精细倍率，若未设置，才会使用粗略倍率。</el-alert>
         </el-form-item>
         <!-- <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'MjProxyDraw'">
           <el-form-item label="Midjourney-Proxy主机">
@@ -132,7 +153,8 @@ export default {
     return {
       loading: false,
       saving: false,
-      modelConfig: {}
+      modelConfig: {},
+      modelMultiples: {}
     }
   },
   computed: {
@@ -150,6 +172,11 @@ export default {
     'model.config': {
       handler(config) {
         this.modelConfig = config ? JSON.parse(config) : {}
+      }
+    },
+    'model.multiples': {
+      handler(multiples) {
+        this.modelMultiples = multiples ? JSON.parse(multiples) : {}
       }
     }
   },
@@ -175,6 +202,7 @@ export default {
           multiple: this.model.multiple,
           path: this.model.path,
           config: this.model.config,
+          multiples: this.model.multiples,
           remark: this.model.remark
         }).then(() => {
           this.$message.success('操作成功！')
@@ -195,6 +223,7 @@ export default {
         multiple: this.model.multiple,
         path: this.model.path,
         config: JSON.stringify(this.modelConfig || {}),
+        multiples: JSON.stringify(this.modelMultiples || {}),
         remark: this.model.remark
       }).then(() => {
         this.$message.success('操作成功！')
@@ -218,6 +247,7 @@ export default {
         multiple: row.multiple,
         path: row.path,
         config: row.config,
+        multiples: row.multiples,
         remark: row.remark
       }).then(() => {
         this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
