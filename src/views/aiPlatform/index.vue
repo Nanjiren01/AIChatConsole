@@ -48,6 +48,7 @@
         <el-tag v-else-if="slotProps.row.chatProtocol === 'MjProxyDraw'">MJ-Proxy绘画协议</el-tag>
         <el-tag v-else-if="slotProps.row.chatProtocol === 'GoApiDraw'">GoApi绘画协议</el-tag>
         <el-tag v-else-if="slotProps.row.chatProtocol === 'AimageDraw'">AImage绘画协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'MjProxyPlusDraw'">MJ-Proxy-Plus绘画协议</el-tag>
       </template>
 
       <template v-slot:baseUrl="props">
@@ -61,6 +62,7 @@
           <template v-else-if="props.row.chatProtocol === 'MjProxyDraw'">×</template>
           <template v-else-if="props.row.chatProtocol === 'GoApiDraw'">https://api.midjourneyapi.xyz</template>
           <template v-else-if="props.row.chatProtocol === 'AimageDraw'">https://api.aimage.nanjiren.online/draw</template>
+          <template v-else-if="props.row.chatProtocol === 'MjProxyPlusDraw'">×</template>
           ）
         </i>
       </template>
