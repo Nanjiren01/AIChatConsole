@@ -202,7 +202,7 @@ export default {
           multiple: this.model.multiple,
           path: this.model.path,
           config: this.model.config,
-          multiples: this.model.multiples,
+          multiples: JSON.stringify(this.modelMultiples || {}),
           remark: this.model.remark
         }).then(() => {
           this.$message.success('操作成功！')
