@@ -68,3 +68,10 @@ export function createMember(member) {
     data: member
   })
 }
+
+export function audit(id, state) {
+  return request({
+    url: `/member/${id}/audit?state=${state}`,
+    method: 'post'
+  })
+}

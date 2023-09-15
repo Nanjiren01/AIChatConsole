@@ -50,6 +50,9 @@
             <el-form-item label="仅限邀请码注册">
               <el-switch v-model="form.registerForInviteCodeOnly" />
             </el-form-item>
+            <el-form-item label="注册后审核">
+              <el-switch v-model="form.auditAfterRegister" />
+            </el-form-item>
             <el-form-item label="未登录时隐藏聊天内容">
               <el-switch v-model="form.hideChatLogWhenNotLogin" />
             </el-form-item>
@@ -153,6 +156,7 @@ export default {
         registerPageSubTitle: '',
         registerTypes: [],
         registerForInviteCodeOnly: false,
+        auditAfterRegister: false,
         registerEmailSuffix: null,
         pricingPageTitle: null,
         pricingPageSubTitle: null,
@@ -198,6 +202,7 @@ export default {
         this.form.botHello = config.websiteContent.botHello
         this.form.hideChatLogWhenNotLogin = !!config.websiteContent.hideChatLogWhenNotLogin
         this.form.registerForInviteCodeOnly = config.websiteContent.registerForInviteCodeOnly || false
+        this.form.auditAfterRegister = config.websiteContent.auditAfterRegister || false
         this.form.registerEmailSuffix = config.websiteContent.registerEmailSuffix
         this.form.redeemCodePageTitle = config.websiteContent.redeemCodePageTitle || ''
         this.form.redeemCodePageSubTitle = config.websiteContent.redeemCodePageSubTitle || ''
@@ -229,6 +234,7 @@ export default {
         registerPageSubTitle: this.form.registerPageSubTitle,
         registerTypes: this.form.registerTypes,
         registerForInviteCodeOnly: this.form.registerForInviteCodeOnly,
+        auditAfterRegister: this.form.auditAfterRegister,
         registerEmailSuffix: this.form.registerEmailSuffix,
         pricingPageTitle: this.form.pricingPageTitle,
         pricingPageSubTitle: this.form.pricingPageSubTitle,

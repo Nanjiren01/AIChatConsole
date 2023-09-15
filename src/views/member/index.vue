@@ -81,7 +81,8 @@
       </template> -->
       <template v-slot:state="slotProps">
         <el-tag v-if="slotProps.row.state == 1" type="success">正常</el-tag>
-        <el-tag v-else type="danger">停用</el-tag>
+        <el-tag v-else-if="slotProps.row.state == 2" type="danger">停用</el-tag>
+        <el-tag v-else type="warning">审核中</el-tag>
       </template>
 
       <template v-slot:username="props">
