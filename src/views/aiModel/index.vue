@@ -151,6 +151,7 @@ export default {
         level: null,
         levelId: null,
         multiple: null,
+        multiples: null,
         path: null,
         config: null,
         remark: null,
@@ -211,6 +212,7 @@ export default {
       this.editModel.level = null
       this.editModel.levelId = null
       this.editModel.multiple = null
+      this.editModel.multiples = null
       this.editModel.state = null
       this.editModel.path = null
       this.editModel.config = null
@@ -227,6 +229,7 @@ export default {
       this.editModel.level = row.level
       this.editModel.levelId = row.levelId
       this.editModel.multiple = row.multiple
+      this.editModel.multiples = row.multiples
       this.editModel.state = row.state
       this.editModel.path = row.path
       this.editModel.config = row.config
@@ -253,6 +256,7 @@ export default {
         state: row.state === 1 ? 2 : 1,
         levelId: row.levelId,
         multiple: row.multiple,
+        multiples: row.multiples,
         path: row.path,
         config: row.config,
         remark: row.remark
