@@ -37,6 +37,8 @@
         <el-tag v-else-if="slotProps.row.chatProtocol === 'EmbeddingMjProxyDraw'">内置MJ-Proxy绘画协议</el-tag>
         <el-tag v-else-if="slotProps.row.chatProtocol === 'MjProxyDraw'">MJ-Proxy绘画协议</el-tag>
         <el-tag v-else-if="slotProps.row.chatProtocol === 'GoApiDraw'">GoApi绘画协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'AimageDraw'">AImage绘画协议</el-tag>
+        <el-tag v-else-if="slotProps.row.chatProtocol === 'MjProxyPlusDraw'">MJ-Proxy-Plus绘画协议</el-tag>
       </template>
 
       <template v-slot:baseUrl="props">
@@ -49,42 +51,19 @@
           <template v-else-if="props.row.chatProtocol === 'EmbeddingMjProxyDraw'">×</template>
           <template v-else-if="props.row.chatProtocol === 'MjProxyDraw'">×</template>
           <template v-else-if="props.row.chatProtocol === 'GoApiDraw'">https://api.midjourneyapi.xyz</template>
+          <template v-else-if="props.row.chatProtocol === 'AimageDraw'">https://api.aimage.nanjiren.online/draw</template>
+          <template v-else-if="props.row.chatProtocol === 'MjProxyPlusDraw'">×</template>
           ）
         </i>
       </template>
 
     </ai-table>
 
-    <el-dialog
-      title="平台修改"
-      :visible.sync="dialogVisible"
-      width="500px"
-    >
-      <div style="margin: 0 auto;">
-        <el-form ref="form" :model="form" label-width="120px">
-          <el-form-item label="名称">
-            <el-input v-model="form.name" />
-          </el-form-item>
-          <el-form-item label="BASE_URL">
-            <el-input v-model="form.baseUrl" />
-          </el-form-item>
-          <el-form-item label="聊天协议">
-            <el-select v-model="form.chatProtocol">
-              <el-option label="OpenAI聊天协议" value="OpenAiChat" />
-              <el-option label="百度聊天协议" value="BaiduChat" />
-              <el-option label="阿里千问聊天协议" value="AliQwenChat" />
-              <el-option label="内置MJ-Proxy绘画协议" value="EmbeddingMjProxyDraw" />
-              <el-option label="MJ-Proxy绘画协议" value="MjProxyDraw" />
-              <el-option label="GoApi绘画协议" value="GoApiDraw" />
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleEditSubmit">确 定</el-button>
-      </span>
-    </el-dialog>
+    <detail
+      :platform="form"
+      :dialog-visible.sync="dialogVisible"
+      @changed="handleChanged"
+    />
 
   </div>
 </template>
@@ -93,10 +72,11 @@
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
 import { getAiPlatforms, updateAiPlatform } from '@/api/aiPlatform.js'
+import Detail from './detail'
 
 export default {
   name: 'AiPlatformIndex',
-  components: { AiTable },
+  components: { AiTable, Detail },
   data() {
     return {
       tableActions: [],
@@ -142,7 +122,8 @@ export default {
         id: null,
         name: null,
         baseUrl: null,
-        chatProtocol: null
+        chatProtocol: null,
+        config: null
       }
     }
   },
@@ -163,6 +144,7 @@ export default {
             state: platform.state,
             baseUrl: platform.baseUrl,
             chatProtocol: platform.chatProtocol,
+            config: platform.config,
             modelsCount: platform.modelsCount,
             createTime: platform.createTime
             // updateTime: key.updateTime
@@ -175,7 +157,12 @@ export default {
       this.reload()
     },
     handleCreate() {
-      this.$message.warning('开发中……')
+      this.dialogVisible = true
+      this.form.id = null
+      this.form.name = ''
+      this.form.state = 1
+      this.form.baseUrl = ''
+      this.form.config = null
     },
     // handleEdit(row) {
     //   console.log('edit', row)
@@ -190,32 +177,14 @@ export default {
       this.form.state = row.state
       this.form.baseUrl = row.baseUrl || ''
       this.form.chatProtocol = row.chatProtocol || ''
+      this.form.config = row.config || ''
     },
-    handleEditSubmit() {
-      if (!this.form.name) {
-        this.$message.error('名称不能为空！')
-        return
-      }
-      if (this.form.baseUrl) {
-        if (!this.form.baseUrl.startsWith('http')) {
-          this.$message.error('BASE_URL必须以http开头')
-          return
-        }
-      }
-      this.loading = true
-      updateAiPlatform({
-        id: this.form.id,
-        name: this.form.name,
-        state: this.form.state,
-        baseUrl: this.form.baseUrl,
-        chatProtocol: this.form.chatProtocol
-      }).then(() => {
-        this.$message.success('操作成功！')
-        this.reload()
-        this.dialogVisible = false
-      }).finally(() => {
-        this.loading = false
-      })
+    handleChanged() {
+      this.reload()
+      this.dialogVisible = false
+    },
+    handleCancel() {
+      this.dialogVisible = false
     },
     toggleEnable(row) {
       this.loading = true
@@ -225,7 +194,8 @@ export default {
         name: row.name,
         state: row.state === 1 ? 2 : 1,
         baseUrl: row.baseUrl,
-        chatProtocol: row.chatProtocol
+        chatProtocol: row.chatProtocol,
+        config: row.config
       }).then(() => {
         this.$message.success('操作成功！')
         this.reload()
