@@ -79,6 +79,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
+import axios from 'axios'
 
 export default {
   name: 'Login',
@@ -163,6 +164,18 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
+              axios.get('//center.nanjiren.online/prod-api/globalConfig/notice')
+                .then(resp => {
+                  console.log('resp.data', resp.data)
+                  const noticeConfig = resp.data?.data?.noticeContent
+                  if (noticeConfig.show && noticeConfig.splash) {
+                    this.$alert(noticeConfig.content, noticeConfig.title, {
+                      dangerouslyUseHTMLString: true
+                    })
+                  }
+                }).catch(e => {
+                  console.error(e)
+                })
             })
             .catch(() => {
               this.loading = false

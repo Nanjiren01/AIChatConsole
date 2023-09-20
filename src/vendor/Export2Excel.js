@@ -28,6 +28,8 @@ function generateArray(table) {
       if (rowspan || colspan) {
         rowspan = rowspan || 1;
         colspan = colspan || 1;
+        rowspan = +rowspan
+        colspan = +colspan
         ranges.push({
           s: {
             r: R,
@@ -44,8 +46,9 @@ function generateArray(table) {
       outRow.push(cellValue !== "" ? cellValue : null);
 
       //Handle Colspan
-      if (colspan)
+      if (colspan) {
         for (var k = 0; k < colspan - 1; ++k) outRow.push(null);
+      }
     }
     out.push(outRow);
   }
@@ -113,7 +116,7 @@ function s2ab(s) {
   return buf;
 }
 
-export function export_table_to_excel(id) {
+export function export_table_to_excel(id, fileName) {
   var theTable = document.getElementById(id);
   var oo = generateArray(theTable);
   var ranges = oo[1];
@@ -141,7 +144,7 @@ export function export_table_to_excel(id) {
 
   saveAs(new Blob([s2ab(wbout)], {
     type: "application/octet-stream"
-  }), "test.xlsx")
+  }), fileName || "test.xlsx")
 }
 
 export function export_json_to_excel({

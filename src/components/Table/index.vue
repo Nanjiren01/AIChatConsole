@@ -17,6 +17,7 @@
       <slot name="header" />
 
       <el-table
+        :id="tableId"
         ref="multipleTable"
         v-loading="loading"
         :data="tableData"
@@ -38,7 +39,7 @@
           :label="col.label"
           :width="col.width"
           :type="col.type"
-          show-overflow-tooltip
+          :show-overflow-tooltip="col.showOverflowTooltip === undefined || col.showOverflowTooltip === null ? true : col.showOverflowTooltip"
         >
           <slot slot-scope="scope" :name="col.slot" :row="scope.row">
             {{ scope.row[col.prop] }}
@@ -78,6 +79,10 @@ export default {
   name: 'AiTable',
   components: {},
   props: {
+    tableId: {
+      type: String,
+      default: () => '' + Math.random()
+    },
     tableActions: {
       type: [Array, Boolean],
       default: () => []
@@ -140,8 +145,8 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     // 多选
-    handleSelectionChange() {
-
+    handleSelectionChange(rows) {
+      this.$emit('selection-change', rows)
     },
 
     handleClickRefreshButton() {

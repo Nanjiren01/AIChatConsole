@@ -12,8 +12,14 @@ RUN mkdir -p /app/
 
 COPY dist /usr/share/nginx/html/
 
+ENV BASE_URL=aichat-admin:8080
+
 COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/start.sh ~/start.sh
 
 EXPOSE 80
+
+CMD ["bash", "~/start.sh"]
+
 
 
