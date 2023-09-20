@@ -72,6 +72,7 @@ export default {
       form: {
         id: null,
         name: null,
+        state: null,
         baseUrl: null,
         chatProtocol: null
       }
@@ -83,6 +84,7 @@ export default {
       handler() {
         this.form.id = this.platform.id
         this.form.name = this.platform.name
+        this.form.state = this.platform.state
         this.form.baseUrl = this.platform.baseUrl
         this.form.chatProtocol = this.platform.chatProtocol
         this.form.config = this.platform.config

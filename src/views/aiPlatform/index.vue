@@ -121,6 +121,7 @@ export default {
       form: {
         id: null,
         name: null,
+        state: null,
         baseUrl: null,
         chatProtocol: null,
         config: null
