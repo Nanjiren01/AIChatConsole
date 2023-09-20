@@ -147,55 +147,6 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/ai',
-    component: Layout,
-    // redirect: '/ai/apiKey',
-    alwaysShow: true, // will always show the root menu
-    name: 'ai',
-    meta: { title: 'AI管理', icon: 'dashboard', affix: true },
-    children: [
-      {
-        path: 'apiKey',
-        component: () => import('@/views/apiKey/index'),
-        name: 'apiKeyList',
-        meta: { title: 'API Key', icon: 'dashboard', affix: true }
-      },
-      {
-        path: 'model',
-        component: () => import('@/views/aiModel/index'),
-        name: 'aiModelList',
-        meta: { title: 'AI模型管理', icon: 'dashboard', affix: true }
-      },
-      {
-        path: 'platform',
-        component: () => import('@/views/aiPlatform/index'),
-        name: 'aiPlatformList',
-        meta: { title: 'AI平台列表', icon: 'dashboard', affix: true }
-      },
-      {
-        path: 'plugin',
-        component: () => import('@/views/plugin/index'),
-        name: 'aiPluginList',
-        meta: { title: '插件列表', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/users',
-    component: Layout,
-    redirect: '/users/list',
-    alwaysShow: false, // will always show the root menu
-    name: 'users',
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/user/index'),
-        name: 'usersList',
-        meta: { title: '管理员列表', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
     path: '/activity',
     component: Layout,
     redirect: '/activity/list',
@@ -227,24 +178,96 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/loginRecord',
+    path: '/ai',
     component: Layout,
-    redirect: '/loginRecord/list',
+    // redirect: '/ai/apiKey',
+    alwaysShow: true, // will always show the root menu
+    name: 'ai',
+    meta: { title: 'AI管理', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: 'apiKey',
+        component: () => import('@/views/apiKey/index'),
+        name: 'apiKeyList',
+        meta: { title: 'API Key', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'model',
+        component: () => import('@/views/aiModel/index'),
+        name: 'aiModelList',
+        meta: { title: 'AI模型管理', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'platform',
+        component: () => import('@/views/aiPlatform/index'),
+        name: 'aiPlatformList',
+        meta: { title: 'AI平台列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/function',
+    component: Layout,
+    redirect: '/function/list',
+    alwaysShow: true, // will always show the root menu
+    name: 'function',
+    meta: { title: '扩展模块', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: 'plugin',
+        component: () => import('@/views/plugin/index'),
+        name: 'aiPluginList',
+        meta: { title: '插件列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/history',
+    component: Layout,
+    redirect: '/history/log',
+    alwaysShow: true, // will always show the root menu
+    name: 'chat',
+    meta: { title: '历史日志', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: 'chat',
+        component: () => import('@/views/chat/index'),
+        name: 'chatLog',
+        meta: { title: '聊天日志', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'task',
+        component: () => import('@/views/drawTask/index'),
+        name: 'drawTask',
+        meta: { title: '绘画日志', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'login',
+        component: () => import('@/views/login/record'),
+        name: 'loginRecordList',
+        meta: { title: '登录日志', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/users',
+    component: Layout,
+    redirect: '/users/list',
     alwaysShow: false, // will always show the root menu
-    name: 'loginRecord',
+    name: 'users',
     children: [
       {
         path: 'list',
-        component: () => import('@/views/login/record'),
-        name: 'loginRecordList',
-        meta: { title: '登录记录', icon: 'dashboard', affix: true }
+        component: () => import('@/views/user/index'),
+        name: 'usersList',
+        meta: { title: '管理员列表', icon: 'dashboard', affix: true }
       }
     ]
   },
   {
     path: '/website',
     component: Layout,
-    alwaysShow: true,
+    alwaysShow: false,
     redirect: '/website/config',
     meta: { title: '配置管理', icon: 'dashboard', affix: true },
     children: [
@@ -252,7 +275,22 @@ export const asyncRoutes = [
         path: '/website/config',
         component: () => import('@/views/website/config/index'),
         name: 'Dashboard',
-        meta: { title: '网站管理', icon: 'dashboard', affix: true }
+        meta: { title: '站点管理', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/info',
+    component: Layout,
+    alwaysShow: false,
+    redirect: '/info/about',
+    // meta: { title: '配置管理', icon: 'dashboard', affix: true },
+    children: [
+      {
+        path: '/info/about',
+        component: () => import('@/views/info/about'),
+        name: 'Dashboard',
+        meta: { title: '关于AIChat', icon: 'dashboard', affix: true }
       }
     ]
   },
