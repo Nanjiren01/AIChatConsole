@@ -138,6 +138,7 @@ export default {
       form: {
         id: null,
         name: null,
+        state: null,
         baseUrl: null,
         remark: null,
         balanceProtocol: null,

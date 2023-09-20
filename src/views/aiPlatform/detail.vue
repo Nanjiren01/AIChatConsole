@@ -83,6 +83,7 @@ export default {
       form: {
         id: null,
         name: null,
+        state: null,
         baseUrl: null,
         remark: null,
         balanceProtocol: null,
@@ -96,6 +97,7 @@ export default {
       handler() {
         this.form.id = this.platform.id
         this.form.name = this.platform.name
+        this.form.state = this.platform.state
         this.form.baseUrl = this.platform.baseUrl
         this.form.remark = this.platform.remark
         this.form.balanceProtocol = this.platform.balanceProtocol
