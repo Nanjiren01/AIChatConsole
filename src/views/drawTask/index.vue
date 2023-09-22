@@ -20,9 +20,6 @@
             <el-input v-model="filter.email" placeholder="请输入邮箱" />
           </el-col>
           <el-col :span="6" :xs="24">
-            <el-input v-model="filter.phone" placeholder="请输入手机号" />
-          </el-col>
-          <el-col :span="6" :xs="24">
             <el-button type="primary" plain :disabled="loading" @click="handleSearch">搜索</el-button>
             <el-button type="info" plain @click="handleResetFilter">重置</el-button>
           </el-col>
@@ -80,8 +77,7 @@ export default {
       showDetail: false,
       filter: {
         username: null,
-        email: null,
-        phone: null
+        email: null
       },
       tableActions: [],
       tableColumns: [{
@@ -152,7 +148,6 @@ export default {
       getDrawTasks({
         username: this.filter.username,
         email: this.filter.email,
-        phone: this.filter.phone,
         page: this.pagination.pageNum,
         size: this.pagination.pageSize
       }).then(resp => {
@@ -220,7 +215,6 @@ export default {
     handleResetFilter() {
       this.filter.username = ''
       this.filter.email = ''
-      this.filter.phone = ''
       this.pagination.pageNum = 1
       // this.pagination.pageSize = 20
       this.reload()
