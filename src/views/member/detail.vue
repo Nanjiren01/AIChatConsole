@@ -30,6 +30,10 @@
         <el-form-item label="QQ">
           <el-input v-model="member.qq" disabled />
         </el-form-item>
+        <el-form-item label="邀请人">
+          <span v-if="member.invitor.id">{{ member.invitor.username || member.invitor.email || member.invitor.phone }}(#{{ member.invitor.id }})</span>
+          <span v-else>无</span>
+        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="member.remark" disabled />
         </el-form-item>
@@ -91,6 +95,9 @@
             </template>
           </ai-table>
         </el-tab-pane>
+        <el-tab-pane label="邀请列表" name="invite">
+          <invite ref="invite" :user-id="member.id" />
+        </el-tab-pane>
       </el-tabs>
 
       <change-password
@@ -107,13 +114,14 @@
 
 import AiTable from '@/components/Table'
 import Balances from './balance'
+import Invite from './invite'
 import { getBalanceRecordByUserId } from '@/api/balance'
 import ChangePassword from '../user/password'
 import { audit } from '@/api/user'
 
 export default {
   name: 'MemberDetail',
-  components: { AiTable, ChangePassword, Balances },
+  components: { AiTable, ChangePassword, Balances, Invite },
   props: {
     member: {
       type: Object,
@@ -193,6 +201,7 @@ export default {
       }
       this.loading = true
       this.$refs.balances.reload()
+      this.$refs.invite.reload()
       getBalanceRecordByUserId(this.member.id).then(resp => {
         console.log('resp', resp)
         this.tableData = resp.data.map(item => {

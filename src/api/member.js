@@ -8,3 +8,10 @@ export function getMembers(params) {
     params
   })
 }
+
+export function getInviteInfo(userId) {
+  return request({
+    url: `/member/${userId}/invite`,
+    method: 'get'
+  })
+}
