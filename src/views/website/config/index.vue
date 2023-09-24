@@ -19,6 +19,9 @@
             <el-form-item label="网站自定义内容（HTML）">
               <el-input v-model="form.icp" type="textarea" autosize />
             </el-form-item>
+            <el-form-item label="网站全局脚本（JavaScript）">
+              <el-input v-model="form.globalJavaScript" type="textarea" autosize :rows="10" placeholder="例如，在此填入网站统计JS或客服系统JS" />
+            </el-form-item>
             <el-form-item label="登录页副标题">
               <el-input v-model="form.loginPageSubTitle" />
             </el-form-item>
@@ -159,6 +162,7 @@ export default {
         mainTitle: '',
         subTitle: '',
         icp: '',
+        globalJavaScript: '',
         loginPageSubTitle: '',
         registerPageSubTitle: '',
         registerTypes: [],
@@ -199,6 +203,7 @@ export default {
         this.form.mainTitle = config.websiteContent.mainTitle
         this.form.subTitle = config.websiteContent.subTitle
         this.form.icp = config.websiteContent.icp
+        this.form.globalJavaScript = config.websiteContent.globalJavaScript
         this.form.loginPageSubTitle = config.websiteContent.loginPageSubTitle
         this.form.registerPageSubTitle = config.websiteContent.registerPageSubTitle
         this.form.pricingPageTitle = config.websiteContent.pricingPageTitle
@@ -239,6 +244,7 @@ export default {
         mainTitle: this.form.mainTitle,
         subTitle: this.form.subTitle,
         icp: this.form.icp,
+        globalJavaScript: this.form.globalJavaScript,
         loginPageSubTitle: this.form.loginPageSubTitle,
         registerPageSubTitle: this.form.registerPageSubTitle,
         registerTypes: this.form.registerTypes,
