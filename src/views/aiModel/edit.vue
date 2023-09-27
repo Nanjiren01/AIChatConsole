@@ -66,6 +66,9 @@
               <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">VARIATION: </span><el-input-number v-model="modelMultiples.variation" />
             </div>
             <div style="line-height: 30px;margin-bottom: 4px;">
+              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">VARY: </span><el-input-number v-model="modelMultiples.vary" />
+            </div>
+            <div style="line-height: 30px;margin-bottom: 4px;">
               <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">ZOOMOUT: </span><el-input-number v-model="modelMultiples.zoomout" />
             </div>
             <div style="line-height: 30px;margin-bottom: 4px;">
