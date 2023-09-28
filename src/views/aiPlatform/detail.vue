@@ -2,7 +2,7 @@
   <el-dialog
     title="平台创建/修改"
     :visible="dialogVisible"
-    width="500px"
+    width="800px"
     @close="handleClose"
   >
     <div style="margin: 0 auto;">
@@ -47,6 +47,20 @@
         <template v-if="form && form.chatProtocol === 'MjProxyPlusDraw'">
           <el-form-item label="Api Secret">
             <el-input v-model="modelConfig.mjProxySecret" placeholder="选填" />
+          </el-form-item>
+        </template>
+        <template v-if="form && ['AimageDraw', 'MjProxyPlusDraw', 'GoApiDraw'].includes(form.chatProtocol)">
+          <el-form-item label="翻译用ChatGPT BaseUrl">
+            <el-input v-model="modelConfig.gptApiUrl" />
+          </el-form-item>
+          <el-form-item label="翻译用ChatGPT Key">
+            <el-input v-model="modelConfig.gptApiKey" />
+          </el-form-item>
+          <el-form-item label="翻译用ChatGPT模型名称">
+            <el-input v-model="modelConfig.model" />
+          </el-form-item>
+          <el-form-item label="翻译Prompt">
+            <el-input v-model="modelConfig.translatePrompt" />
           </el-form-item>
         </template>
         <el-form-item label="备注">
