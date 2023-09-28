@@ -30,12 +30,21 @@
         <el-form-item label="QQ">
           <el-input v-model="member.qq" disabled />
         </el-form-item>
+        <el-form-item label="邀请人">
+          <span v-if="member.invitor.id">{{ member.invitor.username || member.invitor.email || member.invitor.phone }}(#{{ member.invitor.id }})</span>
+          <span v-else>无</span>
+        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="member.remark" disabled />
         </el-form-item>
         <el-form-item label="状态">
-          <el-tag v-if="member.state == 1" type="success">正常</el-tag>
-          <el-tag v-else type="danger">停用</el-tag>
+          <el-tag v-if="member.state === 1" type="success">正常</el-tag>
+          <el-tag v-else-if="member.state === 2" type="danger">停用</el-tag>
+          <el-tag v-else type="warning">审核中</el-tag>
+          <span v-if="member.state === 3" style="margin-left: 10px;">
+            <el-button type="success" @click="() => audit(1)">审核通过（转为正常）</el-button>
+            <el-button type="warning" @click="() => audit(2)">审核不通过（转为正常）</el-button>
+          </span>
         </el-form-item>
         <el-form-item label="创建时间">
           <el-input v-model="member.createTime" disabled />
@@ -86,6 +95,9 @@
             </template>
           </ai-table>
         </el-tab-pane>
+        <el-tab-pane label="邀请列表" name="invite">
+          <invite ref="invite" :user-id="member.id" />
+        </el-tab-pane>
       </el-tabs>
 
       <change-password
@@ -102,12 +114,14 @@
 
 import AiTable from '@/components/Table'
 import Balances from './balance'
+import Invite from './invite'
 import { getBalanceRecordByUserId } from '@/api/balance'
 import ChangePassword from '../user/password'
+import { audit } from '@/api/user'
 
 export default {
   name: 'MemberDetail',
-  components: { AiTable, ChangePassword, Balances },
+  components: { AiTable, ChangePassword, Balances, Invite },
   props: {
     member: {
       type: Object,
@@ -187,6 +201,7 @@ export default {
       }
       this.loading = true
       this.$refs.balances.reload()
+      this.$refs.invite.reload()
       getBalanceRecordByUserId(this.member.id).then(resp => {
         console.log('resp', resp)
         this.tableData = resp.data.map(item => {
@@ -245,6 +260,21 @@ export default {
     handlePasswordDialogClose() {
       console.log('handlePasswordDialogClose')
       this.passwordDialogVisible = false
+    },
+    audit(state) {
+      this.$confirm(`确定将用户状态置为${state === 1 ? '正常' : '停用'}？`, '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        audit(this.member.id, state).then(resp => {
+          console.log('resp', resp)
+          this.$message.success('操作成功！')
+          this.$emit('changed')
+        })
+      })
     },
     getReason(row) {
       if (!row.jsonReason) {

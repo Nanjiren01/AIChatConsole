@@ -19,6 +19,9 @@
             <el-form-item label="网站自定义内容（HTML）">
               <el-input v-model="form.icp" type="textarea" autosize />
             </el-form-item>
+            <el-form-item label="网站全局脚本（JavaScript）">
+              <el-input v-model="form.globalJavaScript" type="textarea" autosize :rows="10" placeholder="例如，在此填入网站统计JS或客服系统JS" />
+            </el-form-item>
             <el-form-item label="登录页副标题">
               <el-input v-model="form.loginPageSubTitle" />
             </el-form-item>
@@ -49,6 +52,16 @@
             </el-form-item>
             <el-form-item label="仅限邀请码注册">
               <el-switch v-model="form.registerForInviteCodeOnly" />
+            </el-form-item>
+            <el-form-item label="注册后审核">
+              <el-switch v-model="form.auditAfterRegister" />
+            </el-form-item>
+            <el-form-item label="审核中的用户可以">
+              <el-checkbox-group v-model="form.auditingActions">
+                <el-checkbox label="login" :disabled="!form.auditAfterRegister">登录</el-checkbox>
+                <el-checkbox label="buyPackage" :disabled="!form.auditAfterRegister">购买套餐</el-checkbox>
+                <el-checkbox label="redeem" :disabled="!form.auditAfterRegister">使用兑换码兑换</el-checkbox>
+              </el-checkbox-group>
             </el-form-item>
             <el-form-item label="未登录时隐藏聊天内容">
               <el-switch v-model="form.hideChatLogWhenNotLogin" />
@@ -149,10 +162,13 @@ export default {
         mainTitle: '',
         subTitle: '',
         icp: '',
+        globalJavaScript: '',
         loginPageSubTitle: '',
         registerPageSubTitle: '',
         registerTypes: [],
         registerForInviteCodeOnly: false,
+        auditAfterRegister: false,
+        auditingActions: [],
         registerEmailSuffix: null,
         pricingPageTitle: null,
         pricingPageSubTitle: null,
@@ -187,6 +203,7 @@ export default {
         this.form.mainTitle = config.websiteContent.mainTitle
         this.form.subTitle = config.websiteContent.subTitle
         this.form.icp = config.websiteContent.icp
+        this.form.globalJavaScript = config.websiteContent.globalJavaScript
         this.form.loginPageSubTitle = config.websiteContent.loginPageSubTitle
         this.form.registerPageSubTitle = config.websiteContent.registerPageSubTitle
         this.form.pricingPageTitle = config.websiteContent.pricingPageTitle
@@ -198,6 +215,8 @@ export default {
         this.form.botHello = config.websiteContent.botHello
         this.form.hideChatLogWhenNotLogin = !!config.websiteContent.hideChatLogWhenNotLogin
         this.form.registerForInviteCodeOnly = config.websiteContent.registerForInviteCodeOnly || false
+        this.form.auditAfterRegister = config.websiteContent.auditAfterRegister || false
+        this.form.auditingActions = config.websiteContent.auditingActions || []
         this.form.registerEmailSuffix = config.websiteContent.registerEmailSuffix
         this.form.redeemCodePageTitle = config.websiteContent.redeemCodePageTitle || ''
         this.form.redeemCodePageSubTitle = config.websiteContent.redeemCodePageSubTitle || ''
@@ -225,10 +244,13 @@ export default {
         mainTitle: this.form.mainTitle,
         subTitle: this.form.subTitle,
         icp: this.form.icp,
+        globalJavaScript: this.form.globalJavaScript,
         loginPageSubTitle: this.form.loginPageSubTitle,
         registerPageSubTitle: this.form.registerPageSubTitle,
         registerTypes: this.form.registerTypes,
         registerForInviteCodeOnly: this.form.registerForInviteCodeOnly,
+        auditAfterRegister: this.form.auditAfterRegister,
+        auditingActions: this.form.auditingActions || [],
         registerEmailSuffix: this.form.registerEmailSuffix,
         pricingPageTitle: this.form.pricingPageTitle,
         pricingPageSubTitle: this.form.pricingPageSubTitle,

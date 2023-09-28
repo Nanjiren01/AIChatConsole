@@ -81,7 +81,8 @@
       </template> -->
       <template v-slot:state="slotProps">
         <el-tag v-if="slotProps.row.state == 1" type="success">正常</el-tag>
-        <el-tag v-else type="danger">停用</el-tag>
+        <el-tag v-else-if="slotProps.row.state == 2" type="danger">停用</el-tag>
+        <el-tag v-else type="warning">审核中</el-tag>
       </template>
 
       <template v-slot:username="props">
@@ -210,6 +211,7 @@ export default {
         email: null,
         phone: null,
         balances: null,
+        invitor: {},
         // tokens: null,
         // chatCount: null,
         // advancedChatCount: null,
@@ -253,6 +255,7 @@ export default {
             phone: user.phone,
             qq: user.qq,
             remark: user.remark,
+            invitor: { ... user.invitor },
             wechatOpenId: user.wechatOpenId,
             balance: user.balances && user.balances[0] || null,
             balances: user.balances || [],
@@ -291,6 +294,7 @@ export default {
         email: row.email,
         phone: row.phone,
         qq: row.qq,
+        invitor: row.invitor,
         remark: row.remark,
         wechatOpenId: row.wechatOpenId,
         // chatCount: row.chatCount,

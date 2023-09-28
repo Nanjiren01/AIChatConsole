@@ -73,7 +73,7 @@
           />
         </el-form-item>
         <el-form-item v-if="drawTaskEntity.state == 30" label="结果">
-          <img :src="getUrl(drawTaskEntity)" style="max-width: 800px;">
+          <img :src="getUrl(drawTaskEntity)" style="max-width: 800px;width: 100%;">
         </el-form-item>
 
       </el-form>
@@ -129,7 +129,11 @@ export default {
       }
       try {
         const result = JSON.parse(drawTaskEntity.result)
-        return result.url
+        const url = result.url
+        if (url.startsWith('/')) {
+          return process.env.VUE_APP_BASE_API + url
+        }
+        return url
       } catch (e) {
         console.error(e)
       }
