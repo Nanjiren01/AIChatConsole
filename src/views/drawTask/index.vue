@@ -158,11 +158,15 @@ export default {
       }).then(resp => {
         // console.log('resp', resp)
         const page = resp.data
-        const orders = page.list
-        this.tableData = orders.map(item => {
-          return {
+        const tasks = page.list
+        this.tableData = tasks.map(item => {
+          item = {
             ...item
           }
+          if (item.baseImages) {
+            item.baseImages = JSON.parse(item.baseImages)
+          }
+          return item
         })
         this.pagination.total = this.tableData.length
         this.pagination.total = page.total

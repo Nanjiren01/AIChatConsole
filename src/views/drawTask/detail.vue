@@ -72,8 +72,24 @@
             :closble="false"
           />
         </el-form-item>
+        <el-form-item label="基础图片">
+          <template v-if="drawTaskEntity.baseImages && drawTaskEntity.baseImages.urls && drawTaskEntity.baseImages.urls.length">
+            <img
+              v-for="(url, idx) in drawTaskEntity.baseImages.urls"
+              :key="idx"
+              :src="parseUrl(url)"
+              style="width: 100px; height: 100px; object-fit: scale-down; border: 1px solid #ccc"
+            >
+          </template>
+        </el-form-item>
         <el-form-item v-if="drawTaskEntity.state == 30" label="结果">
           <img :src="getUrl(drawTaskEntity)" style="max-width: 800px;width: 100%;">
+        </el-form-item>
+        <el-form-item label="request">
+          <span class="order-form-item">{{ drawTaskEntity.request }}</span>
+        </el-form-item>
+        <el-form-item label="response">
+          <span class="order-form-item">{{ drawTaskEntity.response }}</span>
         </el-form-item>
 
       </el-form>
@@ -122,6 +138,12 @@ export default {
     },
     handleRefresh() {
       this.reload()
+    },
+    parseUrl(url) {
+      if (url.startsWith('/')) {
+        return process.env.VUE_APP_BASE_API + url
+      }
+      return url
     },
     getUrl(drawTaskEntity) {
       if (!drawTaskEntity.result) {
