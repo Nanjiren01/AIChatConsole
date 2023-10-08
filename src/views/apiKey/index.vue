@@ -10,6 +10,9 @@
     >
       <template #topActions>
         <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
+        <el-button type="success" icon="el-icon-link">
+          <a href="https://aimhub.nanjiren.online/" target="_blank">获取Key</a>
+        </el-button>
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
