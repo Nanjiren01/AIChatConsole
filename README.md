@@ -1,6 +1,6 @@
 <div align="center">
 <img src="./docs/images/icon.svg" alt="预览"/>
-<h1 align="center">AI Chat Console</h1>
+<h1 align="center">ChatMJ Console</h1>
 
 </div>
 

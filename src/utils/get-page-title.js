@@ -1,6 +1,6 @@
 import defaultSettings from '@/settings'
 
-const title = defaultSettings.title || 'AI Chat Admin'
+const title = defaultSettings.title || 'ChatMJ Admin'
 
 export default function getPageTitle(pageTitle) {
   if (pageTitle) {

@@ -1,7 +1,7 @@
 {
   "name": "vue-element-admin",
   "version": "4.4.0",
-  "description": "A magical AI Chat admin. An out-of-box UI solution for enterprise applications. Newest development stack of vue. Lots of awesome features",
+  "description": "A magical ChatMJ admin. An out-of-box UI solution for enterprise applications. Newest development stack of vue. Lots of awesome features",
   "author": "Nanjiren <nanjiren@qq.com>",
   "scripts": {
     "dev": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",

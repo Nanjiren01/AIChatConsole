@@ -1,9 +1,9 @@
 # 注意，请先运行npm run build:prod生成dist文件
 
-# docker build -t nanjiren01/aichat-console:0.9.5 ../AIChatConsole
-# docker push nanjiren01/aichat-console:0.9.5
-# docker tag nanjiren01/aichat-console:0.9.5 nanjiren01/aichat-console:pro-latest
-# docker push nanjiren01/aichat-console:pro-latest
+# docker build -t nanjiren01/chatmj-console:0.9.5 ../AIChatConsole
+# docker push nanjiren01/chatmj-console:0.9.5
+# docker tag nanjiren01/chatmj-console:0.9.5 nanjiren01/chatmj-console:pro-latest
+# docker push nanjiren01/chatmj-console:pro-latest
 
 
 FROM nginx

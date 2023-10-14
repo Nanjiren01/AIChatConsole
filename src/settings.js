@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'AI Chat Admin'
+  title: 'ChatMJ Admin'
 
   // /**
   //  * @type {boolean} true | false
