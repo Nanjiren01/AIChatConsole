@@ -35,7 +35,7 @@
         <el-tag
           v-for="mdl in pp.row.models"
           :key="mdl.id"
-          :type="mdl.state == 1 ? 'success' : 'danger'"
+          :type="getPlatformState(pp.row.id) !== 1 ? 'info' : mdl.state == 1 ? 'success' : 'danger'"
           size="middle"
           class="model-tag"
           @click.stop="handleEdit(mdl)"
@@ -50,12 +50,19 @@
         ><i class="el-icon-plus" />添加模型</el-tag>
       </template>
 
+      <template v-slot:platformName="props">
+        <span>
+          {{ oldView ? props.row.platformName : props.row.name }}
+          {{ oldView ? '' : getPlatformState(props.row.id) !== 1 ? `(未启用)` : '' }}
+        </span>
+      </template>
+
       <template v-slot:levelId="slotProps">
         <el-tag>{{ getLevelText(slotProps.row.levelId) }}×{{ slotProps.row.multiple }}</el-tag>
       </template>
       <template v-slot:state="slotProps">
-        <el-tag v-if="slotProps.row.state == 1" type="success">启用</el-tag>
-        <el-tag v-else type="danger">停用</el-tag>
+        <el-tag v-if="slotProps.row.state == 1" :type="getPlatformState(slotProps.row.platformId) !== 1 ? 'info' : 'success'">启用</el-tag>
+        <el-tag v-else :type="getPlatformState(slotProps.row.platformId) !== 1 ? 'info' : 'danger'">停用</el-tag>
       </template>
 
     </ai-table>
@@ -91,7 +98,7 @@ export default {
         width: 55
       }, {
         label: '平台名称',
-        prop: 'platformName'
+        slot: 'platformName'
       }, {
         label: '模型名称',
         prop: 'name'
@@ -123,8 +130,7 @@ export default {
         width: 55
       }, {
         label: '平台名称',
-        prop: 'name',
-        width: 150
+        slot: 'platformName'
       }, {
         label: '模型',
         slot: 'models',
@@ -177,7 +183,7 @@ export default {
         this.oldTableData.splice(0, this.oldTableData.length)
         models.forEach(model => {
           let platform = platforms.find(p => p.id === model.platformId)
-          console.log('platform', platform)
+          // console.log('platform', platform)
           if (!platform) {
             platform = {
               id: model.platformId,
@@ -199,6 +205,10 @@ export default {
         this.platforms.splice(0, this.platforms.length)
         this.platforms.push(... (resp.data || []))
       })
+    },
+    getPlatformState(platformId) {
+      const platform = this.platforms.find(p => p.id === platformId)
+      return platform ? platform.state : null
     },
     handleRefresh() {
       this.reload()

@@ -23,8 +23,8 @@
       </template> -->
 
       <template v-slot:state="slotProps">
-        <el-tag v-if="slotProps.row.state == 1" type="success">正常</el-tag>
-        <el-tag v-else type="danger">停用</el-tag>
+        <el-tag v-if="slotProps.row.state == 1" :type="getPlatformState(slotProps.row.platformId) !== 1 ? 'info' : 'success'">正常</el-tag>
+        <el-tag v-else :type="getPlatformState(slotProps.row.platformId) !== 1 ? 'info' : 'danger'">停用</el-tag>
         <el-button style="margin-left: 10px" icon="el-icon-disabled" @click.stop="toggleEnable(slotProps.row)">
           {{ slotProps.row.state == 1 ? '禁用' : '启用' }}
         </el-button>
@@ -34,7 +34,7 @@
         <template v-for="md in props.row.models">
           <el-tag :key="md.id" :type="props.row.state === 1 ? 'primary' : 'info'" style="margin: 0 2px;">{{ md.name }}</el-tag>
         </template>
-        <el-tag v-if="!props.row.models || props.row.models.length === 0" :type="props.row.state === 1 ? 'success' : 'info'">所有模型</el-tag>
+        <el-tag v-if="!props.row.models || props.row.models.length === 0" :type="getPlatformState(props.row.platformId) !== 1 ? 'info' : props.row.state === 1 ? 'success' : 'info'">所有模型</el-tag>
       </template>
 
       <template v-slot:billingState="props">
@@ -54,7 +54,7 @@
       </template>
 
       <template v-slot:platformName="slotProps">
-        <el-tag>{{ slotProps.row.platformName }}</el-tag>
+        <el-tag :type="getPlatformState(slotProps.row.platformId) !== 1 ? 'info' : '' ">{{ slotProps.row.platformName }}</el-tag>
       </template>
 
       <template #header>
@@ -206,6 +206,10 @@ export default {
         this.platforms.splice(0, this.platforms.length)
         this.platforms.push(... (resp.data || []))
       })
+    },
+    getPlatformState(platformId) {
+      const platform = this.platforms.find(p => p.id === platformId)
+      return platform ? platform.state : null
     },
     reloadModels() {
       getAiModels().then(resp => {
