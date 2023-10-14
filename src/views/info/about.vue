@@ -33,7 +33,7 @@ export default {
       const data = resp.data
       this.version = data.version
     })
-    axios.get('//center.nanjiren.online/prod-api/info/about')
+    axios.get('//center.nanjiren.online/prod-api/info/aboutChatMJ')
       .then(resp => {
         // console.log('resp.data', resp.data)
         const data = resp.data
