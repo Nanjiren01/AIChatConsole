@@ -4,9 +4,9 @@
 
       <div class="title-container">
         <div style="text-align: center">
-          <img src="@/assets/ai-chat-bot.png" style="width: 64px; height: 64px;margin: 0 auto;">
+          <img src="@/assets/chat-mj-bot.png" style="width: 64px; height: 64px;margin: 0 auto;">
         </div>
-        <h3 class="title">AI Chat Admin</h3>
+        <h3 class="title">ChatMJ Admin</h3>
       </div>
 
       <el-form-item prop="username">

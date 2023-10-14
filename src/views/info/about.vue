@@ -3,11 +3,11 @@
     <div style="text-align: center;margin-top: 50px;">
 
       <div style="margin: 20px">
-        <img src="@/assets/ai-chat-bot.png" width="120">
+        <img src="@/assets/chat-mj-bot.png" width="120">
       </div>
       <div style="font-size: 14px; line-height: 20px; ">
         <div>Admin：v{{ version }}</div>
-        <div>Console: v0.9.5</div>
+        <div>Console: v0.9.5-chatmj</div>
       </div>
       <div v-html="about" />
     </div>
@@ -28,7 +28,7 @@ export default {
     }
   },
   created() {
-    getInfo().then(resp => {
+    getInfo({ version: 'v0.9.5-chatmj' }).then(resp => {
       // console.log('resp', resp.data)
       const data = resp.data
       this.version = data.version

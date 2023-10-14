@@ -323,7 +323,7 @@ export const asyncRoutes = [
         path: '/info/about',
         component: () => import('@/views/info/about'),
         name: 'Dashboard',
-        meta: { title: '关于AIChat', icon: 'dashboard', affix: true }
+        meta: { title: '关于ChatMJ', icon: 'dashboard', affix: true }
       }
     ]
   },
