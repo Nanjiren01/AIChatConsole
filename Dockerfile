@@ -2,8 +2,8 @@
 
 # docker build -t nanjiren01/chatmj-console:0.9.5 ../AIChatConsole
 # docker push nanjiren01/chatmj-console:0.9.5
-# docker tag nanjiren01/chatmj-console:0.9.5 nanjiren01/chatmj-console:pro-latest
-# docker push nanjiren01/chatmj-console:pro-latest
+# docker tag nanjiren01/chatmj-console:0.9.5 nanjiren01/chatmj-console:latest
+# docker push nanjiren01/chatmj-console:latest
 
 
 FROM nginx
