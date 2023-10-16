@@ -51,3 +51,13 @@ export function addPackage(userId, packageId) {
     }
   })
 }
+
+export function updateExpireTime(balanceId, days, expireTime) {
+  return request({
+    url: '/balances/extend',
+    method: 'post',
+    data: {
+      balanceId, days, newExpireTime: expireTime
+    }
+  })
+}

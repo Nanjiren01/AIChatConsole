@@ -58,6 +58,9 @@
         <el-button type="primary" @click.stop="handleShowQuotaEditDialog(slotProps.row)">
           {{ slotProps.row.calcTypeId == 1 ? '调整额度' : '调整限额' }}
         </el-button>
+        <el-button type="success" plain @click.stop="handleShowTimeEditDialog(slotProps.row)">
+          修改有效期
+        </el-button>
       </template>
     </ai-table>
 
@@ -111,13 +114,51 @@
       </span>
     </el-dialog>
 
+    <el-dialog
+      :title="'为' + member.username + ('修改套餐有效期')"
+      :visible.sync="dialogTimeVisible"
+      :append-to-body="true"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="450px"
+    >
+      <el-form label-width="100px">
+        <el-form-item label="#">
+          <el-input :value="timeBalanceId" :disabled="true" style="width: 130px" />
+        </el-form-item>
+        <el-form-item label="修改方式">
+          <el-radio-group v-model="timeStyle">
+            <el-radio label="days">按天</el-radio>
+            <el-radio label="date">指定日期</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="天数">
+          <el-input-number v-model="timeDays" :disabled="timeStyle !== 'days'" />
+        </el-form-item>
+        <el-form-item label="指定日期">
+          <el-date-picker
+            v-model="timeExpireTime"
+            type="datetime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            :disabled="timeStyle !== 'date'"
+          />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button :disabled="increasing" @click="dialogTimeVisible = false">取 消</el-button>
+        <el-button type="primary" :disabled="timeSubmitting" @click="handleTimeEdit">
+          {{ timeSubmitting ? '提交中' : '确 定' }}
+        </el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 
 import AiTable from '@/components/Table'
-import { getBalancesByUserId, increaseBalance, setDisable, setEnable, addPackage } from '@/api/balance'
+import { getBalancesByUserId, increaseBalance, setDisable, setEnable, addPackage, updateExpireTime } from '@/api/balance'
 import { getPackages } from '@/api/package'
 
 export default {
@@ -169,7 +210,7 @@ export default {
       }],
       tableData: [],
       tableActionColumn: {
-        width: 180
+        width: 280
       },
       pagination: {
         total: 0,
@@ -182,6 +223,13 @@ export default {
       increasing: false,
       increaseBalanceId: 0,
       increaseCalcTypeId: 0,
+
+      dialogTimeVisible: false,
+      timeBalanceId: 0,
+      timeExpireTime: null,
+      timeStyle: 'days',
+      timeSubmitting: false,
+      timeDays: null,
 
       packages: [],
       packageDialogVisible: false,
@@ -285,6 +333,37 @@ export default {
     handleShowAddPackageDialog() {
       this.packageDialogVisible = true
       this.packageId = null
+    },
+    handleShowTimeEditDialog(row) {
+      this.dialogTimeVisible = true
+      this.timeBalanceId = row.id
+      this.timeExpireTime = row.expireTime
+      this.timeDays = 0
+      this.timeStyle = 'days'
+    },
+    handleTimeEdit() {
+      if (this.timeStyle === 'days') {
+        if (this.timeDays === 0) {
+          return this.$message.error('天数不能为0！')
+        }
+      } else if (this.timeStyle === 'date') {
+        if (!this.timeExpireTime) {
+          return this.$message.error('有效期不能为空！')
+        }
+      }
+      updateExpireTime(this.timeBalanceId,
+        this.timeStyle === 'days' ? this.timeDays : null,
+        this.timeStyle === 'date' ? this.timeExpireTime : null).then(resp => {
+        if (resp.code === 0) {
+          this.$message.success('修改成功！')
+          this.reload()
+          this.dialogTimeVisible = false
+        } else {
+          this.$message.error('修改失败！' + resp.message)
+        }
+      }).catch(e => {
+        console.error(e)
+      })
     },
     handlePackageAdd() {
       if (!this.packageId) {
