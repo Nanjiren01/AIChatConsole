@@ -32,7 +32,7 @@
 
       <template v-slot:model="props">
         <template v-for="md in props.row.models">
-          <el-tag :key="md.id" :type="props.row.state === 1 ? 'primary' : 'info'" style="margin: 0 2px;">{{ md.name }}</el-tag>
+          <el-tag :key="md.id" :type="getPlatformState(props.row.platformId) !== 1 || props.row.state !== 1 ? 'info' : 'primary'" style="margin: 0 2px;">{{ md.name }}</el-tag>
         </template>
         <el-tag v-if="!props.row.models || props.row.models.length === 0" :type="getPlatformState(props.row.platformId) !== 1 ? 'info' : props.row.state === 1 ? 'success' : 'info'">所有模型</el-tag>
       </template>
