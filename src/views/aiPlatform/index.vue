@@ -45,6 +45,7 @@
       <template v-slot:chatProtocol="slotProps">
         <el-tag :type="slotProps.row.state !== 1 ? 'info' : '' ">
           <span v-if="slotProps.row.chatProtocol === 'OpenAiChat'">OpenAI聊天协议</span>
+          <span v-if="slotProps.row.chatProtocol === 'AzureOpenAiChat'">Azure OpenAI聊天协议</span>
           <span v-else-if="slotProps.row.chatProtocol === 'BaiduChat'">百度聊天协议</span>
           <span v-else-if="slotProps.row.chatProtocol === 'AliQwenChat'">阿里千问聊天协议</span>
           <span v-else-if="slotProps.row.chatProtocol === 'EmbeddingMjProxyDraw'">内置MJ-Proxy绘画协议</span>
@@ -60,6 +61,7 @@
         <i v-else style="color: #888">
           系统默认（
           <template v-if="props.row.chatProtocol === 'OpenAiChat'">https://api.openai.com</template>
+          <template v-else-if="props.row.chatProtocol === 'AzureOpenAiChat'">×</template>
           <template v-else-if="props.row.chatProtocol === 'BaiduChat'">https://aip.baidubce.com/rpc/2.0/ai_custom</template>
           <template v-else-if="props.row.chatProtocol === 'AliQwenChat'">×</template>
           <template v-else-if="props.row.chatProtocol === 'EmbeddingMjProxyDraw'">×</template>
