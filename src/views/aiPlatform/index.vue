@@ -30,25 +30,29 @@
         <el-tag v-else type="danger">停用</el-tag>
       </template>
       <template v-slot:balanceProtocol="props">
-        <el-tag
-          v-if="props.row.balanceProtocol == 'OpenAI' || props.row.baseUrl && props.row.baseUrl.startsWith('https://gptapi.nextweb.fun/')"
-          type="success"
-        >OpenAI</el-tag>
-        <el-tag v-else-if="props.row.balanceProtocol == 'GoApi'" type="info">GoApi</el-tag>
-        <el-tag v-else-if="props.row.balanceProtocol == 'AImage'" type="success">AImage</el-tag>
-        <el-tag v-else-if="props.row.balanceProtocol == 'Other'" type="primary">其他</el-tag>
-        <el-tag v-else type="info">未知</el-tag>
+        <el-tag :type="props.row.state !== 1 ? 'info' : '' ">
+          <span
+            v-if="props.row.balanceProtocol == 'OpenAI' || props.row.baseUrl && props.row.baseUrl.startsWith('https://gptapi.nextweb.fun/')"
+            type="success"
+          >OpenAI</span>
+          <span v-else-if="props.row.balanceProtocol == 'GoApi'" type="info">GoApi</span>
+          <span v-else-if="props.row.balanceProtocol == 'AImage'" type="success">AImage</span>
+          <span v-else-if="props.row.balanceProtocol == 'Other'" type="primary">其他</span>
+          <span v-else type="info">未知</span>
+        </el-tag>
       </template>
 
       <template v-slot:chatProtocol="slotProps">
-        <el-tag v-if="slotProps.row.chatProtocol === 'OpenAiChat'">OpenAI聊天协议</el-tag>
-        <el-tag v-else-if="slotProps.row.chatProtocol === 'BaiduChat'">百度聊天协议</el-tag>
-        <el-tag v-else-if="slotProps.row.chatProtocol === 'AliQwenChat'">阿里千问聊天协议</el-tag>
-        <el-tag v-else-if="slotProps.row.chatProtocol === 'EmbeddingMjProxyDraw'">内置MJ-Proxy绘画协议</el-tag>
-        <el-tag v-else-if="slotProps.row.chatProtocol === 'MjProxyDraw'">MJ-Proxy绘画协议</el-tag>
-        <el-tag v-else-if="slotProps.row.chatProtocol === 'GoApiDraw'">GoApi绘画协议</el-tag>
-        <el-tag v-else-if="slotProps.row.chatProtocol === 'AimageDraw'">AImage绘画协议</el-tag>
-        <el-tag v-else-if="slotProps.row.chatProtocol === 'MjProxyPlusDraw'">MJ-Proxy-Plus绘画协议</el-tag>
+        <el-tag :type="slotProps.row.state !== 1 ? 'info' : '' ">
+          <span v-if="slotProps.row.chatProtocol === 'OpenAiChat'">OpenAI聊天协议</span>
+          <span v-else-if="slotProps.row.chatProtocol === 'BaiduChat'">百度聊天协议</span>
+          <span v-else-if="slotProps.row.chatProtocol === 'AliQwenChat'">阿里千问聊天协议</span>
+          <span v-else-if="slotProps.row.chatProtocol === 'EmbeddingMjProxyDraw'">内置MJ-Proxy绘画协议</span>
+          <span v-else-if="slotProps.row.chatProtocol === 'MjProxyDraw'">MJ-Proxy绘画协议</span>
+          <span v-else-if="slotProps.row.chatProtocol === 'GoApiDraw'">GoApi绘画协议</span>
+          <span v-else-if="slotProps.row.chatProtocol === 'AimageDraw'">AImage绘画协议</span>
+          <span v-else-if="slotProps.row.chatProtocol === 'MjProxyPlusDraw'">MJ-Proxy-Plus绘画协议</span>
+        </el-tag>
       </template>
 
       <template v-slot:baseUrl="props">
@@ -61,7 +65,7 @@
           <template v-else-if="props.row.chatProtocol === 'EmbeddingMjProxyDraw'">×</template>
           <template v-else-if="props.row.chatProtocol === 'MjProxyDraw'">×</template>
           <template v-else-if="props.row.chatProtocol === 'GoApiDraw'">https://api.midjourneyapi.xyz</template>
-          <template v-else-if="props.row.chatProtocol === 'AimageDraw'">https://api.aimage.nanjiren.online/draw</template>
+          <template v-else-if="props.row.chatProtocol === 'AimageDraw'">https://aimageapi.nanjiren.online/draw</template>
           <template v-else-if="props.row.chatProtocol === 'MjProxyPlusDraw'">×</template>
           ）
         </i>

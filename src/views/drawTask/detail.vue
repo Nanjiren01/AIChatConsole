@@ -57,6 +57,17 @@
         <el-form-item label="进度更新时间">
           <span class="order-form-item">{{ drawTaskEntity.progressTime }}</span>
         </el-form-item>
+        <el-form-item label="结束时间">
+          <span class="order-form-item">
+            <span
+              v-if="(!drawTaskEntity.finishTime)"
+              style="background-color: #f4f4f5; color: #909399;line-height: 30px;display: inline-block;padding: 0 10px;border-radius: 6px;"
+            >
+              {{ drawTaskEntity.state === 30 || drawTaskEntity.state === 40 ? 'v0.9.5后支持' : '未结束' }}
+            </span>
+            {{ drawTaskEntity.finishTime }}
+          </span>
+        </el-form-item>
         <el-form-item label="状态">
           <span style="margin-right: 10px">
             <el-tag v-if="drawTaskEntity.state == 0" type="info">待提交</el-tag>
@@ -72,8 +83,37 @@
             :closble="false"
           />
         </el-form-item>
+        <el-form-item label="基础图片">
+          <div
+            v-if="drawTaskEntity.baseImages && drawTaskEntity.baseImages.urls && drawTaskEntity.baseImages.urls.length"
+          >
+            <template v-for="(url, idx) in drawTaskEntity.baseImages.urls">
+              <el-link
+                :key="idx"
+                type="primary"
+                :href="parseUrl(url)"
+                class="base-image-item-container"
+                target="_blank"
+                :underline="false"
+              >
+                <img
+                  :src="parseUrl(url)"
+                  class="base-image"
+                >
+              </el-link>
+            </template>
+          </div>
+        </el-form-item>
         <el-form-item v-if="drawTaskEntity.state == 30" label="结果">
-          <img :src="getUrl(drawTaskEntity)" style="max-width: 800px;width: 100%;">
+          <el-link target="_blank" :underline="false" :href="getUrl(drawTaskEntity)">
+            <img :src="getUrl(drawTaskEntity)" style="max-width: 800px;width: 100%;">
+          </el-link>
+        </el-form-item>
+        <el-form-item label="request">
+          <span class="order-form-item">{{ drawTaskEntity.request }}</span>
+        </el-form-item>
+        <el-form-item label="response">
+          <span class="order-form-item">{{ drawTaskEntity.response }}</span>
         </el-form-item>
 
       </el-form>
@@ -123,6 +163,12 @@ export default {
     handleRefresh() {
       this.reload()
     },
+    parseUrl(url) {
+      if (url.startsWith('/')) {
+        return process.env.VUE_APP_BASE_API + url
+      }
+      return url
+    },
     getUrl(drawTaskEntity) {
       if (!drawTaskEntity.result) {
         return ''
@@ -149,5 +195,20 @@ export default {
 ::v-deep .el-drawer__body {
   height: calc(100% - 77px);
   overflow-y: auto;
+}
+.base-image-item-container {
+  display: inline-block;
+  margin: 5px;
+
+  &:hover img.base-image {
+    border-color: #409EFF;
+  }
+}
+
+.base-image {
+  width: 100px;
+  height: 100px;
+  object-fit: scale-down;
+  border: 1px solid #ccc
 }
 </style>

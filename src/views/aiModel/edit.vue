@@ -95,19 +95,21 @@
             <el-input v-model="modelConfig.mjProxySecret" placeholder="选填" />
           </el-form-item>
         </template> -->
-        <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'">
+        <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw' && modelConfig.gptApiKey">
           <el-form-item label="翻译用ChatGPT BaseUrl">
-            <el-input v-model="modelConfig.gptApiUrl" />
+            <el-input v-model="modelConfig.gptApiUrl" disabled placeholder="请前往平台详情页配置" />
           </el-form-item>
           <el-form-item label="翻译用ChatGPT Key">
-            <el-input v-model="modelConfig.gptApiKey" />
+            <el-input v-model="modelConfig.gptApiKey" disabled placeholder="请前往平台详情页配置" />
           </el-form-item>
           <el-form-item label="翻译用ChatGPT模型名称">
-            <el-input v-model="modelConfig.model" />
+            <el-input v-model="modelConfig.model" disabled placeholder="请前往平台详情页配置" />
           </el-form-item>
           <el-form-item label="翻译Prompt">
-            <el-input v-model="modelConfig.translatePrompt" />
+            <el-input v-model="modelConfig.translatePrompt" disabled placeholder="请前往平台详情页配置" />
           </el-form-item>
+        </template>
+        <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'">
           <el-form-item label="处理模式">
             <el-select v-model="modelConfig.processMode" placeholder="未设置时默认为mixed">
               <el-option label="mixed" value="mixed" />
