@@ -3,6 +3,7 @@
     <ai-table
       :table-actions="tableActions"
       :table-columns="tableColumns"
+      :table-action-column="tableActionColumn"
       :table-data="tableData"
       :pagination="pagination"
       @refresh="handleRefresh"
@@ -11,15 +12,9 @@
         <!-- <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新增</el-button> -->
         <!-- <el-button type="danger" icon="el-icon-delete" @click="handleDelete">删除</el-button> -->
       </template>
-      <!-- <template v-slot:rowActions="slotProps">
-        <el-button icon="el-icon-set-up" @click.stop="handleShowChangePassword(slotProps.row)">修改密码</el-button>
-      </template> -->
-
-      <!-- <template v-slot:entryId="slotProps">
-        <el-tag :type="slotProps.row.entryId == 1 ? 'success' : slotProps.row.entryId == 2 ? 'primary' : 'danger' ">
-          {{ getEntryName(slotProps.row.entryId) }}
-        </el-tag>
-      </template> -->
+      <template v-slot:rowActions="slotProps">
+        <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
+      </template>
 
       <template v-slot:state="props">
         <el-tag :type="props.row.state == 10 ? 'primary' : 'info' ">{{ getStateName(props.row.state) }}</el-tag>
@@ -36,6 +31,14 @@
         {{ getAloneName(props.row.alone) }}
       </template>
     </ai-table>
+
+    <detail
+      ref="detail"
+      :show="showDetail"
+      :plugin-entity="detailModel"
+      @changed="handleChanged"
+      @close="handleCloseDetail"
+    />
   </div>
 </template>
 
@@ -43,16 +46,17 @@
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
 import { getAllPlugins, togglePlugin } from '@/api/plugin'
+import Detail from './detail'
 
 export default {
   name: 'PluginIndex',
-  components: { AiTable },
+  components: { AiTable, Detail },
   data() {
     return {
       loading: false,
-      tableActions: false,
+      tableActions: [],
       tableActionColumn: {
-        width: 200
+        width: 105
       },
       tableColumns: [{
         label: '#',
@@ -85,6 +89,19 @@ export default {
       pagination: {
         total: 0,
         showDetail: false
+      },
+
+      showDetail: false,
+      detailModel: {
+        id: null,
+        uuid: null,
+        name: null,
+        logo: null,
+        config: null,
+        state: null,
+        builtin: null,
+        createTime: null,
+        updateTime: null
       }
     }
   },
@@ -110,6 +127,8 @@ export default {
             uuid: plugin.uuid,
             alone: plugin.alone,
             builtin: plugin.builtin,
+            logo: plugin.logo,
+            config: plugin.config,
             state: plugin.state,
             createTime: plugin.createTime
           }
@@ -140,6 +159,24 @@ export default {
         0: '草稿',
         10: '已发布'
       })[state] || '未知'
+    },
+    handleChanged(id) {
+      this.detailModel.id = id
+      this.reload()
+    },
+    handleEdit(row) {
+      this.showDetail = true
+      this.updateDetail(row)
+    },
+    handleCloseDetail() {
+      this.showDetail = false
+    },
+    updateDetail(row) {
+      // console.log('updateDetail')
+      this.detailModel = row
+      this.$nextTick(() => {
+        this.$refs.detail.reload()
+      })
     }
   }
 }
