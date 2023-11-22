@@ -6,6 +6,7 @@
       type="warning"
       :closable="false"
     /> -->
+    <!-- <div style="font-size: 14px;height: 20px;" :style="{visibility: updating ? 'visible' : 'hidden'}">刷新中</div> -->
 
     <panel-group :basic-data="basicData" />
     <!--  @handleSetLineChartData="handleSetLineChartData" -->
@@ -77,6 +78,7 @@ import LineChart from './components/LineChart'
 // import TodoList from './components/TodoList'
 // import BoxCard from './components/BoxCard'
 import { getBasic } from '@/api/dashboard'
+import { parseTime } from '@/utils/index.js'
 
 export default {
   name: 'DashboardAdmin',
@@ -93,6 +95,9 @@ export default {
   },
   data() {
     return {
+      timer: null,
+      updating: false,
+      updateTime: null,
       userData: {
         data: [],
         itemStyle: {
@@ -148,7 +153,11 @@ export default {
         memberCount: 0,
         apiCallCount: 0,
         orderCount: 0,
-        orderFeeSum: 0
+        orderFeeSum: 0,
+        onlineChatCount: 0,
+        onlineDrawCount: 0,
+        payingOrderCount: 0,
+        payingFeeSum: 0
       }
     }
   },
@@ -167,16 +176,27 @@ export default {
     }
   },
   mounted() {
-    this.reload()
+    this.timer = setInterval(() => {
+      this.reload()
+    }, 5000)
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
   methods: {
     reload() {
+      this.updating = true
       getBasic().then(resp => {
+        this.updateTime = parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
         const data = resp.data
         this.basicData.memberCount = data.memberCount
         this.basicData.apiCallCount = data.apiCallCount
         this.basicData.orderCount = data.orderCount
         this.basicData.orderFeeSum = data.orderFeeSum
+        this.basicData.onlineChatCount = data.onlineChatCount
+        this.basicData.onlineDrawCount = data.onlineDrawCount
+        this.basicData.payingOrderCount = data.payingOrderCount
+        this.basicData.payingFeeSum = data.payingFeeSum
 
         const orderMap = {}
         data.orderInfos.forEach(info => {
@@ -193,7 +213,7 @@ export default {
             this.orderFeeData.data.push(0)
           }
         })
-        console.log(this.dates, this.orderData.data, this.orderFeeData.data)
+        // console.log(this.dates, this.orderData.data, this.orderFeeData.data)
 
         const userMap = {}
         data.userInfos.forEach(info => {
@@ -207,7 +227,7 @@ export default {
             this.userData.data.push(0)
           }
         })
-        console.log(this.dates, this.userData.data)
+        // console.log(this.dates, this.userData.data)
 
         const chatMap = {}
         data.chatInfos.forEach(info => {
@@ -221,7 +241,9 @@ export default {
             this.chatData.data.push(0)
           }
         })
-        console.log(this.dates, this.chatData.data)
+        // console.log(this.dates, this.chatData.data)
+      }).finally(() => {
+        this.updating = false
       })
     }
   }
