@@ -24,7 +24,7 @@
           >
             {{ slotProps.row.state == 1 ? '禁用' : '启用' }}
           </el-button>
-          <!-- <el-button type="danger" icon="el-icon-delete" @click="handleDelete(slotProps.row)">删除</el-button> -->
+          <el-button type="danger" icon="el-icon-delete" plain @click="handleDelete(slotProps.row)">删除</el-button>
         </template>
       </template>
       <!-- <template #columns>
@@ -80,7 +80,7 @@
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getAiModels, updateAiModel } from '@/api/aiModel.js'
+import { getAiModels, updateAiModel, deleteAiModel } from '@/api/aiModel.js'
 import { getAiPlatforms } from '@/api/aiPlatform.js'
 import Edit from './edit'
 
@@ -137,7 +137,7 @@ export default {
         showOverflowTooltip: false
       }],
       tableActionColumn: {
-        width: 170
+        width: 260
       },
 
       tableData: [],
@@ -254,7 +254,19 @@ export default {
       this.reload()
     },
     handleDelete(row) {
-      console.log('delete', row)
+      this.$confirm('确定删除' + row.name + '？', '删除确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        deleteAiModel(row.id).then(resp => {
+          console.log('resp', resp)
+          this.$message.success('操作成功！')
+          this.reload()
+        })
+      })
     },
     toggleEnable(row) {
       this.loading = true

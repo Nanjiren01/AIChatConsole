@@ -24,3 +24,10 @@ export function createAiModel(params) {
     data: params
   })
 }
+
+export function deleteAiModel(id) {
+  return request({
+    url: '/aiModels/' + id,
+    method: 'delete'
+  })
+}

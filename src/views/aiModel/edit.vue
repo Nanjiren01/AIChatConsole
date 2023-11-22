@@ -134,6 +134,10 @@
         </el-form-item>
       </el-form>
 
+      <div style="margin-top: 100px;">
+        <el-button type="danger" icon="el-icon-delete" plain @click="handleDelete()">删除</el-button>
+      </div>
+
     </div>
   </el-drawer>
 </template>
@@ -141,7 +145,7 @@
 <script>
 
 import clip from '@/utils/clipboard' // use clipboard directly
-import { updateAiModel, createAiModel } from '@/api/aiModel.js'
+import { updateAiModel, createAiModel, deleteAiModel } from '@/api/aiModel.js'
 
 export default {
   name: 'ModelDetail',
@@ -270,6 +274,22 @@ export default {
     },
     handleCopy(text, event) {
       clip(text, event)
+    },
+    handleDelete() {
+      this.$confirm('确定删除' + this.model.name + '？', '删除确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        deleteAiModel(this.model.id).then(resp => {
+          console.log('resp', resp)
+          this.$message.success('操作成功！')
+          this.$emit('changed')
+          this.$emit('close')
+        })
+      })
     }
   }
 }
