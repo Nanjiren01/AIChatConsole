@@ -22,7 +22,7 @@
         >
           {{ slotProps.row.state == 1 ? '禁用' : '启用' }}
         </el-button>
-        <!-- <el-button type="danger" icon="el-icon-delete" @click="handleDelete(slotProps.row)">删除</el-button> -->
+        <el-button type="danger" icon="el-icon-delete" plain @click="handleDelete(slotProps.row)">删除</el-button>
       </template>
 
       <template v-slot:state="slotProps">
@@ -87,7 +87,7 @@
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getAiPlatforms, updateAiPlatform } from '@/api/aiPlatform.js'
+import { getAiPlatforms, updateAiPlatform, deleteAiPlatform } from '@/api/aiPlatform.js'
 import Detail from './detail'
 
 export default {
@@ -131,7 +131,7 @@ export default {
         width: 135
       }],
       tableActionColumn: {
-        width: 175
+        width: 260
       },
       tableData: [],
       pagination: {
@@ -197,9 +197,21 @@ export default {
     // handleEdit(row) {
     //   console.log('edit', row)
     // },
-    // handleDelete(row) {
-    //   console.log('delete', row)
-    // },
+    handleDelete(row) {
+      this.$confirm('确定删除' + row.name + '？', '删除确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        deleteAiPlatform(row.id).then(resp => {
+          console.log('resp', resp)
+          this.$message.success('操作成功！')
+          this.reload()
+        })
+      })
+    },
     handleShowEdit(row) {
       this.dialogVisible = true
       this.form.id = row.id
