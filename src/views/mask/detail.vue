@@ -87,6 +87,11 @@
           <el-input v-model="maskEntity.contextJson" type="textarea" :rows="20" autosize :disabled="true" />
         </el-form-item> -->
         <el-form-item label="消息上下文">
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >将消息设置为私有可避免消息被透露到前台用户侧。仅支持将开头的连续的消息设置为私有。</el-alert>
           <div v-for="(message, index) in context" :key="index">
             <div class="chat-item">
               <el-select v-model="message.role" style="width: 70px;" @change="handleRebuildContextJson">
@@ -94,8 +99,8 @@
                 <el-option label="用户" value="user" />
                 <el-option label="AI" value="assistant" />
               </el-select>
-              <el-checkbox v-model="message.private">私有</el-checkbox>
-              ：<i class="el-icon-delete delete-message-button" @click="handleDeleteMessage(index)">删除此消息</i>
+              <el-checkbox v-model="message.private" style="margin-left: 10px" @change="() => handleRebuildContextJson()">私有</el-checkbox>
+              <i class="el-icon-delete delete-message-button" @click="handleDeleteMessage(index)">删除此消息</i>
               <el-input
                 v-model="message.content"
                 style="margin-top: 2px;"
@@ -132,6 +137,11 @@
           >
             {{ maskEntity.state == 0 ? ' 发 布 ' : '取消发布' }}
           </el-button>
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >未发布时，仅管理员前台用户侧可见。</el-alert>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="disabled" style="width: 100%;" @click="handleSubmit">
@@ -278,6 +288,24 @@ export default {
         this.$message.error('语言不能为空！')
         return
       }
+      if (this.context) {
+        let p = null
+        for (const message of this.context) {
+          console.log('message', message)
+          if (message.private) {
+            if (p === null) {
+              p = true
+            } else if (p === true) {
+              continue
+            } else {
+              this.$message.error('私有消息必须在最开头，且必须连续！')
+              return
+            }
+          } else {
+            p = false
+          }
+        }
+      }
       if (this.maskEntity.id) {
         if (this.maskEntity.state === 20) {
           this.$message.error('已删除的数据无法修改！')
@@ -363,11 +391,11 @@ export default {
       })[role]
     },
     handleRebuildModelConfigJson() {
-      console.log('rebuild')
+      // console.log('rebuild')
       this.maskEntity.modelConfigJson = JSON.stringify(this.modelConfig, null, '\t')
     },
     handleRebuildContextJson() {
-      console.log('rebuild')
+      // console.log('rebuild')
       this.maskEntity.contextJson = JSON.stringify(this.context, null, '\t')
     },
     handleDeleteMessage(index) {
