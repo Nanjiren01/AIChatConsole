@@ -21,6 +21,12 @@
         <el-form-item label="path">
           <el-input v-model="model.path" />
         </el-form-item>
+        <el-form-item label="消息协议">
+          <el-select v-model="model.messageStruct">
+            <el-option label="普通" value="normal" />
+            <el-option label="复杂（如gpt-4-vision-preview）" value="complex" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="model.remark" type="textarea" :row="1" autosize />
         </el-form-item>
@@ -54,7 +60,7 @@
             :closable="false"
           >token默认按实际使用扣减，其他默认每次扣减1积分。您可以针对不同的模型设置不同的倍率。</el-alert>
         </el-form-item>
-        <el-form-item v-if="modelMultiples" label="精细倍率">
+        <el-form-item v-if="modelMultiples && selectedPlatform && selectedPlatform.chatProtocol && selectedPlatform.chatProtocol.includes('Draw')" label="精细倍率">
           <div style="border: 1px solid #DCDFE6; border-radius: 4px; padding: 10px">
             <div style="line-height: 30px;margin-bottom: 4px;">
               <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">IMAGINE: </span><el-input-number v-model="modelMultiples.imagine" />
@@ -218,7 +224,8 @@ export default {
           path: this.model.path,
           config: this.model.config,
           multiples: JSON.stringify(this.modelMultiples || {}),
-          remark: this.model.remark
+          remark: this.model.remark,
+          messageStruct: this.model.messageStruct
         }).then(() => {
           this.$message.success('操作成功！')
           this.$emit('changed')
@@ -239,7 +246,8 @@ export default {
         path: this.model.path,
         config: JSON.stringify(this.modelConfig || {}),
         multiples: JSON.stringify(this.modelMultiples || {}),
-        remark: this.model.remark
+        remark: this.model.remark,
+        messageStruct: this.model.messageStruct
       }).then(() => {
         this.$message.success('操作成功！')
         this.$emit('changed')
@@ -263,7 +271,8 @@ export default {
         path: row.path,
         config: row.config,
         multiples: row.multiples,
-        remark: row.remark
+        remark: row.remark,
+        messageStruct: row.messageStruct
       }).then(() => {
         this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
         this.$emit('changed')

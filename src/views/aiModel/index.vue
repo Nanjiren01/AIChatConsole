@@ -161,6 +161,7 @@ export default {
         path: null,
         config: null,
         remark: null,
+        messageStruct: null,
         createTime: null
       },
 
@@ -227,6 +228,7 @@ export default {
       this.editModel.path = null
       this.editModel.config = null
       this.editModel.remark = null
+      this.editModel.messageStruct = null
       this.showEdit = true
     },
     handleEdit(row) {
@@ -244,6 +246,7 @@ export default {
       this.editModel.path = row.path
       this.editModel.config = row.config
       this.editModel.remark = row.remark
+      this.editModel.messageStruct = row.messageStruct
       this.editModel.createTime = row.createTime
       this.showEdit = true
     },
@@ -281,7 +284,8 @@ export default {
         multiples: row.multiples,
         path: row.path,
         config: row.config,
-        remark: row.remark
+        remark: row.remark,
+        messageStruct: row.messageStruct
       }).then(() => {
         this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
         this.reload()
