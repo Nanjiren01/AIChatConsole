@@ -63,6 +63,9 @@ export default {
         label: '名称',
         prop: 'name'
       }, {
+        label: '描述',
+        prop: 'description'
+      }, {
         label: '语言',
         slot: 'lang',
         width: 75
@@ -88,7 +91,7 @@ export default {
         width: 140
       }],
       tableActionColumn: {
-        width: 200
+        width: 95
       },
       tableData: [],
       pagination: {
@@ -98,6 +101,7 @@ export default {
       detailModel: {
         id: null,
         name: '',
+        description: null,
         avatar: '',
         state: null,
         lang: null,
@@ -124,6 +128,7 @@ export default {
           return {
             id: item.id,
             name: item.name,
+            description: item.description,
             state: item.state,
             avatar: item.avatar,
             lang: item.lang,
@@ -179,6 +184,7 @@ export default {
     updateDetail(row) {
       this.detailModel.id = row.id
       this.detailModel.name = row.name || ''
+      this.detailModel.description = row.description || ''
       this.detailModel.avatar = row.avatar || ''
       this.detailModel.lang = row.lang || ''
       this.detailModel.state = row.state || 0
@@ -200,6 +206,7 @@ export default {
       this.updateDetail({
         id: null,
         name: '',
+        description: '',
         avatar: '1f600',
         lang: 'cn',
         state: 0,

@@ -15,6 +15,9 @@
         <el-form-item label="名称">
           <el-input v-model="maskEntity.name" :disabled="disabled" />
         </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="maskEntity.description" :disabled="disabled" />
+        </el-form-item>
         <el-form-item label="头像">
           <!-- <el-input v-model="maskEntity.avatar" :disabled="disabled" /> -->
           <div style="display: flex; margin-bottom: 10px;">
@@ -322,6 +325,7 @@ export default {
         this.loading = true
         createMask({
           name: this.maskEntity.name,
+          description: this.maskEntity.description || '',
           avatar: this.maskEntity.avatar,
           lang: this.maskEntity.lang,
           type: this.maskEntity.type,
