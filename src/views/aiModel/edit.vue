@@ -6,14 +6,22 @@
     :before-close="handleClose"
   >
     <div style="padding: 20px; height: calc(100% - 77px); overflow-y: auto;">
-      <el-form ref="form" label-width="260px" style="padding-right: 180px">
+      <el-form ref="form" label-width="160px">
         <el-form-item label="平台">
           <el-select v-model="model.platformId" :disabled="!!model.id">
             <el-option v-for="p in platforms" :key="p.id" :value="p.id" :label="p.name" />
           </el-select>
         </el-form-item>
-        <el-form-item label="名称">
-          <el-input v-model="model.name" />
+        <el-form-item label="调用模型">
+          <el-select v-model="model.name" clearable filterable>
+            <el-option
+              v-for="gm in globalModels.filter(gm => !selectedPlatform || selectedPlatform.chatProtocol === gm.platformProtocol)"
+              :key="gm.uuid"
+              :label="gm.name"
+              :value="gm.name"
+            />
+          </el-select>
+          <el-button type="primary" plain style="margin-left: 20px" @click="handleCreateGlobaModel">创建新条目</el-button>
         </el-form-item>
         <el-form-item label="展示名称">
           <el-input v-model="model.showName" />
@@ -151,13 +159,17 @@
 <script>
 
 import clip from '@/utils/clipboard' // use clipboard directly
-import { updateAiModel, createAiModel, deleteAiModel } from '@/api/aiModel.js'
+import { updateAiModel, createAiModel, deleteAiModel, createGlobalModel } from '@/api/aiModel.js'
 
 export default {
   name: 'ModelDetail',
   components: { },
   props: {
     platforms: {
+      type: Array,
+      default: () => []
+    },
+    globalModels: {
       type: Array,
       default: () => []
     },
@@ -298,6 +310,40 @@ export default {
           this.$emit('changed')
           this.$emit('close')
         })
+      })
+    },
+    handleCreateGlobaModel() {
+      this.$prompt('创建新条目', '创建新条目', {
+        type: 'info',
+        showClose: true,
+        inputValue: '',
+        // inputPattern: /^[\d\w\-_]+$/,
+        // inputErrorMessage: '仅支持数字和字母，下划线',
+        beforeClose: (action, instance, done) => {
+          console.log(action, instance.inputValue)
+          if (action !== 'confirm') {
+            return done()
+          }
+          createGlobalModel({
+            platformProtocol: this.selectedPlatform.chatProtocol,
+            name: instance.inputValue
+          }).then(resp => {
+            if (resp.code === 0) {
+              this.$message.success('创建成功！')
+              this.globalModels.push(resp.data)
+              this.model.name = instance.inputValue
+              done()
+            } else {
+              this.$message.error('创建失败：' + resp.message)
+            }
+          }).catch(e => {
+            console.log('创建失败：' + e)
+          })
+        }
+      }).then(({ value }) => {
+        console.debug('then', value)
+      }).catch(e => {
+        console.debug(e)
       })
     }
   }
