@@ -164,6 +164,7 @@ export default {
         config: null,
         remark: null,
         messageStruct: null,
+        messageFileTransformer: null,
         createTime: null
       },
 
@@ -238,6 +239,7 @@ export default {
       this.editModel.config = null
       this.editModel.remark = null
       this.editModel.messageStruct = null
+      this.editModel.messageFileTransformer = null
       this.showEdit = true
     },
     handleEdit(row) {
@@ -256,6 +258,7 @@ export default {
       this.editModel.config = row.config
       this.editModel.remark = row.remark
       this.editModel.messageStruct = row.messageStruct
+      this.editModel.messageFileTransformer = row.messageFileTransformer
       this.editModel.createTime = row.createTime
       this.showEdit = true
     },
@@ -294,7 +297,8 @@ export default {
         path: row.path,
         config: row.config,
         remark: row.remark,
-        messageStruct: row.messageStruct
+        messageStruct: row.messageStruct,
+        messageFileTransformer: row.messageFileTransformer
       }).then(() => {
         this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
         this.reload()

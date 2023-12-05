@@ -36,6 +36,12 @@
             <el-option label="复杂（如gpt-4-vision-preview）" value="complex" />
           </el-select>
         </el-form-item>
+        <el-form-item v-if="model.messageStruct === 'complex'" label="图片传输方式">
+          <el-select v-model="model.messageFileTransformer" placeholder="一般无需选择">
+            <el-option label="Url" value="url" />
+            <el-option label="Base64（不推荐）" value="base64" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="model.remark" type="textarea" :row="1" autosize />
         </el-form-item>
@@ -272,7 +278,8 @@ export default {
           config: this.model.config,
           multiples: JSON.stringify(this.modelMultiples || {}),
           remark: this.model.remark,
-          messageStruct: this.model.messageStruct
+          messageStruct: this.model.messageStruct,
+          messageFileTransformer: this.model.messageFileTransformer
         }).then(() => {
           this.$message.success('操作成功！')
           this.$emit('changed')
@@ -294,7 +301,8 @@ export default {
         config: JSON.stringify(this.modelConfig || {}),
         multiples: JSON.stringify(this.modelMultiples || {}),
         remark: this.model.remark,
-        messageStruct: this.model.messageStruct
+        messageStruct: this.model.messageStruct,
+        messageFileTransformer: this.model.messageFileTransformer
       }).then(() => {
         this.$message.success('操作成功！')
         this.$emit('changed')
@@ -319,7 +327,8 @@ export default {
         config: row.config,
         multiples: row.multiples,
         remark: row.remark,
-        messageStruct: row.messageStruct
+        messageStruct: row.messageStruct,
+        messageFileTransformer: row.messageFileTransformer
       }).then(() => {
         this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
         this.$emit('changed')
