@@ -4,8 +4,9 @@
     size="60%"
     :visible="show"
     :before-close="handleClose"
+    class="model-drawer"
   >
-    <div style="padding: 20px; height: calc(100% - 77px); overflow-y: auto;">
+    <div style="padding: 20px; overflow-y: auto;">
       <el-form ref="form" label-width="160px">
         <el-form-item label="平台">
           <el-select v-model="model.platformId" :disabled="!!model.id">
@@ -29,7 +30,7 @@
         <el-form-item label="path">
           <el-input v-model="model.path" />
         </el-form-item>
-        <el-form-item label="消息协议">
+        <el-form-item v-if="selectedPlatform && ['OpenAiChat', 'AzureOpenAiChat'].includes(selectedPlatform.chatProtocol)" label="消息协议">
           <el-select v-model="model.messageStruct">
             <el-option label="普通" value="normal" />
             <el-option label="复杂（如gpt-4-vision-preview）" value="complex" />
@@ -68,28 +69,88 @@
             :closable="false"
           >token默认按实际使用扣减，其他默认每次扣减1积分。您可以针对不同的模型设置不同的倍率。</el-alert>
         </el-form-item>
+        <template
+          v-if="selectedPlatform
+            && ['GoApiDraw', 'EmbeddingMjProxyDraw', 'MjProxyDraw','AImageDraw', 'MjProxyPlusDraw'].includes(selectedPlatform.chatProtocol)"
+        >
+          <el-form-item label="出图速度">
+            <el-select v-model="modelConfig.processMode" placeholder="未设置时默认为mixed" clearable>
+              <el-option label="mixed（默认）" value="mixed" />
+              <el-option label="turbo" value="turbo" />
+              <el-option label="fast" value="fast" />
+              <el-option label="relax" value="relax" />
+            </el-select>
+          </el-form-item>
+          <!-- <el-form-item label="回调地址">
+            <el-input v-model="modelConfig.webhookEndpoint" placeholder="webhook endpoint" />
+          </el-form-item>
+          <el-form-item label="回调密码">
+            <el-input v-model="modelConfig.webhookSecret" placeholder="webhook secret" />
+          </el-form-item> -->
+        </template>
         <el-form-item v-if="modelMultiples && selectedPlatform && selectedPlatform.chatProtocol && selectedPlatform.chatProtocol.includes('Draw')" label="精细倍率">
           <div style="border: 1px solid #DCDFE6; border-radius: 4px; padding: 10px">
-            <div style="line-height: 30px;margin-bottom: 4px;">
-              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">IMAGINE: </span><el-input-number v-model="modelMultiples.imagine" />
-            </div>
-            <div style="line-height: 30px;margin-bottom: 4px;">
-              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">UPSCALE: </span><el-input-number v-model="modelMultiples.upscale" />
-            </div>
-            <div style="line-height: 30px;margin-bottom: 4px;">
-              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">VARIATION: </span><el-input-number v-model="modelMultiples.variation" />
-            </div>
-            <div style="line-height: 30px;margin-bottom: 4px;">
-              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">VARY: </span><el-input-number v-model="modelMultiples.vary" />
-            </div>
-            <div style="line-height: 30px;margin-bottom: 4px;">
-              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">ZOOMOUT: </span><el-input-number v-model="modelMultiples.zoomout" />
-            </div>
-            <div style="line-height: 30px;margin-bottom: 4px;">
-              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">PAN: </span><el-input-number v-model="modelMultiples.pan" />
-            </div>
-            <div style="line-height: 30px;margin-bottom: 4px;">
-              <span style="display:inline-block; width: 100px; text-align: right; padding-right: 10px;">SQUARE: </span><el-input-number v-model="modelMultiples.square" />
+            <div
+              class="el-table el-table--fit el-table--border el-table--scrollable-y el-table--enable-row-hover el-table--enable-row-transition"
+            >
+              <table cellspacing="0" cellpadding="0" border="0" class="el-table__body">
+                <tr>
+                  <th><div class="cell">动作</div></th>
+                  <th><div class="cell">精细倍率</div></th>
+                  <th><div class="cell">turbo倍率</div></th>
+                  <th><div class="cell">fast倍率</div></th>
+                  <th><div class="cell">relax倍率</div></th>
+                </tr>
+                <tr class="el-table__row">
+                  <td><div class="cell">IMAGINE</div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.imagine" :controls="false" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboImagine" :controls="false" :disabled="modelConfig.processMode !== 'turbo'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastImagine" :controls="false" :disabled="modelConfig.processMode !== 'fast'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxImagine" :controls="false" :disabled="modelConfig.processMode !== 'relax'" /></div></td>
+                </tr>
+                <tr class="el-table__row">
+                  <td><div class="cell">UPSCALE</div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.upscale" :controls="false" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboUpscale" :controls="false" :disabled="modelConfig.processMode !== 'turbo'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastUpscale" :controls="false" :disabled="modelConfig.processMode !== 'fast'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxUpscale" :controls="false" :disabled="modelConfig.processMode !== 'relax'" /></div></td>
+                </tr>
+                <tr class="el-table__row">
+                  <td><div class="cell">VARIATION</div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.variation" :controls="false" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboVariation" :controls="false" :disabled="modelConfig.processMode !== 'turbo'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastVariation" :controls="false" :disabled="modelConfig.processMode !== 'fast'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxVariation" :controls="false" :disabled="modelConfig.processMode !== 'relax'" /></div></td>
+                </tr>
+                <tr class="el-table__row">
+                  <td><div class="cell">VARY</div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.vary" :controls="false" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboVary" :controls="false" :disabled="modelConfig.processMode !== 'turbo'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastVary" :controls="false" :disabled="modelConfig.processMode !== 'fast'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxVary" :controls="false" :disabled="modelConfig.processMode !== 'relax'" /></div></td>
+                </tr>
+                <tr class="el-table__row">
+                  <td><div class="cell">ZOOMOUT</div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.zoomout" :controls="false" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboZoomout" :controls="false" :disabled="modelConfig.processMode !== 'turbo'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastZoomout" :controls="false" :disabled="modelConfig.processMode !== 'fast'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxZoomout" :controls="false" :disabled="modelConfig.processMode !== 'relax'" /></div></td>
+                </tr>
+                <tr class="el-table__row">
+                  <td><div class="cell">PAN</div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.pan" :controls="false" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboPan" :controls="false" :disabled="modelConfig.processMode !== 'turbo'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastPan" :controls="false" :disabled="modelConfig.processMode !== 'fast'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxPan" :controls="false" :disabled="modelConfig.processMode !== 'relax'" /></div></td>
+                </tr>
+                <tr class="el-table__row">
+                  <td><div class="cell">SQUARE</div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.square" :controls="false" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboSquare" :controls="false" :disabled="modelConfig.processMode !== 'turbo'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastSquare" :controls="false" :disabled="modelConfig.processMode !== 'fast'" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxSquare" :controls="false" :disabled="modelConfig.processMode !== 'relax'" /></div></td>
+                </tr>
+              </table>
             </div>
           </div>
           <el-alert
@@ -98,17 +159,6 @@
             :closable="false"
           >系统会优先使用精细倍率，若未设置，才会使用粗略倍率。</el-alert>
         </el-form-item>
-        <!-- <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'MjProxyDraw'">
-          <el-form-item label="Midjourney-Proxy主机">
-            <el-input v-model="modelConfig.mjProxyHost" />
-          </el-form-item>
-          <el-form-item label="Midjourney-Proxy端口">
-            <el-input v-model="modelConfig.mjProxyPort" />
-          </el-form-item>
-          <el-form-item label="Midjourney-Proxy Secret">
-            <el-input v-model="modelConfig.mjProxySecret" placeholder="选填" />
-          </el-form-item>
-        </template> -->
         <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw' && modelConfig.gptApiKey">
           <el-form-item label="翻译用ChatGPT BaseUrl">
             <el-input v-model="modelConfig.gptApiUrl" disabled placeholder="请前往平台详情页配置" />
@@ -122,21 +172,6 @@
           <el-form-item label="翻译Prompt">
             <el-input v-model="modelConfig.translatePrompt" disabled placeholder="请前往平台详情页配置" />
           </el-form-item>
-        </template>
-        <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw'">
-          <el-form-item label="处理模式">
-            <el-select v-model="modelConfig.processMode" placeholder="未设置时默认为mixed">
-              <el-option label="mixed" value="mixed" />
-              <el-option label="fast" value="fast" />
-              <el-option label="turbo" value="turbo" />
-            </el-select>
-          </el-form-item>
-          <!-- <el-form-item label="回调地址">
-            <el-input v-model="modelConfig.webhookEndpoint" placeholder="webhook endpoint" />
-          </el-form-item>
-          <el-form-item label="回调密码">
-            <el-input v-model="modelConfig.webhookSecret" placeholder="webhook secret" />
-          </el-form-item> -->
         </template>
         <el-form-item v-if="model.createTime" label="创建时间">
           <el-input v-model="model.createTime" disabled />
@@ -351,5 +386,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.model-drawer ::v-deep .el-drawer__body {
+  height: calc(100% - 77px);
+  overflow: auto;
+}
 </style>

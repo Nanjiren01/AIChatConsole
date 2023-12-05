@@ -64,6 +64,14 @@
             <el-input v-model="modelConfig.translatePrompt" />
           </el-form-item>
         </template>
+        <template v-if="form && ['MjProxyPlusDraw'].includes(form.chatProtocol)">
+          <el-form-item label="ProcessModeType">
+            <el-select v-model="modelConfig.modeType" placeholder="一般无需设置">
+              <el-option label="将出图速度放置到prompt中（默认）" value="prompt" />
+              <el-option label="将出图速度放置到参数中" value="parameter" />
+            </el-select>
+          </el-form-item>
+        </template>
         <el-form-item label="备注">
           <el-input v-model="form.remark" />
         </el-form-item>
