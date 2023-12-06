@@ -41,6 +41,11 @@
             <el-option label="Url" value="url" />
             <el-option label="Base64（不推荐）" value="base64" />
           </el-select>
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >一般情况下选择url方式，仅当部署在内网，无法对公网提供接口时使用Base64的方式。注意：base64模式会极大消耗内存。</el-alert>
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="model.remark" type="textarea" :row="1" autosize />
