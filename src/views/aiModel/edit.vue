@@ -22,10 +22,33 @@
               :value="gm.name"
             />
           </el-select>
-          <el-button type="primary" plain style="margin-left: 20px" @click="handleCreateGlobaModel">创建新条目</el-button>
+          <el-button type="primary" plain style="margin-left: 20px" @click="handleCreateGlobalModel">创建新条目</el-button>
         </el-form-item>
         <el-form-item label="展示名称">
-          <el-input v-model="model.showName" />
+          <el-select v-model="model.showName" clearable filterable>
+            <el-option
+              v-for="display in displayModels"
+              :key="display.uuid"
+              :label="display.name"
+              :value="display.name"
+              :disabled="display.contentType !== (isDrawPlatform ? 'Image' : 'Text')"
+            />
+          </el-select>
+          <el-button type="primary" plain style="margin-left: 20px" @click="handleCreateDisplayModel">创建新的展示名称</el-button>
+        </el-form-item>
+        <el-form-item label="总结模型">
+          <el-tag type="primary">{{ summarizeModel }}</el-tag>
+          <el-button type="primary" plain style="margin-left: 20px" @click="handleEditSumarizeModel">修改</el-button>
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >总结模型是指当用户采用此模型进行聊天时，使用该模型对会话进行总结。</el-alert>
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >总结模型仅上面选择的调用模型有关，与当前模型无关。即，总结模型是调用模型上的一个属性</el-alert>
         </el-form-item>
         <el-form-item label="path">
           <el-input v-model="model.path" />
@@ -80,10 +103,7 @@
             :closable="false"
           >token默认按实际使用扣减，其他默认每次扣减1积分。您可以针对不同的模型设置不同的倍率。</el-alert>
         </el-form-item>
-        <template
-          v-if="selectedPlatform
-            && ['GoApiDraw', 'EmbeddingMjProxyDraw', 'MjProxyDraw','AImageDraw', 'MjProxyPlusDraw'].includes(selectedPlatform.chatProtocol)"
-        >
+        <template v-if="isDrawPlatform">
           <el-form-item label="出图速度">
             <el-select v-model="modelConfig.processMode" placeholder="未设置时默认为mixed" clearable>
               <el-option label="mixed（默认）" value="mixed" />
@@ -205,7 +225,7 @@
 <script>
 
 import clip from '@/utils/clipboard' // use clipboard directly
-import { updateAiModel, createAiModel, deleteAiModel, createGlobalModel } from '@/api/aiModel.js'
+import { updateAiModel, createAiModel, deleteAiModel, createGlobalModel, updateGlobalModel, createDisplayModel } from '@/api/aiModel.js'
 
 export default {
   name: 'ModelDetail',
@@ -216,6 +236,10 @@ export default {
       default: () => []
     },
     globalModels: {
+      type: Array,
+      default: () => []
+    },
+    displayModels: {
       type: Array,
       default: () => []
     },
@@ -233,7 +257,8 @@ export default {
       loading: false,
       saving: false,
       modelConfig: {},
-      modelMultiples: {}
+      modelMultiples: {},
+      selectedSummarizeModelValue: ''
     }
   },
   computed: {
@@ -245,6 +270,30 @@ export default {
         return this.platforms.filter(p => p.id === this.model.platformId)[0]
       }
       return null
+    },
+    selectedGlobalModel() {
+      if (!this.selectedPlatform || !this.model.name) {
+        return null
+      }
+      return this.globalModels.filter(gm => this.selectedPlatform.chatProtocol === gm.platformProtocol && this.model.name === gm.name)[0]
+    },
+    isDrawPlatform() {
+      return this.selectedPlatform && ['GoApiDraw', 'EmbeddingMjProxyDraw', 'MjProxyDraw', 'AImageDraw', 'MjProxyPlusDraw'].includes(this.selectedPlatform.chatProtocol)
+    },
+    summarizeModel() {
+      if (this.isDrawPlatform) {
+        return '绘画模型不总结'
+      }
+      if (!this.selectedPlatform || !this.model.name) {
+        return '请先选择调用模型'
+      }
+      if (this.selectedGlobalModel && this.selectedGlobalModel.summarizeModel) {
+        return this.selectedGlobalModel.summarizeModel
+      }
+      if (['OpenAiChat', 'AzureOpenAiChat'].includes(this.selectedPlatform.chatProtocol)) {
+        return 'gpt-3.5-turbo-16k'
+      }
+      return this.model.name
     }
   },
   watch: {
@@ -361,8 +410,8 @@ export default {
         })
       })
     },
-    handleCreateGlobaModel() {
-      this.$prompt('创建新条目', '创建新条目', {
+    handleCreateGlobalModel() {
+      this.$prompt('请输入新的调用模型名称，务必与官方或中转站一致', '创建新条目', {
         type: 'info',
         showClose: true,
         inputValue: '',
@@ -391,6 +440,104 @@ export default {
         }
       }).then(({ value }) => {
         console.debug('then', value)
+      }).catch(e => {
+        console.debug(e)
+      })
+    },
+    handleCreateDisplayModel() {
+      // console.log('this.$prompt', this.$prompt)
+      this.$prompt('请输入新的展示名称，不可与已有名称重复', '创建新的展示名称', {
+        type: 'info',
+        showClose: true,
+        inputValue: '',
+        // inputPattern: /^[\d\w\-_]+$/,
+        // inputErrorMessage: '仅支持数字和字母，下划线',
+        beforeClose: (action, instance, done) => {
+          console.log(action, instance.inputValue)
+          if (action !== 'confirm') {
+            return done()
+          }
+          createDisplayModel({
+            name: instance.inputValue,
+            contentType: this.isDrawPlatform ? 'Image' : 'Text'
+          }).then(resp => {
+            if (resp.code === 0) {
+              this.$message.success('创建成功！')
+              this.displayModels.push(resp.data)
+              this.model.showName = instance.inputValue
+              done()
+            } else {
+              this.$message.error('创建失败：' + resp.message)
+            }
+          }).catch(e => {
+            console.log('创建失败：' + e)
+          })
+        }
+      }).then(({ value }) => {
+        console.debug('then', value)
+      }).catch(e => {
+        console.debug(e)
+      })
+    },
+    handleEditSumarizeModel() {
+      if (!this.selectedGlobalModel) {
+        return this.$message.error('请先设置调用模型！')
+      }
+      const h = this.$createElement
+      this.selectedSummarizeModelValue = this.selectedGlobalModel.summarizeModel || ''
+      const children = this.displayModels.map(m => {
+        return h('el-option', {
+          props: {
+            key: m.id,
+            value: m.name,
+            label: m.name
+          }
+        })
+      })
+      const selector = h('el-select', {
+        domProps: { style: 'width: 100%;' },
+        props: { value: this.selectedSummarizeModelValue },
+        on: {
+          change: (v) => {
+            console.log(v, selector)
+            this.selectedSummarizeModelValue = v
+            this.$nextTick(() => {
+              // selector.data.props.value = v
+              // selector.componentInstance.$children[0].$options.propsData.value = v
+              selector.componentInstance.$children[0].$refs.input.value = v
+              // selector.componentInstance.$children[0].$forceUpdate()
+            })
+          }
+        }
+      }, children)
+      this.$msgbox({
+        title: `给${this.selectedPlatform.name}平台下的${this.selectedGlobalModel.name}设置总结模型`,
+        message: selector,
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          if (action !== 'confirm') {
+            return done()
+          }
+          instance.confirmButtonLoading = true
+          instance.confirmButtonText = '执行中...'
+          updateGlobalModel({
+            uuid: this.selectedGlobalModel.uuid,
+            summarizeModel: this.selectedSummarizeModelValue
+          }).then(resp => {
+            if (resp.code === 0) {
+              this.selectedGlobalModel.summarizeModel = this.selectedSummarizeModelValue
+              this.$message.success('设置成功！')
+              done()
+            } else {
+              this.$message.error('设置失败！' + resp.message)
+            }
+          })
+          // .finally(() => {
+          //   done()
+          // })
+        }
       }).catch(e => {
         console.debug(e)
       })

@@ -72,6 +72,7 @@
       :model="editModel"
       :platforms="platforms"
       :global-models="globalModels"
+      :display-models="displayModels"
       @close="handleCloseEdit"
       @changed="handleChanged"
     />
@@ -81,7 +82,7 @@
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getAiModels, updateAiModel, deleteAiModel, getGlobalModels } from '@/api/aiModel.js'
+import { getAiModels, updateAiModel, deleteAiModel, getGlobalModels, getDisplayModels } from '@/api/aiModel.js'
 import { getAiPlatforms } from '@/api/aiPlatform.js'
 import Edit from './edit'
 
@@ -93,6 +94,7 @@ export default {
       oldView: false,
       platforms: [],
       globalModels: [],
+      displayModels: [],
       tableActions: [],
       oldTableColumns: [{
         label: '#',
@@ -177,6 +179,7 @@ export default {
     this.reload()
     this.reloadPlatforms()
     this.reloadGlobalModels()
+    this.reloadDisplayModels()
   },
   methods: {
     reload() {
@@ -215,6 +218,12 @@ export default {
       getGlobalModels().then(resp => {
         this.globalModels.splice(0, this.globalModels.length)
         this.globalModels.push(... (resp.data || []))
+      })
+    },
+    reloadDisplayModels() {
+      getDisplayModels().then(resp => {
+        this.displayModels.splice(0, this.displayModels.length)
+        this.displayModels.push(... (resp.data || []))
       })
     },
     getPlatformState(platformId) {

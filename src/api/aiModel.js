@@ -53,3 +53,33 @@ export function deleteGlobalModel(uuid) {
     method: 'delete'
   })
 }
+
+export function updateGlobalModel(model) {
+  return request({
+    url: '/globalModels/' + model.uuid,
+    method: 'put',
+    data: model
+  })
+}
+
+export function getDisplayModels() {
+  return request({
+    url: '/displayModels/all',
+    method: 'get'
+  })
+}
+
+export function createDisplayModel(model) {
+  return request({
+    url: '/displayModels',
+    method: 'post',
+    data: model
+  })
+}
+
+export function deleteDisplayModel(uuid) {
+  return request({
+    url: '/displayModels/' + uuid,
+    method: 'delete'
+  })
+}
