@@ -23,6 +23,11 @@
             />
           </el-select>
           <el-button type="primary" plain style="margin-left: 20px" @click="handleCreateGlobalModel">创建新条目</el-button>
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >调用模型是指向上游服务器发送请求时的模型名称，该模型名称务必与官方（或中转站）保持一致。</el-alert>
         </el-form-item>
         <el-form-item label="展示名称">
           <el-select v-model="model.showName" clearable filterable>
@@ -35,10 +40,15 @@
             />
           </el-select>
           <el-button type="primary" plain style="margin-left: 20px" @click="handleCreateDisplayModel">创建新的展示名称</el-button>
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >展示名称是用于前台用户侧该模型展示的名称。通过设置展示名称，可以实现模型映射，真实模型隐藏的功能。</el-alert>
         </el-form-item>
         <el-form-item label="总结模型">
           <el-tag type="primary">{{ summarizeModel }}</el-tag>
-          <el-button type="primary" plain style="margin-left: 20px" @click="handleEditSumarizeModel">修改</el-button>
+          <el-button type="primary" plain style="margin-left: 20px" :disabled="isDrawPlatform" @click="handleEditSumarizeModel">修改</el-button>
           <el-alert
             type="success"
             style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
@@ -51,7 +61,17 @@
           >总结模型仅上面选择的调用模型有关，与当前模型无关。即，总结模型是调用模型上的一个属性</el-alert>
         </el-form-item>
         <el-form-item label="path">
-          <el-input v-model="model.path" />
+          <el-input v-model="model.path" placeholder />
+          <el-alert
+            type="info"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >当向上游发送的请求URL不是标准的请求路径时，可以在此处设置请求路径。默认情况下每个协议的每个调用模型都有自己的path，具体请参考各AI平台官方文档。</el-alert>
+          <el-alert
+            type="info"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >大部分情况下，您都无需设置该值。</el-alert>
         </el-form-item>
         <el-form-item v-if="selectedPlatform && ['OpenAiChat', 'AzureOpenAiChat'].includes(selectedPlatform.chatProtocol)" label="消息协议">
           <el-select v-model="model.messageStruct">
@@ -69,9 +89,6 @@
             style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
             :closable="false"
           >一般情况下选择url方式，仅当部署在内网，无法对公网提供接口时使用Base64的方式。注意：base64模式会极大消耗内存。</el-alert>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="model.remark" type="textarea" :row="1" autosize />
         </el-form-item>
         <el-form-item v-if="model.id" label="状态">
           <el-tag v-if="model.state == 1" type="success">启用</el-tag>
@@ -204,6 +221,9 @@
             <el-input v-model="modelConfig.translatePrompt" disabled placeholder="请前往平台详情页配置" />
           </el-form-item>
         </template>
+        <el-form-item label="备注">
+          <el-input v-model="model.remark" type="textarea" :row="1" autosize />
+        </el-form-item>
         <el-form-item v-if="model.createTime" label="创建时间">
           <el-input v-model="model.createTime" disabled />
         </el-form-item>
@@ -257,8 +277,7 @@ export default {
       loading: false,
       saving: false,
       modelConfig: {},
-      modelMultiples: {},
-      selectedSummarizeModelValue: ''
+      modelMultiples: {}
     }
   },
   computed: {
@@ -293,7 +312,7 @@ export default {
       if (['OpenAiChat', 'AzureOpenAiChat'].includes(this.selectedPlatform.chatProtocol)) {
         return 'gpt-3.5-turbo-16k'
       }
-      return this.model.name
+      return this.model.showName || this.model.name
     }
   },
   watch: {
@@ -484,8 +503,9 @@ export default {
         return this.$message.error('请先设置调用模型！')
       }
       const h = this.$createElement
-      this.selectedSummarizeModelValue = this.selectedGlobalModel.summarizeModel || ''
-      const children = this.displayModels.map(m => {
+      const displayModels = this.displayModels.includes(dm => dm.name === 'gpt-3.5-turbo-16k') ? this.displayModels
+        : this.displayModels.concat({ id: '-1', name: 'gpt-3.5-turbo-16k' })
+      const children = displayModels.map(m => {
         return h('el-option', {
           props: {
             key: m.id,
@@ -496,26 +516,36 @@ export default {
       })
       const selector = h('el-select', {
         domProps: { style: 'width: 100%;' },
-        props: { value: this.selectedSummarizeModelValue },
+        props: { value: this.summarizeModel },
         on: {
-          change: (v) => {
-            console.log(v, selector)
-            this.selectedSummarizeModelValue = v
+          change: (value) => {
+            // console.log(v, selector)
             this.$nextTick(() => {
-              // selector.data.props.value = v
-              // selector.componentInstance.$children[0].$options.propsData.value = v
-              selector.componentInstance.$children[0].$refs.input.value = v
-              // selector.componentInstance.$children[0].$forceUpdate()
+              selector.componentInstance.$children[0].$refs.input.value = value
             })
           }
         }
       }, children)
+      const box = h('div', {}, [
+        h('el-alert', {
+          domProps: { style: 'margin: 5px 0; padding: 0; padding-bottom: 5px;' },
+          props: {
+            type: 'success',
+            closable: false
+          }
+        }, [
+          '总结模型仅支持从展示名称中选择。如未设置展示名称，请先设置。'
+        ]),
+        selector
+      ])
       this.$msgbox({
         title: `给${this.selectedPlatform.name}平台下的${this.selectedGlobalModel.name}设置总结模型`,
-        message: selector,
+        message: box,
         showCancelButton: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消',
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
         beforeClose: (action, instance, done) => {
           if (action !== 'confirm') {
             return done()
