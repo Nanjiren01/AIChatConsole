@@ -503,6 +503,7 @@ export default {
         return this.$message.error('请先设置调用模型！')
       }
       const h = this.$createElement
+      let value = this.summarizeModel
       const displayModels = this.displayModels.includes(dm => dm.name === 'gpt-3.5-turbo-16k') ? this.displayModels
         : this.displayModels.concat({ id: '-1', name: 'gpt-3.5-turbo-16k' })
       const children = displayModels.map(m => {
@@ -516,12 +517,13 @@ export default {
       })
       const selector = h('el-select', {
         domProps: { style: 'width: 100%;' },
-        props: { value: this.summarizeModel },
+        props: { value },
         on: {
-          change: (value) => {
+          change: (v) => {
             // console.log(v, selector)
+            value = v
             this.$nextTick(() => {
-              selector.componentInstance.$children[0].$refs.input.value = value
+              selector.componentInstance.$children[0].$refs.input.value = v
             })
           }
         }
@@ -554,10 +556,10 @@ export default {
           instance.confirmButtonText = '执行中...'
           updateGlobalModel({
             uuid: this.selectedGlobalModel.uuid,
-            summarizeModel: this.selectedSummarizeModelValue
+            summarizeModel: value
           }).then(resp => {
             if (resp.code === 0) {
-              this.selectedGlobalModel.summarizeModel = this.selectedSummarizeModelValue
+              this.selectedGlobalModel.summarizeModel = value
               this.$message.success('设置成功！')
               done()
             } else {
