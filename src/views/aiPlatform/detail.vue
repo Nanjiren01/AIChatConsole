@@ -14,7 +14,7 @@
           <el-input v-model="form.baseUrl" />
         </el-form-item>
         <el-form-item label="聊天协议">
-          <el-select v-model="form.chatProtocol">
+          <el-select v-model="form.chatProtocol" :disabled="!!platform.id">
             <el-option label="OpenAI聊天协议" value="OpenAiChat" />
             <el-option label="Azure OpenAI聊天协议" value="AzureOpenAiChat" />
             <el-option label="百度聊天协议" value="BaiduChat" />
