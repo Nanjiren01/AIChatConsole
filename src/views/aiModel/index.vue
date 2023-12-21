@@ -167,6 +167,10 @@ export default {
         remark: null,
         messageStruct: null,
         messageFileTransformer: null,
+        imageSizes: [],
+        imageNumber: 1,
+        imageQuality: null,
+        imageStyle: null,
         createTime: null
       },
 
@@ -249,6 +253,10 @@ export default {
       this.editModel.remark = null
       this.editModel.messageStruct = null
       this.editModel.messageFileTransformer = null
+      this.editModel.imageSizes = []
+      this.editModel.imageNumber = 1
+      this.editModel.imageQuality = ''
+      this.editModel.imageStyle = ''
       this.showEdit = true
     },
     handleEdit(row) {
@@ -268,6 +276,10 @@ export default {
       this.editModel.remark = row.remark
       this.editModel.messageStruct = row.messageStruct
       this.editModel.messageFileTransformer = row.messageFileTransformer
+      this.editModel.imageSizes = row.imageSizes ? [...row.imageSizes] : []
+      this.editModel.imageNumber = row.imageNumber || 1
+      this.editModel.imageQuality = row.imageQuality || ''
+      this.editModel.imageStyle = row.imageStyle || ''
       this.editModel.createTime = row.createTime
       this.showEdit = true
     },
@@ -307,7 +319,9 @@ export default {
         config: row.config,
         remark: row.remark,
         messageStruct: row.messageStruct,
-        messageFileTransformer: row.messageFileTransformer
+        messageFileTransformer: row.messageFileTransformer,
+        imageSizesJson: JSON.stringify(row.imageSizes || []),
+        imageNumber: row.imageNumber || 1
       }).then(() => {
         this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
         this.reload()

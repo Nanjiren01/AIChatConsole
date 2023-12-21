@@ -74,10 +74,11 @@
           >大部分情况下，您都无需设置该值。</el-alert>
         </el-form-item>
         <el-form-item v-if="selectedPlatform && ['OpenAiChat', 'AzureOpenAiChat'].includes(selectedPlatform.chatProtocol)" label="消息协议">
-          <el-select v-model="model.messageStruct">
-            <el-option label="普通" value="normal" />
-            <el-option label="复杂（如gpt-4-vision-preview）" value="complex" />
-          </el-select>
+          <el-radio-group v-model="model.messageStruct">
+            <el-radio label="normal">普通</el-radio>
+            <el-radio label="complex">复杂（如gpt-4-vision）</el-radio>
+            <el-radio label="dalle">dall·e</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item v-if="model.messageStruct === 'complex'" label="图片传输方式">
           <el-select v-model="model.messageFileTransformer" placeholder="一般无需选择">
@@ -89,6 +90,52 @@
             style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
             :closable="false"
           >一般情况下选择url方式，仅当部署在内网，无法对公网提供接口时使用Base64的方式。注意：base64模式会极大消耗内存。</el-alert>
+        </el-form-item>
+        <el-form-item v-if="model.messageStruct === 'dalle'" label="图片尺寸">
+          <el-select v-model="model.imageSizes" multiple clearable style="width: 100%;">
+            <el-option label="1792×1024（仅Dalle3）" value="1792x1024" />
+            <el-option label="1024×1792（仅Dalle3）" value="1024x1792" />
+            <el-option label="1024×1024（Dalle2，Dalle3）" value="1024x1024" />
+            <el-option label="512×512（仅Dalle2）" value="512x512" />
+            <el-option label="256×256（仅Dalle2）" value="256x256" />
+          </el-select>
+          <el-alert
+            type="info"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >dalle2默认512×512，其他默认1024x1024，支持多选，但目前仅第一个有效。后续支持多个（选择多个时，由用户自行决定图片生成尺寸）</el-alert>
+        </el-form-item>
+        <el-form-item v-if="model.messageStruct === 'dalle'" label="图片质量">
+          <el-select v-model="model.imageQuality" clearable>
+            <el-option label="用户自定义" value="custom" disabled />
+            <el-option label="标准Standard（仅Dalle3）" value="standard" />
+            <el-option label="高清HD（仅Dalle3）" value="hd" />
+          </el-select>
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >仅dalle3支持设置图片质量。如您使用的是dalle2，请勿选择。</el-alert>
+        </el-form-item>
+        <el-form-item v-if="model.messageStruct === 'dalle'" label="图片风格">
+          <el-select v-model="model.imageStyle" clearable>
+            <el-option label="用户自定义" value="custom" disabled />
+            <el-option label="鲜艳（vivid）" value="vivid" />
+            <el-option label="自然（natural）" value="natural" />
+          </el-select>
+          <el-alert
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >仅dalle3支持设置图片风格。如您使用的是dalle2，请勿选择。</el-alert>
+        </el-form-item>
+        <el-form-item v-if="model.messageStruct === 'dalle'" label="图片数量">
+          <el-select v-model="model.imageNumber" clearable>
+            <el-option label="用户自定义" :value="-1" disabled />
+            <el-option label="1张（Dalle2，Dalle3）" :value="1" />
+            <el-option v-for="n in 9" :key="n + 1" :label="(n+1) + '张（仅Dalle2）'" :value="n + 1" />
+          </el-select>
+          <span>（默认1张）</span>
         </el-form-item>
         <el-form-item v-if="model.id" label="状态">
           <el-tag v-if="model.state == 1" type="success">启用</el-tag>
@@ -352,7 +399,11 @@ export default {
           multiples: JSON.stringify(this.modelMultiples || {}),
           remark: this.model.remark,
           messageStruct: this.model.messageStruct,
-          messageFileTransformer: this.model.messageFileTransformer
+          messageFileTransformer: this.model.messageFileTransformer,
+          imageSizesJson: JSON.stringify(this.model.imageSizes || []),
+          imageNumber: this.model.imageNumber || 1,
+          imageQuality: this.model.imageQuality || '',
+          imageStyle: this.model.imageStyle || ''
         }).then(() => {
           this.$message.success('操作成功！')
           this.$emit('changed')
@@ -375,7 +426,11 @@ export default {
         multiples: JSON.stringify(this.modelMultiples || {}),
         remark: this.model.remark,
         messageStruct: this.model.messageStruct,
-        messageFileTransformer: this.model.messageFileTransformer
+        messageFileTransformer: this.model.messageFileTransformer,
+        imageSizesJson: JSON.stringify(this.model.imageSizes || []),
+        imageNumber: this.model.imageNumber || 1,
+        imageQuality: this.model.imageQuality || '',
+        imageStyle: this.model.imageStyle || ''
       }).then(() => {
         this.$message.success('操作成功！')
         this.$emit('changed')
@@ -401,7 +456,11 @@ export default {
         multiples: row.multiples,
         remark: row.remark,
         messageStruct: row.messageStruct,
-        messageFileTransformer: row.messageFileTransformer
+        messageFileTransformer: row.messageFileTransformer,
+        imageSizesJson: JSON.stringify(this.model.imageSizes || []),
+        imageNumber: this.model.imageNumber || 1,
+        imageQuality: this.model.imageQuality || '',
+        imageStyle: this.model.imageStyle || ''
       }).then(() => {
         this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
         this.$emit('changed')
