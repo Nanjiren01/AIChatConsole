@@ -624,10 +624,10 @@ export default {
             } else {
               this.$message.error('设置失败！' + resp.message)
             }
+          }).finally(() => {
+            instance.confirmButtonLoading = false
+            instance.confirmButtonText = '确定'
           })
-          // .finally(() => {
-          //   done()
-          // })
         }
       }).catch(e => {
         console.debug(e)
