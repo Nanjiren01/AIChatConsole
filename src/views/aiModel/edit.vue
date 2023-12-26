@@ -253,6 +253,12 @@
             style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
             :closable="false"
           >系统会优先使用精细倍率，若未设置，才会使用粗略倍率。</el-alert>
+          <el-alert
+            v-if="selectedPlatform && ['OpenAiChat', 'AzureOpenAiChat'].includes(selectedPlatform.chatProtocol)"
+            type="success"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          ><a href="https://openai.com/pricing" target="_blank">OpenAI官方价格表</a>。</el-alert>
         </el-form-item>
         <template v-if="selectedPlatform && selectedPlatform.chatProtocol === 'GoApiDraw' && modelConfig.gptApiKey">
           <el-form-item label="翻译用ChatGPT BaseUrl">
