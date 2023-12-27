@@ -62,7 +62,7 @@
             :disabled="disabled"
             @change="handleRebuildModelConfigJson"
           >
-            <el-option v-for="mdl in models" :key="mdl.name" :label="mdl.name" :value="mdl.name" />
+            <el-option v-for="mdl in displayModels" :key="mdl.name" :label="mdl.name" :value="mdl.name" />
           </el-select>
         </el-form-item>
         <el-form-item label="随机性">
@@ -169,6 +169,7 @@
 import { VEmojiPicker, emojisDefault, categoriesDefault } from 'v-emoji-picker'
 
 import { createMask, updateMask, deleteMask, toDraft, toNormal } from '@/api/mask'
+import { getDisplayModels } from '@/api/aiModel.js'
 
 export default {
   name: 'MaskDetail',
@@ -202,7 +203,8 @@ export default {
         historyMessageCount: null,
         compressMessageLengthThreshold: null
       },
-      context: []
+      context: [],
+      displayModels: []
     }
   },
   computed: {
@@ -255,6 +257,7 @@ export default {
   },
   mounted() {
     // this.reload()
+    this.reloadDisplayModels()
     console.log(categoriesDefault)
     console.log('Total emojis:', emojisDefault.length)
   },
@@ -263,6 +266,12 @@ export default {
       if (!this.maskEntity.id) {
         return
       }
+    },
+    reloadDisplayModels() {
+      getDisplayModels().then(resp => {
+        this.displayModels.splice(0, this.displayModels.length)
+        this.displayModels.push(... (resp.data || []))
+      })
     },
     handleClose() {
       this.$emit('close')
