@@ -190,7 +190,10 @@
             <el-input v-model="modelConfig.webhookSecret" placeholder="webhook secret" />
           </el-form-item> -->
         </template>
-        <el-form-item v-if="modelMultiples && selectedPlatform && selectedPlatform.chatProtocol && selectedPlatform.chatProtocol.includes('Draw')" label="精细倍率">
+        <el-form-item
+          v-if="modelMultiples && selectedPlatform && selectedPlatform.chatProtocol && selectedPlatform.chatProtocol.includes('Draw')"
+          label="动作倍率"
+        >
           <div style="border: 1px solid #DCDFE6; border-radius: 4px; padding: 10px">
             <div
               class="el-table el-table--fit el-table--border el-table--scrollable-y el-table--enable-row-hover el-table--enable-row-transition"
@@ -206,51 +209,65 @@
                 <tr class="el-table__row">
                   <td><div class="cell">IMAGINE</div></td>
                   <td><div class="cell"><el-input-number v-model="modelMultiples.imagine" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboImagine" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastImagine" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxImagine" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboImagine" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastImagine" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxImagine" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
                 </tr>
                 <tr class="el-table__row">
                   <td><div class="cell">UPSCALE</div></td>
                   <td><div class="cell"><el-input-number v-model="modelMultiples.upscale" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboUpscale" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastUpscale" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxUpscale" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboUpscale" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastUpscale" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxUpscale" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
                 </tr>
                 <tr class="el-table__row">
                   <td><div class="cell">VARIATION</div></td>
                   <td><div class="cell"><el-input-number v-model="modelMultiples.variation" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboVariation" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastVariation" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxVariation" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboVariation" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastVariation" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxVariation" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
                 </tr>
                 <tr class="el-table__row">
                   <td><div class="cell">VARY</div></td>
                   <td><div class="cell"><el-input-number v-model="modelMultiples.vary" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboVary" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastVary" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxVary" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboVary" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastVary" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxVary" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
                 </tr>
                 <tr class="el-table__row">
                   <td><div class="cell">ZOOMOUT</div></td>
                   <td><div class="cell"><el-input-number v-model="modelMultiples.zoomout" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboZoomout" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastZoomout" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxZoomout" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboZoomout" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastZoomout" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxZoomout" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
                 </tr>
                 <tr class="el-table__row">
                   <td><div class="cell">PAN</div></td>
                   <td><div class="cell"><el-input-number v-model="modelMultiples.pan" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboPan" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastPan" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxPan" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboPan" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastPan" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxPan" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
                 </tr>
                 <tr class="el-table__row">
                   <td><div class="cell">SQUARE</div></td>
                   <td><div class="cell"><el-input-number v-model="modelMultiples.square" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboSquare" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastSquare" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxSquare" :controls="false" :disabled="modelConfig.processMode && modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboSquare" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastSquare" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxSquare" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                </tr>
+                <tr class="el-table__row">
+                  <td><div class="cell">BLEND</div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.blend" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboBlend" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastBlend" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxBlend" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                </tr>
+                <tr class="el-table__row">
+                  <td><div class="cell">DESCRIBE</div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.describe" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboDescribe" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastDescribe" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxDescribe" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
                 </tr>
               </table>
             </div>
@@ -259,7 +276,7 @@
             type="success"
             style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
             :closable="false"
-          >系统会优先使用精细倍率，若未设置，才会使用基础倍率。</el-alert>
+          >系统会优先使用上述表格配置的动作倍率，若未设置，才会使用基础倍率。若同时配置了动作倍率和基础倍率，则基础倍率将失效。</el-alert>
           <el-alert
             v-if="selectedPlatform && ['OpenAiChat', 'AzureOpenAiChat'].includes(selectedPlatform.chatProtocol)"
             type="success"
