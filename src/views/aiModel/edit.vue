@@ -175,7 +175,7 @@
               <el-option label="fast" value="fast" />
               <el-option label="relax" value="relax" />
               <el-option label="用户自定义（用户可以选择turbo、fast、relax）" value="turbo|fast|relax|mixed" />
-              <el-option label="用户自定义（用户可以选择fast、relax）" value="fast|relax" />
+              <el-option label="用户自定义（用户可以选择fast、relax）" value="fast|relax|mixed" />
             </el-select>
             <el-alert
               type="success"
