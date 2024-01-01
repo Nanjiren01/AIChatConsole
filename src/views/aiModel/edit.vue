@@ -258,16 +258,16 @@
                 <tr class="el-table__row">
                   <td><div class="cell">BLEND</div></td>
                   <td><div class="cell"><el-input-number v-model="modelMultiples.blend" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboBlend" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastBlend" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxBlend" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboBlend" :controls="false" :disabled="true" placeholder="暂不支持" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastBlend" :controls="false" :disabled="true" placeholder="暂不支持" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxBlend" :controls="false" :disabled="true" placeholder="暂不支持" /></div></td>
                 </tr>
                 <tr class="el-table__row">
                   <td><div class="cell">DESCRIBE</div></td>
                   <td><div class="cell"><el-input-number v-model="modelMultiples.describe" :controls="false" placeholder="未设置时以基础倍率计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboDescribe" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('turbo')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastDescribe" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('fast')=== -1" placeholder="未设置时以第一列计算" /></div></td>
-                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxDescribe" :controls="false" :disabled="!modelConfig.processMode || modelConfig.processMode.indexOf('relax')=== -1" placeholder="未设置时以第一列计算" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.turboDescribe" :controls="false" :disabled="true" placeholder="暂不支持" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.fastDescribe" :controls="false" :disabled="true" placeholder="暂不支持" /></div></td>
+                  <td><div class="cell"><el-input-number v-model="modelMultiples.relaxDescribe" :controls="false" :disabled="true" placeholder="暂不支持" /></div></td>
                 </tr>
               </table>
             </div>
