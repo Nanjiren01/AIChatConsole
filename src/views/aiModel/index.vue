@@ -24,7 +24,7 @@
           >
             {{ slotProps.row.state == 1 ? '禁用' : '启用' }}
           </el-button>
-          <!-- <el-button type="danger" icon="el-icon-delete" @click="handleDelete(slotProps.row)">删除</el-button> -->
+          <el-button type="danger" icon="el-icon-delete" plain @click="handleDelete(slotProps.row)">删除</el-button>
         </template>
       </template>
       <!-- <template #columns>
@@ -71,6 +71,8 @@
       :show="showEdit"
       :model="editModel"
       :platforms="platforms"
+      :global-models="globalModels"
+      :display-models="displayModels"
       @close="handleCloseEdit"
       @changed="handleChanged"
     />
@@ -80,7 +82,7 @@
 <script>
 // import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
-import { getAiModels, updateAiModel } from '@/api/aiModel.js'
+import { getAiModels, updateAiModel, deleteAiModel, getGlobalModels, getDisplayModels } from '@/api/aiModel.js'
 import { getAiPlatforms } from '@/api/aiPlatform.js'
 import Edit from './edit'
 
@@ -91,6 +93,8 @@ export default {
     return {
       oldView: false,
       platforms: [],
+      globalModels: [],
+      displayModels: [],
       tableActions: [],
       oldTableColumns: [{
         label: '#',
@@ -137,7 +141,7 @@ export default {
         showOverflowTooltip: false
       }],
       tableActionColumn: {
-        width: 170
+        width: 260
       },
 
       tableData: [],
@@ -161,6 +165,12 @@ export default {
         path: null,
         config: null,
         remark: null,
+        messageStruct: null,
+        messageFileTransformer: null,
+        imageSizes: [],
+        imageNumber: 1,
+        imageQuality: null,
+        imageStyle: null,
         createTime: null
       },
 
@@ -172,6 +182,8 @@ export default {
   mounted() {
     this.reload()
     this.reloadPlatforms()
+    this.reloadGlobalModels()
+    this.reloadDisplayModels()
   },
   methods: {
     reload() {
@@ -206,6 +218,18 @@ export default {
         this.platforms.push(... (resp.data || []))
       })
     },
+    reloadGlobalModels() {
+      getGlobalModels().then(resp => {
+        this.globalModels.splice(0, this.globalModels.length)
+        this.globalModels.push(... (resp.data || []))
+      })
+    },
+    reloadDisplayModels() {
+      getDisplayModels().then(resp => {
+        this.displayModels.splice(0, this.displayModels.length)
+        this.displayModels.push(... (resp.data || []))
+      })
+    },
     getPlatformState(platformId) {
       const platform = this.platforms.find(p => p.id === platformId)
       return platform ? platform.state : null
@@ -227,6 +251,12 @@ export default {
       this.editModel.path = null
       this.editModel.config = null
       this.editModel.remark = null
+      this.editModel.messageStruct = null
+      this.editModel.messageFileTransformer = null
+      this.editModel.imageSizes = []
+      this.editModel.imageNumber = 1
+      this.editModel.imageQuality = ''
+      this.editModel.imageStyle = ''
       this.showEdit = true
     },
     handleEdit(row) {
@@ -244,6 +274,12 @@ export default {
       this.editModel.path = row.path
       this.editModel.config = row.config
       this.editModel.remark = row.remark
+      this.editModel.messageStruct = row.messageStruct
+      this.editModel.messageFileTransformer = row.messageFileTransformer
+      this.editModel.imageSizes = row.imageSizes ? [...row.imageSizes] : []
+      this.editModel.imageNumber = row.imageNumber || 1
+      this.editModel.imageQuality = row.imageQuality || ''
+      this.editModel.imageStyle = row.imageStyle || ''
       this.editModel.createTime = row.createTime
       this.showEdit = true
     },
@@ -254,7 +290,19 @@ export default {
       this.reload()
     },
     handleDelete(row) {
-      console.log('delete', row)
+      this.$confirm('确定删除' + row.name + '？', '删除确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'long-message',
+        width: '600px',
+        type: 'warning'
+      }).then(async() => {
+        deleteAiModel(row.id).then(resp => {
+          console.log('resp', resp)
+          this.$message.success('操作成功！')
+          this.reload()
+        })
+      })
     },
     toggleEnable(row) {
       this.loading = true
@@ -269,7 +317,11 @@ export default {
         multiples: row.multiples,
         path: row.path,
         config: row.config,
-        remark: row.remark
+        remark: row.remark,
+        messageStruct: row.messageStruct,
+        messageFileTransformer: row.messageFileTransformer,
+        imageSizesJson: JSON.stringify(row.imageSizes || []),
+        imageNumber: row.imageNumber || 1
       }).then(() => {
         this.$message.success(row.state === 1 ? '停用成功！' : '启用成功！')
         this.reload()

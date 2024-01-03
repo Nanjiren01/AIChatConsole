@@ -17,3 +17,11 @@ export function togglePlugin(uuid, enable) {
     }
   })
 }
+
+export function updatePluginConfig(plugin) {
+  return request({
+    url: '/plugin/' + plugin.uuid,
+    method: 'put',
+    data: plugin
+  })
+}

@@ -19,7 +19,7 @@
       </el-table> -->
       <el-form ref="form" :model="model" label-width="120px">
         <el-form-item label="平台">
-          <el-select v-model="model.platformId">
+          <el-select v-model="model.platformId" :disabled="!!model.id">
             <el-option
               v-for="platform in platforms"
               :key="platform.id"

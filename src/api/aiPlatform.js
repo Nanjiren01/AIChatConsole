@@ -24,3 +24,10 @@ export function createAiPlatform(params) {
     data: params
   })
 }
+
+export function deleteAiPlatform(id) {
+  return request({
+    url: '/aiPlatforms/' + id,
+    method: 'delete'
+  })
+}

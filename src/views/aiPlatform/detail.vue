@@ -14,8 +14,9 @@
           <el-input v-model="form.baseUrl" />
         </el-form-item>
         <el-form-item label="聊天协议">
-          <el-select v-model="form.chatProtocol">
+          <el-select v-model="form.chatProtocol" :disabled="!!platform.id">
             <el-option label="OpenAI聊天协议" value="OpenAiChat" />
+            <el-option label="Azure OpenAI聊天协议" value="AzureOpenAiChat" />
             <el-option label="百度聊天协议" value="BaiduChat" />
             <el-option label="阿里千问聊天协议" value="AliQwenChat" />
             <el-option label="内置MJ-Proxy绘画协议" value="EmbeddingMjProxyDraw" />
@@ -61,6 +62,14 @@
           </el-form-item>
           <el-form-item label="翻译Prompt">
             <el-input v-model="modelConfig.translatePrompt" />
+          </el-form-item>
+        </template>
+        <template v-if="form && ['MjProxyPlusDraw'].includes(form.chatProtocol)">
+          <el-form-item label="ProcessModeType">
+            <el-select v-model="modelConfig.modeType" placeholder="一般无需设置">
+              <el-option label="将出图速度放置到prompt中（默认）" value="prompt" />
+              <el-option label="将出图速度放置到参数中" value="parameter" />
+            </el-select>
           </el-form-item>
         </template>
         <el-form-item label="备注">
