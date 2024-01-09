@@ -10,6 +10,14 @@
     >
       <template #topActions>
         <el-button type="primary" icon="el-icon-plus" @click="handleCreate(null)">添加模型</el-button>
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-s-operation"
+          style="margin-left: 10px"
+          @click="() => showDisplayModelListDialog = true"
+          @changed="handleChanged"
+        >管理前台用户模型列表</el-button>
         <el-switch v-model="oldView" style="margin-left: 10px" active-text="全列表视图" />
       </template>
       <template v-slot:rowActions="slotProps">
@@ -76,6 +84,12 @@
       @close="handleCloseEdit"
       @changed="handleChanged"
     />
+
+    <display-model-list-dialog
+      :show="showDisplayModelListDialog"
+      @close="handleCloseDisplayModelListDialog"
+      @changed="handleChanged"
+    />
   </div>
 </template>
 
@@ -85,10 +99,11 @@ import AiTable from '@/components/Table'
 import { getAiModels, updateAiModel, deleteAiModel, getGlobalModels, getDisplayModels } from '@/api/aiModel.js'
 import { getAiPlatforms } from '@/api/aiPlatform.js'
 import Edit from './edit'
+import DisplayModelListDialog from './displayModel/index'
 
 export default {
   name: 'AiModelsIndex',
-  components: { AiTable, Edit },
+  components: { AiTable, Edit, DisplayModelListDialog },
   data() {
     return {
       oldView: false,
@@ -174,7 +189,9 @@ export default {
         createTime: null
       },
 
-      loading: false
+      loading: false,
+
+      showDisplayModelListDialog: false
     }
   },
   computed: {
@@ -342,6 +359,10 @@ export default {
         3: 'tokens',
         4: '绘画'
       })[levelId] || '未知'
+    },
+
+    handleCloseDisplayModelListDialog() {
+      this.showDisplayModelListDialog = false
     }
   }
 }

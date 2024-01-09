@@ -257,7 +257,7 @@ export const asyncRoutes = [
         path: 'chat',
         component: () => import('@/views/chat/index'),
         name: 'chatLog',
-        meta: { title: '聊天日志', icon: 'dashboard', affix: true }
+        meta: { title: '聊天请求日志', icon: 'dashboard', affix: true }
       },
       {
         path: 'task',
