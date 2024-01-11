@@ -16,6 +16,18 @@
         <el-button icon="el-icon-edit" @click.stop="handleEdit(slotProps.row)">编辑</el-button>
       </template>
 
+      <template v-slot:name="props">
+        <span style="display: flex;">
+          <img
+            v-if="props.row.avatar"
+            class="emoji"
+            style="width: 20px; height: 20px;"
+            :src="`/emoji-date-apple-img-64-15.0.1/${props.row.avatar}.png`"
+          >
+          {{ props.row.name }}
+        </span>
+      </template>
+
       <template v-slot:state="props">
         <el-tag :type="props.row.state === 0 ? 'info' : 'success'">{{ getStateText(props.row.state) }}</el-tag>
       </template>
@@ -61,7 +73,7 @@ export default {
         width: 100
       }, {
         label: '名称',
-        prop: 'name'
+        slot: 'name'
       }, {
         label: '描述',
         prop: 'description'

@@ -235,7 +235,7 @@ export const asyncRoutes = [
         path: 'mask',
         component: () => import('@/views/mask/index'),
         name: 'maskList',
-        meta: { title: '面具管理', icon: 'dashboard', affix: true }
+        meta: { title: '应用管理', icon: 'dashboard', affix: true }
       },
       {
         path: 'plugin',
