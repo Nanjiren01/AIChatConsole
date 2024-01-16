@@ -6,6 +6,9 @@
     :before-close="handleClose"
     class="model-drawer"
   >
+    <el-alert type="success" style="margin: 10px" :closable="false">
+      该列表第一项将作为新建会话时的默认模型，已有会话若未修改过会话级别的配置，也会同步修改会话所使用的模型。
+    </el-alert>
     <ai-table
       :table-actions="tableActions"
       :table-columns="tableColumns"
