@@ -413,6 +413,9 @@ export default {
       this.$emit('update:show', false)
     },
     handleSave() {
+      if (isNaN(this.model.levelId) || this.model.levelId < 1 || this.model.levelId > 4) {
+        return this.$message.error('请选择计费方式！')
+      }
       this.loading = true
       this.saving = true
       if (!this.model.id) {
