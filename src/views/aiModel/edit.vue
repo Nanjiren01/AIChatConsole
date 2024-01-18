@@ -389,6 +389,9 @@ export default {
       if (['OpenAiChat', 'AzureOpenAiChat'].includes(this.selectedPlatform.chatProtocol)) {
         return 'gpt-3.5-turbo-16k'
       }
+      if (this.selectedPlatform.chatProtocol === 'ZhipuChat') {
+        return 'glm-3-turbo'
+      }
       return this.model.showName || this.model.name
     }
   },
