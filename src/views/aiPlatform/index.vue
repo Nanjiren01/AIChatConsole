@@ -63,7 +63,7 @@
           系统默认（
           <template v-if="props.row.chatProtocol === 'OpenAiChat'">https://api.openai.com</template>
           <template v-else-if="props.row.chatProtocol === 'AzureOpenAiChat'">×</template>
-          <template v-else-if="props.row.chatProtocol === 'ZhipuChat'">https://open.bigmodel.cn/api/paas/v4</template>
+          <template v-else-if="props.row.chatProtocol === 'ZhipuChat'">https://open.bigmodel.cn/api/paas</template>
           <template v-else-if="props.row.chatProtocol === 'BaiduChat'">https://aip.baidubce.com/rpc/2.0/ai_custom</template>
           <template v-else-if="props.row.chatProtocol === 'AliQwenChat'">×</template>
           <template v-else-if="props.row.chatProtocol === 'EmbeddingMjProxyDraw'">×</template>
