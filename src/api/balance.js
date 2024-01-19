@@ -1,17 +1,16 @@
 
 import request from '@/utils/request'
 
-export function getBalancesByUserId(userId) {
+export function getBalancesByUserId(userId, page, size) {
   return request({
-    url: '/balances/' + userId,
-    method: 'get',
-    params: {}
+    url: `/balances/${userId}?page=${page}&size=${size}`,
+    method: 'get'
   })
 }
 
-export function getBalanceRecordByUserId(userId) {
+export function getBalanceRecordByUserId(userId, page, size) {
   return request({
-    url: '/balances/' + userId + '/records',
+    url: `/balances/${userId}/records?page=${page}&size=${size}`,
     method: 'get',
     params: {}
   })

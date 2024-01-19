@@ -7,6 +7,8 @@
       :table-data="tableData"
       :table-action-column="tableActionColumn"
       :pagination="pagination"
+      @pageSizeChanged="handlePageSizeChange"
+      @pageCurrentChanged="handlePageCurrentChanged"
       @refresh="handleRefresh"
     >
       <template #leftColumns>
@@ -35,30 +37,31 @@
         <el-button type="primary" @click="handleShowAddPackageDialog">增加套餐</el-button>
       </template>
       <template v-slot:sourceId="slotProps">
-        <el-tag>{{ getSourceText(slotProps.row.sourceId) }}</el-tag>
+        <el-tag :type="slotProps.row.expired ? 'info' : '' ">{{ getSourceText(slotProps.row.sourceId) }}</el-tag>
       </template>
       <template v-slot:calcTypeId="slotProps">
-        <el-tag>{{ getCalcTypeText(slotProps.row.calcTypeId) }}</el-tag>
+        <el-tag :type="slotProps.row.expired ? 'info' : '' ">{{ getCalcTypeText(slotProps.row.calcTypeId) }}</el-tag>
       </template>
       <template v-slot:count="slotProps">
         <span>{{ slotProps.row.tokens }}, {{ slotProps.row.chatCount }}, {{ slotProps.row.advancedChatCount }}, {{ slotProps.row.drawCount }}</span>
       </template>
       <template v-slot:state="slotProps">
-        <el-tag :type="slotProps.row.state == 1 ? 'primary' : 'danger'">{{ getStateText(slotProps.row.state) }}</el-tag>
+        <el-tag :type="slotProps.row.expired ? 'info' : slotProps.row.state == 1 ? 'primary' : 'danger'">{{ getStateText(slotProps.row.state) }}</el-tag>
+        <el-tag v-if="slotProps.row.expired" style="margin-left: 5px;" type="info">已过期</el-tag>
       </template>
       <template v-slot:rowActions="slotProps">
         <el-button
           v-if="slotProps.row.state == 1 || slotProps.row.state == 2"
-          :type="slotProps.row.state == 2 ? 'primary' : 'danger'"
+          :type="slotProps.row.expired ? 'info' : slotProps.row.state == 2 ? 'primary' : 'danger'"
           plain
           @click.stop="handleToggleEnable(slotProps.row)"
         >
           {{ slotProps.row.state == 1 ? '废除' : '恢复' }}
         </el-button>
-        <el-button type="primary" @click.stop="handleShowQuotaEditDialog(slotProps.row)">
+        <el-button :type="slotProps.row.expired ? 'info' : 'primary'" :plain="slotProps.row.expired" @click.stop="handleShowQuotaEditDialog(slotProps.row)">
           {{ slotProps.row.calcTypeId == 1 ? '调整额度' : '调整限额' }}
         </el-button>
-        <el-button type="success" plain @click.stop="handleShowTimeEditDialog(slotProps.row)">
+        <el-button :type="slotProps.row.expired ? 'info' : 'success'" plain @click.stop="handleShowTimeEditDialog(slotProps.row)">
           修改有效期
         </el-button>
       </template>
@@ -198,7 +201,7 @@ export default {
         label: '状态',
         prop: 'state',
         slot: 'state',
-        width: 75
+        width: 120
       }, {
         label: '创建时间',
         prop: 'createTime',
@@ -214,7 +217,9 @@ export default {
       },
       pagination: {
         total: 0,
-        showDetail: false
+        pageNum: 1,
+        pageSize: 20
+        // showDetail: false
       },
 
       dialogVisible: false,
@@ -246,9 +251,9 @@ export default {
   methods: {
     reload() {
       this.loading = true
-      getBalancesByUserId(this.userId).then(resp => {
+      getBalancesByUserId(this.userId, this.pagination.pageNum, this.pagination.pageSize).then(resp => {
         console.log('resp', resp)
-        this.tableData = resp.data.map(balance => {
+        this.tableData = resp.data.list.map(balance => {
           return {
             id: balance.id,
             sourceId: balance.sourceId,
@@ -261,15 +266,29 @@ export default {
             drawCount: balance.drawCount,
             createTime: balance.createTime,
             expireTime: balance.expireTime,
-            state: balance.state
+            state: balance.state,
+            expired: balance.expired
           }
         })
         this.pagination.total = this.tableData.length
+        this.pagination.total = resp.data.total
+        this.pagination.pageNum = resp.data.pageNum
+        this.pagination.pageSize = resp.data.pageSize
       }).finally(() => {
         this.loading = false
       })
     },
     handleRefresh() {
+      this.reload()
+    },
+    handlePageSizeChange(size) {
+      this.pagination.pageNum = 1
+      this.pagination.pageSize = size
+      this.reload()
+    },
+    handlePageCurrentChanged(page) {
+      console.log('page', page)
+      this.pagination.pageNum = page
       this.reload()
     },
     handleToggleEnable(row) {
