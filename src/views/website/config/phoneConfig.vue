@@ -1,7 +1,10 @@
 <template>
   <div>
     <div style="margin: 0 auto; width: 500px;">
-      <el-alert :closable="false" title="仅支持阿里云短信服务" style="margin-bottom: 10px" />
+      <el-alert :closable="false" style="margin-bottom: 10px">
+        仅支持阿里云短信服务，请点击链接申请：<a target="_blank" href="https://dysms.console.aliyun.com/overview">https://dysms.console.aliyun.com/overview</a>。
+      </el-alert>
+
       <el-form ref="form" :model="form" label-width="160px">
         <el-form-item label="accessKeyId">
           <el-input v-model="form.accessKeyId" />
