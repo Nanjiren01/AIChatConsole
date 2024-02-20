@@ -7,7 +7,7 @@
       </div>
       <div style="font-size: 14px; line-height: 20px; ">
         <div>Admin：v{{ version }}</div>
-        <div>Console: v0.11.3</div>
+        <div>Console: v0.11.4</div>
       </div>
       <div v-html="about" />
     </div>
