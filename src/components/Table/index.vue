@@ -4,6 +4,10 @@
       <slot name="filter" />
     </div>
 
+    <div>
+      <slot name="top" />
+    </div>
+
     <div class="table-container" style="padding: 20px;">
 
       <div class="operation-container" style="margin-bottom: 10px; padding-left: 10px;">

@@ -12,7 +12,7 @@
     <!--  @handleSetLineChartData="handleSetLineChartData" -->
 
     <el-alert
-      title="订单总数、金额仅统计已支付的订单。订单金额仅保留整数部分。"
+      title="订单总数、金额仅统计已支付的订单。"
       type="warning"
       :closable="false"
       style="margin-bottom: 20px;"
