@@ -13,16 +13,30 @@
     >
       <template #filter>
         <el-row :gutter="20">
-          <el-col :span="6" :xs="24">
+          <el-col :span="6" :xs="24" class="filter-item">
             <el-input v-model="filter.username" placeholder="请输入用户名" />
           </el-col>
-          <el-col :span="6" :xs="24">
+          <el-col :span="6" :xs="24" class="filter-item">
             <el-input v-model="filter.email" placeholder="请输入邮箱" />
           </el-col>
-          <el-col :span="6" :xs="24">
+          <el-col :span="6" :xs="24" class="filter-item">
             <el-input v-model="filter.phone" placeholder="请输入手机号" />
           </el-col>
-          <el-col :span="6" :xs="24">
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12" :xs="24" class="filter-item">
+            <div style="line-height: 28px;display: flex;justify-content: flex-start;align-items: center;font-size: 14px;padding: 0 15px;border: 1px solid #DCDFE6; border-radius: 4px;">
+              <span style="color: #606266;flex-shrink: 0;flex-grow: 0;flex-basis: 40px;text-align: left;">状态</span>
+              <el-checkbox-group v-model="filter.states" style="display: flex;">
+                <el-checkbox :label="1">正常</el-checkbox>
+                <el-checkbox :label="2">停用</el-checkbox>
+                <el-checkbox :label="3">审核中</el-checkbox>
+              </el-checkbox-group>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6" :xs="24" class="filter-item">
             <el-button type="primary" plain :disabled="loading" @click="handleSearch">搜索</el-button>
             <el-button type="info" plain @click="handleResetFilter">重置</el-button>
           </el-col>
@@ -200,7 +214,8 @@ export default {
       filter: {
         username: null,
         email: null,
-        phone: null
+        phone: null,
+        states: []
       },
       detailModel: {
         id: null,
@@ -237,6 +252,7 @@ export default {
         username: this.filter.username,
         email: this.filter.email,
         phone: this.filter.phone,
+        states: this.filter.states,
         page: this.pagination.pageNum,
         size: this.pagination.pageSize
       }).then(resp => {
@@ -369,6 +385,7 @@ export default {
       this.filter.username = ''
       this.filter.email = ''
       this.filter.phone = ''
+      this.filter.states = []
       this.pagination.pageNum = 1
       // this.pagination.pageSize = 20
       this.reload()
@@ -389,5 +406,9 @@ export default {
 }
 .username-tag {
   margin-right: 5px;
+}
+
+.filter-item {
+  margin: 5px 0;
 }
 </style>
