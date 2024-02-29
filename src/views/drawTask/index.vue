@@ -28,12 +28,12 @@
             <div class="filter-item-inner">
               <span style="color: #606266;flex-shrink: 0;flex-grow: 0;flex-basis: 80px;text-align: left;">类型</span>
               <el-checkbox-group v-model="filter.types" style="display: flex;flex-wrap: wrap;">
-                <el-checkbox label="imagine">绘图(imagine)</el-checkbox>
+                <el-checkbox label="imagine">生图(imagine)</el-checkbox>
                 <el-checkbox label="upscale">放大(upscale)</el-checkbox>
                 <el-checkbox label="variation">变换(variation)</el-checkbox>
                 <el-checkbox label="vary">vary</el-checkbox>
                 <el-checkbox label="reroll">重绘(reroll)</el-checkbox>
-                <el-checkbox label="zoomOut">放大(zoomOut)</el-checkbox>
+                <el-checkbox label="zoomOut">缩放(zoomOut)</el-checkbox>
                 <el-checkbox label="describe">识图(describe)</el-checkbox>
                 <el-checkbox label="blend">混图(blend)</el-checkbox>
                 <el-checkbox label="pan">移焦(pan)</el-checkbox>
@@ -88,6 +88,47 @@
           </el-col>
         </el-row>
       </template>
+
+      <template #top>
+        <div style="background-color: white; margin-bottom: 20px; padding: 20px; color: #999; font-size: 14px;">
+          <div>
+            本页总共{{ tableData.length }}次，
+            生图{{ tableData.filter(v => v.type === 'imagine').length }}次，
+            放大{{ tableData.filter(v => v.type === 'upscale').length }}次，
+            变换{{ tableData.filter(v => v.type === 'variation').length }}次，
+            vary{{ tableData.filter(v => v.type === 'vary').length }}次，
+            重绘{{ tableData.filter(v => v.type === 'reroll').length }}次，
+            缩放{{ tableData.filter(v => v.type === 'zoomOut').length }}次，
+            识图{{ tableData.filter(v => v.type === 'describe').length }}次，
+            混图{{ tableData.filter(v => v.type === 'blend').length }}次，
+            移焦{{ tableData.filter(v => v.type === 'pan').length }}次，
+            转正{{ tableData.filter(v => v.type === 'square').length }}次
+          </div>
+
+          <template v-for="mode in ['turob', 'fast', 'mixed', 'relax']">
+            <div :key="mode">
+              <div style="margin-top: 10px;">其中{{ mode }}模式：</div>
+              <div>
+                <div>
+                  总共{{ tableData.filter(v => v.processMode === mode).length }}次，
+                  生图{{ tableData.filter(v => v.processMode === mode).filter(v => v.type === 'imagine').length }}次，
+                  放大{{ tableData.filter(v => v.processMode === mode).filter(v => v.type === 'upscale').length }}次，
+                  变换{{ tableData.filter(v => v.processMode === mode).filter(v => v.type === 'variation').length }}次，
+                  vary{{ tableData.filter(v => v.processMode === mode).filter(v => v.type === 'vary').length }}次，
+                  重绘{{ tableData.filter(v => v.processMode === mode).filter(v => v.type === 'reroll').length }}次，
+                  缩放{{ tableData.filter(v => v.processMode === mode).filter(v => v.type === 'zoomOut').length }}次，
+                  识图{{ tableData.filter(v => v.processMode === mode).filter(v => v.type === 'describe').length }}次，
+                  混图{{ tableData.filter(v => v.processMode === mode).filter(v => v.type === 'blend').length }}次，
+                  移焦{{ tableData.filter(v => v.processMode === mode).filter(v => v.type === 'pan').length }}次，
+                  转正{{ tableData.filter(v => v.processMode === mode).filter(v => v.type === 'square').length }}次
+                </div>
+              </div>
+            </div>
+          </template>
+
+        </div>
+      </template>
+
       <template #topActions>
         <!-- <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button> -->
         <!-- <el-button type="danger" icon="el-icon-delete" disabled>删除</el-button> -->
