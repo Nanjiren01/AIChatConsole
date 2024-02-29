@@ -22,7 +22,67 @@
           <el-col :span="6" :xs="24">
             <el-input v-model="filter.phone" placeholder="请输入手机号" />
           </el-col>
-          <el-col :span="6" :xs="24">
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :xl="12" :lg="18" :md="18" :sm="24" :xs="24" class="filter-item">
+            <div class="filter-item-inner">
+              <span style="color: #606266;flex-shrink: 0;flex-grow: 0;flex-basis: 80px;text-align: left;">类型</span>
+              <el-checkbox-group v-model="filter.types" style="display: flex;flex-wrap: wrap;">
+                <el-checkbox label="imagine">绘图(imagine)</el-checkbox>
+                <el-checkbox label="upscale">放大(upscale)</el-checkbox>
+                <el-checkbox label="variation">变换(variation)</el-checkbox>
+                <el-checkbox label="vary">vary</el-checkbox>
+                <el-checkbox label="reroll">重绘(reroll)</el-checkbox>
+                <el-checkbox label="zoomOut">放大(zoomOut)</el-checkbox>
+                <el-checkbox label="describe">识图(describe)</el-checkbox>
+                <el-checkbox label="blend">混图(blend)</el-checkbox>
+                <el-checkbox label="pan">移焦(pan)</el-checkbox>
+                <el-checkbox label="square">转正(square)</el-checkbox>
+              </el-checkbox-group>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :xl="12" :lg="18" :md="18" :sm="24" :xs="24" class="filter-item">
+            <div class="filter-item-inner">
+              <span style="color: #606266;flex-shrink: 0;flex-grow: 0;flex-basis: 80px;text-align: left;">状态</span>
+              <el-checkbox-group v-model="filter.states" style="display: flex;flex-wrap: wrap;">
+                <el-checkbox :label="0">待提交</el-checkbox>
+                <el-checkbox :label="10">已提交</el-checkbox>
+                <el-checkbox :label="20">处理中</el-checkbox>
+                <el-checkbox :label="30">成功</el-checkbox>
+                <el-checkbox :label="40">失败</el-checkbox>
+              </el-checkbox-group>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :xl="12" :lg="18" :md="18" :sm="24" :xs="24" class="filter-item">
+            <div class="filter-item-inner create-time-filter">
+              <span style="color: #606266;flex-shrink: 0;flex-grow: 0;flex-basis: 80px;text-align: left;">创建时间</span>
+              <div style="display: flex;flex-wrap: wrap;">
+                <el-date-picker
+                  v-model="filter.startTime"
+                  type="datetime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  placeholder="选择开始日期"
+                />
+                <span style="margin: 0 5px;">-</span>
+                <el-date-picker
+                  v-model="filter.endTime"
+                  type="datetime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  default-time="23:59:59"
+                  placeholder="选择结束日期"
+                />
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6" :xs="24" class="filter-item">
             <el-button type="primary" plain :disabled="loading" @click="handleSearch">搜索</el-button>
             <el-button type="info" plain @click="handleResetFilter">重置</el-button>
           </el-col>
@@ -81,7 +141,11 @@ export default {
       filter: {
         username: null,
         email: null,
-        phone: null
+        phone: null,
+        types: [],
+        states: [],
+        startTime: null,
+        endTime: null
       },
       tableActions: [],
       tableColumns: [{
@@ -153,6 +217,10 @@ export default {
         username: this.filter.username,
         email: this.filter.email,
         phone: this.filter.phone,
+        types: this.filter.types,
+        states: this.filter.states,
+        createTimeStart: this.filter.startTime,
+        createTimeEnd: this.filter.endTime,
         page: this.pagination.pageNum,
         size: this.pagination.pageSize
       }).then(resp => {
@@ -225,6 +293,10 @@ export default {
       this.filter.username = ''
       this.filter.email = ''
       this.filter.phone = ''
+      this.filter.types = []
+      this.filter.states = []
+      this.filter.startTime = null
+      this.filter.endTime = null
       this.pagination.pageNum = 1
       // this.pagination.pageSize = 20
       this.reload()
@@ -238,4 +310,26 @@ export default {
   padding: 10px;
 }
 
+.filter-item {
+  margin: 5px 0;
+
+  .filter-item-inner {
+    line-height: 28px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 14px;
+    padding: 0 15px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+  }
+}
+
+.create-time-filter {
+  ::v-deep {
+    .el-input__inner {
+      border: none;
+    }
+  }
+}
 </style>
