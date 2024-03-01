@@ -7,7 +7,8 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  user: null
 }
 
 const mutations = {
@@ -25,6 +26,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_USER: (state, user) => {
+    state.user = user
   }
 }
 
@@ -36,6 +40,8 @@ const actions = {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        commit('SET_USER', data.userEntity)
+        console.log('commit data.userEntity', data.userEntity)
         setToken(data.token)
         resolve()
       }).catch(error => {

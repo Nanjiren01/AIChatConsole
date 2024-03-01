@@ -5,6 +5,16 @@
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
+
+      <span v-if="user" style="line-height: 50px;color: #999;font-size: 14px; margin-right: 20px;height: 50px; display: block;float: left;">
+        <el-tag type="primary" style="margin-right: 5px;">Admin: v{{ version }}</el-tag>
+        <el-tag type="primary">Console: v0.11.4</el-tag>
+      </span>
+
+      <span v-if="user" style="line-height: 50px;color: #999;font-size: 14px; margin-right: 20px;height: 50px; display: block;float: left;">
+        {{ user.name || user.username || '-' }}，欢迎使用aichat！
+      </span>
+
       <template v-if="device!=='mobile'">
         <!-- <search id="header-search" class="right-menu-item" /> -->
 
@@ -29,15 +39,16 @@
           <!-- <router-link to="/profile/index">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
+          -->
           <router-link to="/">
             <el-dropdown-item>仪表盘</el-dropdown-item>
-          </router-link> -->
-          <!-- <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
-            <el-dropdown-item>Github</el-dropdown-item>
+          </router-link>
+          <a target="_blank" href="https://github.com/nanjiren01/aichatweb">
+            <el-dropdown-item>AIChat Github</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>文档</el-dropdown-item>
-          </a> -->
+          <a target="_blank" href="https://nanjiren.online">
+            <el-dropdown-item>AIChat官网</el-dropdown-item>
+          </a>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出</span>
           </el-dropdown-item>
@@ -55,6 +66,7 @@ import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 // import SizeSelect from '@/components/SizeSelect'
 // import Search from '@/components/HeaderSearch'
+import { getInfo } from '@/api/info'
 
 export default {
   components: {
@@ -65,14 +77,28 @@ export default {
     // SizeSelect
     // Search
   },
+  data() {
+    return {
+      version: null
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'device'
+      'device',
+      'user'
     ])
   },
+  mounted() {
+    getInfo().then(resp => {
+      // console.log('resp', resp.data)
+      const data = resp.data
+      this.version = data.version
+    })
+  },
   methods: {
+
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
