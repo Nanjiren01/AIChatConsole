@@ -10,18 +10,18 @@
   >
     <el-form ref="passwordForm" label-width="80px">
       <el-form-item v-if="showOldPassword" label="旧密码">
-        <el-input v-model="passwordDialogInfo.oldPassword" />
+        <el-input v-model="passwordDialogInfo.oldPassword" type="password" />
       </el-form-item>
       <el-form-item label="新密码">
-        <el-input v-model="passwordDialogInfo.newPassword" />
+        <el-input v-model="passwordDialogInfo.newPassword" type="password" />
       </el-form-item>
       <el-form-item label="确认密码">
-        <el-input v-model="passwordDialogInfo.newPassword2" />
+        <el-input v-model="passwordDialogInfo.newPassword2" type="password" />
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="handlePasswordDialogClose">取 消</el-button>
-      <el-button type="primary" @click="handlePasswordChangeSubmit">确定修改</el-button>
+      <el-button type="primary" :disabled="loading" @click="handlePasswordChangeSubmit">确定修改</el-button>
     </span>
   </el-dialog>
 </template>
@@ -44,6 +44,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       passwordDialogInfo: {
         userId: null,
         oldPassword: '',
@@ -91,11 +92,16 @@ export default {
         this.$message.error('两次输入的密码不一致！')
         return
       }
+      this.loading = true
       changePassword(this.passwordDialogInfo.userId, this.passwordDialogInfo.oldPassword,
         this.passwordDialogInfo.newPassword).then(resp => {
         console.log('resp', resp)
-        this.$message.success('修改密码成功！')
-        this.$emit('close')
+        if (resp.code === 0) {
+          this.$message.success('修改密码成功！')
+          this.$emit('close')
+        }
+      }).finally(() => {
+        this.loading = false
       })
     }
   }
