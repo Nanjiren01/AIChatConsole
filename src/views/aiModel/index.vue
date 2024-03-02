@@ -224,8 +224,15 @@ export default {
           platform.models.push(model)
           this.oldTableData.push(model)
         })
+        const noModels = this.platforms.filter(p => {
+          return !models.find(m => m.platformId === p.id)
+        })
+        noModels.forEach(p => {
+          p.models = []
+        })
         console.log('platforms', platforms)
         this.tableData.splice(0, this.tableData.length, ...platforms)
+        this.tableData.push(...noModels)
         this.pagination.total = this.tableData.length
       })
     },
