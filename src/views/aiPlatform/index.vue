@@ -8,6 +8,55 @@
       :pagination="pagination"
       @refresh="handleRefresh"
     >
+      <template #filter>
+        <el-row :gutter="20">
+          <el-col :span="12" :xs="24" class="filter-item">
+            <div style="line-height: 28px;display: flex;justify-content: flex-start;align-items: center;font-size: 14px;padding: 0 15px;border: 1px solid #DCDFE6; border-radius: 4px;">
+              <span style="color: #606266;flex-shrink: 0;flex-grow: 0;flex-basis: 40px;text-align: left;">分类</span>
+              <el-checkbox-group v-model="filter.protocolTypes" style="display: flex;">
+                <el-checkbox label="text">文本平台</el-checkbox>
+                <el-checkbox label="image">绘画平台</el-checkbox>
+              </el-checkbox-group>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24" :xs="24" class="filter-item">
+            <div style="line-height: 28px;display: flex;justify-content: flex-start;align-items: center;font-size: 14px;padding: 0 15px;border: 1px solid #DCDFE6; border-radius: 4px;">
+              <span style="color: #606266;flex-shrink: 0;flex-grow: 0;flex-basis: 40px;text-align: left;">协议</span>
+              <el-checkbox-group v-model="filter.chatProtocols" style="display: flex; flex-flow: wrap;">
+                <el-checkbox label="OpenAiChat">OpenAI聊天协议</el-checkbox>
+                <el-checkbox label="AzureOpenAiChat">Azure OpenAI聊天协议</el-checkbox>
+                <el-checkbox label="ZhipuChat">智谱清言（GLM）聊天协议</el-checkbox>
+                <el-checkbox label="BaiduChat">百度聊天协议</el-checkbox>
+                <el-checkbox label="AliQwenChat">阿里千问聊天协议</el-checkbox>
+                <el-checkbox label="EmbeddingMjProxyDraw">内置MJ-Proxy绘画协议</el-checkbox>
+                <el-checkbox label="MjProxyDraw">MJ-Proxy绘画协议</el-checkbox>
+                <el-checkbox label="GoApiDraw">GoApi绘画协议</el-checkbox>
+                <el-checkbox label="AimageDraw">AImage绘画协议</el-checkbox>
+                <el-checkbox label="MjProxyPlusDraw">MJ-Proxy-Plus绘画协议</el-checkbox>
+              </el-checkbox-group>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12" :xs="24" class="filter-item">
+            <div style="line-height: 28px;display: flex;justify-content: flex-start;align-items: center;font-size: 14px;padding: 0 15px;border: 1px solid #DCDFE6; border-radius: 4px;">
+              <span style="color: #606266;flex-shrink: 0;flex-grow: 0;flex-basis: 40px;text-align: left;">状态</span>
+              <el-checkbox-group v-model="filter.states" style="display: flex;">
+                <el-checkbox :label="1">启用</el-checkbox>
+                <el-checkbox :label="2">停用</el-checkbox>
+              </el-checkbox-group>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6" :xs="24" class="filter-item">
+            <el-button type="primary" plain :disabled="loading" @click="handleSearch">搜索</el-button>
+            <el-button type="info" plain @click="handleResetFilter">重置</el-button>
+          </el-col>
+        </el-row>
+      </template>
       <template #topActions>
         <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新建</el-button>
       </template>
@@ -140,6 +189,11 @@ export default {
         total: 0,
         showDetail: false
       },
+      filter: {
+        states: [],
+        chatProtocols: [],
+        protocolTypes: []
+      },
       loading: false,
 
       dialogVisible: false,
@@ -162,7 +216,11 @@ export default {
   },
   methods: {
     reload() {
-      getAiPlatforms().then(resp => {
+      getAiPlatforms({
+        states: this.filter.states,
+        chatProtocols: this.filter.chatProtocols,
+        protocolTypes: this.filter.protocolTypes
+      }).then(resp => {
         console.log('resp', resp)
         const platforms = resp.data || []
         this.tableData = platforms.map(platform => {
@@ -251,6 +309,19 @@ export default {
         this.loading = false
       })
     },
+    handleSearch() {
+      this.pagination.pageNum = 1 // 搜索时只是跳回第一页，不调整分页数量
+      // this.pagination.pageSize = 20
+      this.reload()
+    },
+    handleResetFilter() {
+      this.filter.states = []
+      this.filter.chatProtocols = []
+      this.filter.protocolTypes = []
+      this.pagination.pageNum = 1
+      // this.pagination.pageSize = 20
+      this.reload()
+    },
     getStateName(state) {
       return ({
         1: '启用',
@@ -266,4 +337,7 @@ export default {
   padding: 10px;
 }
 
+.filter-item {
+  margin: 5px 0;
+}
 </style>
