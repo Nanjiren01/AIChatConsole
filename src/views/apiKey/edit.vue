@@ -143,7 +143,7 @@ export default {
     this.model.createTime = this.apiKey && this.apiKey.createTime || ''
   },
   mounted() {
-    getAiPlatforms().then(resp => {
+    getAiPlatforms({ states: [] }).then(resp => {
       this.platforms.splice(0, this.platforms.length, ...(resp.data || []))
     })
   },

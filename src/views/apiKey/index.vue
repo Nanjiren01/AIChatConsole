@@ -202,7 +202,7 @@ export default {
       })
     },
     reloadPlatforms() {
-      getAiPlatforms().then(resp => {
+      getAiPlatforms({ states: [] }).then(resp => {
         this.platforms.splice(0, this.platforms.length)
         this.platforms.push(... (resp.data || []))
       })
