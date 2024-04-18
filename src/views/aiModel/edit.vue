@@ -159,6 +159,23 @@
             <el-option :value="3" label="扣减tokens" />
             <el-option :value="4" label="扣减绘画积分" />
           </el-select>
+          <el-alert
+            v-if="model.levelId === 3"
+            type="warning"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px; color: #cc9600;"
+            :closable="false"
+          >
+            非gpt开头和glm开头的模型，系统将使用gpt-3.5-turbo一样的token计算方式，即cl100k_base。注意，这可能会与官方（或中转站）计算结果有细微差异。
+            参考链接：<a href="https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb" target="_blank">
+              How_to_count_tokens_with_tiktoken.ipynb
+            </a>
+          </el-alert>
+          <el-alert
+            v-if="(model.messageStruct === 'dalle' || model.messageStruct === 'cogview') && model.levelId === 3"
+            type="error"
+            style="margin-top: 5px; padding: 0; padding-bottom: 5px;"
+            :closable="false"
+          >当消息协议是dalle或cogview时，不支持token计费制，请选择其他计费方式。</el-alert>
         </el-form-item>
         <el-form-item label="基础倍率">
           <el-input-number v-model="model.multiple" />

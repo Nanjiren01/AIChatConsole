@@ -87,6 +87,10 @@
           <el-form-item label="模型">
             <el-input v-model="form.modelName" disabled />
           </el-form-item>
+          <el-form-item label="tokens">
+            <el-tag style="margin-right: 5px;">提示：{{ form.inputTokens }}</el-tag>
+            <el-tag>补全：{{ form.outputTokens }}</el-tag>
+          </el-form-item>
           <el-form-item label="请求">
             <el-alert :closable="false">{{ form.request }}</el-alert>
           </el-form-item>
@@ -160,6 +164,8 @@ export default {
         username: null,
         email: null,
         status: null,
+        inputTokens: null,
+        outputTokens: null,
         platformName: null,
         modelName: null,
         createTime: null
@@ -191,6 +197,8 @@ export default {
             username: log.username,
             email: log.email,
             status: log.status,
+            inputTokens: log.inputTokens,
+            outputTokens: log.outputTokens,
             platformName: log.platformName,
             modelName: log.modelName,
             createTime: log.createTime,
@@ -213,6 +221,8 @@ export default {
       this.form.username = row.username
       this.form.email = row.email
       this.form.status = row.status
+      this.form.inputTokens = row.inputTokens
+      this.form.outputTokens = row.outputTokens
       this.form.platformName = row.platformName
       this.form.modelName = row.modelName
       this.form.createTime = row.createTime
