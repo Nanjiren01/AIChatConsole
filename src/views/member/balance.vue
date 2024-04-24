@@ -201,7 +201,7 @@ export default {
         label: '状态',
         prop: 'state',
         slot: 'state',
-        width: 120
+        width: 140
       }, {
         label: '创建时间',
         prop: 'createTime',
@@ -419,7 +419,7 @@ export default {
       return ({
         0: '初始化',
         1: '正常',
-        2: '废除'
+        2: '已废除'
       })[state]
     }
   }
