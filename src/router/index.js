@@ -82,8 +82,7 @@ export const constantRoutes = [
         meta: { title: '仪表盘', icon: 'dashboard', affix: true }
       }
     ]
-  }
-  /*
+  }, /*
   {
     path: '/documentation',
     component: Layout,
@@ -108,7 +107,9 @@ export const constantRoutes = [
         meta: { title: 'Guide', icon: 'guide', noCache: true }
       }
     ]
-  },
+  }
+  // */
+
   {
     path: '/profile',
     component: Layout,
@@ -119,11 +120,10 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
+        meta: { title: '个人中心', icon: 'user', noCache: true }
       }
     ]
   }
-  // */
 ]
 
 /**

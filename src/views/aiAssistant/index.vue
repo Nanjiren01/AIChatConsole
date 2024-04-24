@@ -117,7 +117,7 @@ export default {
   },
   async mounted() {
     this.reload()
-    getAiPlatforms().then(resp => {
+    getAiPlatforms({ states: [] }).then(resp => {
       this.platforms = resp.data || []
     })
     getAiModels().then(resp => {

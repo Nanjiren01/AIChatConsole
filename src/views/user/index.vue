@@ -9,15 +9,21 @@
       @refresh="handleRefresh"
     >
       <template #topActions>
-        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleCreate">创建</el-button>
         <!-- <el-button type="danger" icon="el-icon-delete" @click="handleDelete">删除</el-button> -->
       </template>
       <template v-slot:rowActions="slotProps">
-        <el-button icon="el-icon-set-up" @click.stop="handleShowChangePassword(slotProps.row)">修改密码</el-button>
+        <el-button
+          icon="el-icon-set-up"
+          :disabled="!enableModifyPassword(slotProps.row)"
+          @click.stop="handleShowChangePassword(slotProps.row)"
+        >修改密码</el-button>
       </template>
 
       <template v-slot:state="slotProps">
-        {{ getStateName(slotProps.row.state) }}
+        <el-tag :type="slotProps.row.state === 1 ? 'primary' : slotProps.row.state === 3 ? 'warning' : 'danger'">
+          {{ getStateName(slotProps.row.state) }}
+        </el-tag>
       </template>
 
       <template v-slot:role="slotProps">
@@ -27,6 +33,7 @@
     <change-password
       ref="password"
       :password-dialog-visible="passwordDialogVisible"
+      :show-old-password="showOldPassword"
       @close="handlePasswordDialogClose"
     />
     <create-user
@@ -39,7 +46,7 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import AiTable from '@/components/Table'
 import { getUsers } from '@/api/user'
 import ChangePassword from './password'
@@ -96,11 +103,15 @@ export default {
       },
 
       passwordDialogVisible: false,
+      showOldPassword: false,
 
       createUserDialogVisible: false
     }
   },
   computed: {
+    ...mapGetters([
+      'user'
+    ])
   },
   created() {
     // if (!this.roles.includes('admin')) {
@@ -133,6 +144,9 @@ export default {
       this.reload()
     },
     handleCreate() {
+      if (!this.user || this.user.role !== 1) {
+        return this.$message.error('仅超级管理员支持创建管理员')
+      }
       this.createUserDialogVisible = true
       this.$refs.createUser.init()
     },
@@ -142,7 +156,8 @@ export default {
     getStateName(state) {
       return ({
         1: '正常',
-        2: '禁用'
+        2: '禁用',
+        3: '审核中'
       })[state] || '未知'
     },
     getRoleName(role) {
@@ -153,6 +168,7 @@ export default {
     },
     handleShowChangePassword(row) {
       this.passwordDialogVisible = true
+      this.showOldPassword = this.user && (this.user.role !== 1) // 不是超管的情况下，需要提供自己的旧密码
       this.$refs.password.init(row.id)
     },
     handlePasswordDialogClose() {
@@ -165,6 +181,13 @@ export default {
     handleCreateUserDialogCreated() {
       this.handleCreateUserDialogClose()
       this.reload()
+    },
+    enableModifyPassword(target) {
+      if (this.user && (this.user.role === 1)) { // 超管
+        return true
+      }
+      // 普通管理员只能修改自己的密码
+      return this.user && (target.id === this.user.id)
     }
   }
 }
