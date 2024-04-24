@@ -6,6 +6,7 @@
           <el-select v-model="form.thirdpartName">
             <el-option :label="'虎皮椒'" :value="'xunhu'" />
             <el-option :label="'蓝兔'" :value="'lantu'" />
+            <el-option :label="'易支付'" :value="'yizhifu'" />
           </el-select>
         </el-form-item>
         <el-form-item label="虎皮椒AppId">
@@ -25,6 +26,22 @@
         </el-form-item>
         <el-form-item label="蓝兔商户秘钥">
           <el-input v-model="form.lantuAppSecret" type="password" />
+        </el-form-item>
+        <el-form-item label="易支付商户ID">
+          <el-input v-model="form.yizhifuAppId" />
+        </el-form-item>
+        <el-form-item label="易支付商户秘钥">
+          <el-input v-model="form.yizhifuAppSecret" type="password" />
+        </el-form-item>
+        <el-form-item label="易支付接口地址">
+          <el-input v-model="form.yizhifuGateway" placeholder="默认http://localhost:8888" />
+        </el-form-item>
+        <el-form-item label="易支付支持">
+          <el-checkbox-group v-model="form.yizhifuChannels">
+            <el-checkbox label="alipay">支付宝</el-checkbox>
+            <el-checkbox label="wxpay">微信</el-checkbox>
+            <el-checkbox label="qqpay">QQ钱包</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="loading" @click="handleSubmit">
@@ -57,7 +74,11 @@ export default {
         xunhuGateway: null,
         xunhuQueryUrl: null,
         lantuAppId: '',
-        lantuAppSecret: ''
+        lantuAppSecret: '',
+        yizhifuAppId: '',
+        yizhifuAppSecret: '',
+        yizhifuGateway: null,
+        yizhifuChannels: []
       }
     }
   },
@@ -77,6 +98,10 @@ export default {
         this.form.xunhuQueryUrl = content.xunhuQueryUrl
         this.form.lantuAppId = content.lantuAppId
         this.form.lantuAppSecret = content.lantuAppSecret
+        this.form.yizhifuAppId = content.yizhifuAppId
+        this.form.yizhifuAppSecret = content.yizhifuAppSecret
+        this.form.yizhifuGateway = content.yizhifuGateway
+        this.form.yizhifuChannels = content.yizhifuChannels || []
       }).finally(() => {
         this.loading = false
       })
@@ -90,7 +115,11 @@ export default {
         xunhuGateway: this.form.xunhuGateway,
         xunhuQueryUrl: this.form.xunhuQueryUrl,
         lantuAppId: this.form.lantuAppId,
-        lantuAppSecret: this.form.lantuAppSecret
+        lantuAppSecret: this.form.lantuAppSecret,
+        yizhifuAppId: this.form.yizhifuAppId,
+        yizhifuAppSecret: this.form.yizhifuAppSecret,
+        yizhifuGateway: this.form.yizhifuGateway,
+        yizhifuChannels: this.form.yizhifuChannels
       }).then(() => {
         this.$message.success('保存成功！')
       }).finally(() => {

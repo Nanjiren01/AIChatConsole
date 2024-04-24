@@ -83,3 +83,11 @@ export function deleteDisplayModel(uuid) {
     method: 'delete'
   })
 }
+
+export function updateDisplayModel(model) {
+  return request({
+    url: '/displayModels/' + model.uuid,
+    method: 'put',
+    data: model
+  })
+}

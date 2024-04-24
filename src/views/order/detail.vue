@@ -148,6 +148,8 @@ export default {
         return '虎皮椒'
       } else if (order.payChannel === 'lantu') {
         return '蓝兔'
+      } else if (order.payChannel === 'yizhifu') {
+        return '易支付'
       } else {
         return order.payChannel
       }

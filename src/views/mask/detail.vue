@@ -24,7 +24,7 @@
             <img
               class="emoji"
               style="cursor: pointer;width: 50px; height: 50px;"
-              :src="`https://cdn.staticfile.org/emoji-datasource-apple/14.0.0/img/apple/64/${maskEntity.avatar}.png`"
+              :src="`/emoji-date-apple-img-64-15.0.1/${maskEntity.avatar}.png`"
               @click="showEmojiDialog = !showEmojiDialog"
             >
             <span v-if="showEmojiDialog" style="margin-left: 20px;">
@@ -209,7 +209,7 @@ export default {
   },
   computed: {
     title() {
-      return this.maskEntity.id ? ((this.maskEntity.name || '') + '详情') : '创建面具'
+      return this.maskEntity.id ? ((this.maskEntity.name || '') + '详情') : '创建应用'
     },
     disabled() {
       return (this.loading) || this.maskEntity.state === 20 // 20-删除

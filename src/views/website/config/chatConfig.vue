@@ -3,12 +3,12 @@
     <div style="margin: 0 auto; width: 500px;">
       <el-form ref="form" :model="form" label-width="120px">
         <el-alert
-          title="若记录聊天内容，请务必获得用户同意！"
+          title="若记录，请务必获得用户同意！"
           type="error"
           style="margin-bottom: 10px;"
           :closable="false"
         />
-        <el-form-item label="记录聊天内容">
+        <el-form-item label="记录聊天请求日志">
           <el-switch v-model="form.recordLog" />
         </el-form-item>
         <el-form-item label="默认Prompt">
