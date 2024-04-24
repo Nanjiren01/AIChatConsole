@@ -78,6 +78,8 @@
             :table-data="tableData"
             :table-action-column="tableActionColumn"
             :pagination="pagination"
+            @pageSizeChanged="handlePageSizeChange"
+            @pageCurrentChanged="handlePageCurrentChanged"
             @refresh="handleRefresh"
           >
             <template v-slot:type="slotProps">
@@ -172,7 +174,9 @@ export default {
       },
       pagination: {
         total: 0,
-        showDetail: false
+        pageNum: 1,
+        pageSize: 20
+        // showDetail: false
       },
 
       passwordDialogVisible: false
@@ -202,9 +206,9 @@ export default {
       this.loading = true
       this.$refs.balances.reload()
       this.$refs.invite.reload()
-      getBalanceRecordByUserId(this.member.id).then(resp => {
+      getBalanceRecordByUserId(this.member.id, this.pagination.pageNum, this.pagination.pageSize).then(resp => {
         console.log('resp', resp)
-        this.tableData = resp.data.map(item => {
+        this.tableData = resp.data.list.map(item => {
           return {
             id: item.id,
             type: item.type,
@@ -219,6 +223,9 @@ export default {
           }
         })
         this.pagination.total = this.tableData.length
+        this.pagination.total = resp.data.total
+        this.pagination.pageNum = resp.data.pageNum
+        this.pagination.pageSize = resp.data.pageSize
       }).finally(() => {
         this.loading = false
       })
@@ -228,6 +235,17 @@ export default {
       this.$emit('close')
     },
     handleRefresh() {
+      this.reload()
+    },
+    handlePageSizeChange(size) {
+      console.log('size', size)
+      this.pagination.pageNum = 1
+      this.pagination.pageSize = size
+      this.reload()
+    },
+    handlePageCurrentChanged(page) {
+      console.log('page', page)
+      this.pagination.pageNum = page
       this.reload()
     },
     handleTabClick() {

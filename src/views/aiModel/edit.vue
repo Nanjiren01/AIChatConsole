@@ -73,11 +73,12 @@
             :closable="false"
           >大部分情况下，您都无需设置该值。</el-alert>
         </el-form-item>
-        <el-form-item v-if="selectedPlatform && ['OpenAiChat', 'AzureOpenAiChat'].includes(selectedPlatform.chatProtocol)" label="消息协议">
+        <el-form-item v-if="selectedPlatform && ['OpenAiChat', 'AzureOpenAiChat', 'ZhipuChat'].includes(selectedPlatform.chatProtocol)" label="消息协议">
           <el-radio-group v-model="model.messageStruct">
             <el-radio label="normal">普通</el-radio>
             <el-radio label="complex">复杂（如gpt-4-vision）</el-radio>
             <el-radio label="dalle">dall·e</el-radio>
+            <el-radio label="cogview">cogview</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item v-if="model.messageStruct === 'complex'" label="图片传输方式">
@@ -389,6 +390,9 @@ export default {
       if (['OpenAiChat', 'AzureOpenAiChat'].includes(this.selectedPlatform.chatProtocol)) {
         return 'gpt-3.5-turbo-16k'
       }
+      if (this.selectedPlatform.chatProtocol === 'ZhipuChat') {
+        return 'glm-3-turbo'
+      }
       return this.model.showName || this.model.name
     }
   },
@@ -413,6 +417,9 @@ export default {
       this.$emit('update:show', false)
     },
     handleSave() {
+      if (isNaN(this.model.levelId) || this.model.levelId < 1 || this.model.levelId > 4) {
+        return this.$message.error('请选择计费方式！')
+      }
       this.loading = true
       this.saving = true
       if (!this.model.id) {

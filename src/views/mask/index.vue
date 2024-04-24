@@ -225,7 +225,7 @@ export default {
         type: '',
         hideContext: false,
         modelConfigJson: JSON.stringify({
-          model: 'gpt-3.5-turbo',
+          model: '',
           temperature: 1.0,
           max_tokens: 2000,
           presence_penalty: 0,

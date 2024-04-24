@@ -6,6 +6,8 @@
       :table-data="tableData"
       :pagination="pagination"
       @refresh="handleRefresh"
+      @pageSizeChanged="handlePageSizeChange"
+      @pageCurrentChanged="handlePageCurrentChanged"
     >
       <template #filter>
         <el-row :gutter="20">
@@ -68,7 +70,7 @@ export default {
       //   label: '昵称',
       //   prop: 'name'
       }, {
-        label: '用户名（账号）',
+        label: '用户名/账号（#用户id）',
         slot: 'username'
       }, {
         label: '邮箱',
@@ -152,6 +154,16 @@ export default {
       this.reload()
     },
     handleRefresh() {
+      this.reload()
+    },
+    handlePageSizeChange(size) {
+      this.pagination.pageNum = 1
+      this.pagination.pageSize = size
+      this.reload()
+    },
+    handlePageCurrentChanged(page) {
+      console.log('page', page)
+      this.pagination.pageNum = page
       this.reload()
     },
     handleResetFilter() {

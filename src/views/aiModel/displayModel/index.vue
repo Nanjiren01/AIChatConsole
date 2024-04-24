@@ -29,6 +29,16 @@
         <span>{{ slotProps.row.contentType }}</span>
       </template>
 
+      <template v-slot:name="slotProps">
+        <img
+          v-if="slotProps.row.avatarEmoji"
+          class="emoji"
+          style="cursor: pointer;width: 15px; height: 15px;margin-right: 5px;"
+          :src="`/emoji-date-apple-img-64-15.0.1/${slotProps.row.avatarEmoji}.png`"
+        >
+        <span>{{ slotProps.row.name }}</span>
+      </template>
+
       <template v-slot:show="slotProps">
         <el-tag v-if="slotProps.row.show" type="success">展示</el-tag>
         <el-tag v-else type="warning">不展示</el-tag>
@@ -72,7 +82,7 @@ export default {
         prop: 'uuid'
       }, {
         label: '前台展示名称',
-        prop: 'name',
+        slot: 'name',
         width: 180
       }, {
         label: '类型',
@@ -151,6 +161,7 @@ export default {
       this.form.state = 1
       this.form.order = +new Date()
       this.form.remark = ''
+      this.form.desc = ''
     },
     handleClose() {
       this.$emit('close')
@@ -178,6 +189,8 @@ export default {
       this.form.id = row.id
       this.form.uuid = row.uuid
       this.form.name = row.name
+      this.form.desc = row.desc
+      this.form.avatarEmoji = row.avatarEmoji
       this.form.remark = row.remark || ''
       this.form.state = row.state
       this.form.order = row.order

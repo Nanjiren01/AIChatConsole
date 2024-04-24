@@ -238,8 +238,11 @@ export default {
         return
       }
       this.loading = true
+      const omitLastSlash = (url) => {
+        return url && url.endsWith('/') ? url.substring(0, url.length - 1) : url
+      }
       saveWebsiteConfig({
-        frontBaseUrl: this.form.frontBaseUrl,
+        frontBaseUrl: this.form.frontBaseUrl = omitLastSlash(this.form.frontBaseUrl),
         title: this.form.title,
         mainTitle: this.form.mainTitle,
         subTitle: this.form.subTitle,
