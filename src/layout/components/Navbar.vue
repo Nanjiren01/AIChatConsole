@@ -8,7 +8,7 @@
 
       <span v-if="user" style="line-height: 50px;color: #999;font-size: 14px; margin-right: 20px;height: 50px; display: block;float: left;">
         <el-tag type="primary" style="margin-right: 5px;">Admin: v{{ version }}</el-tag>
-        <el-tag type="primary">Console: v0.11.4</el-tag>
+        <el-tag type="primary">Console: v0.11.5</el-tag>
       </span>
 
       <span v-if="user" style="line-height: 50px;color: #999;font-size: 14px; margin-right: 20px;height: 50px; display: block;float: left;">
