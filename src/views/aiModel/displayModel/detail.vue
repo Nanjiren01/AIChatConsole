@@ -14,37 +14,63 @@
         <el-form-item label="头像">
           <el-switch
             v-model="form.avatarType"
-            :disabled="true"
             style="display: block; margin-top: 5px;"
-            active-text="文件"
+            active-text="手动上传"
             inactive-text="emoji"
           />
           <div style="display: flex; margin: 10px 0;">
             <img
-              v-if="form.avatarEmoji"
+              v-if="form.avatarEmoji && !form.avatarType"
               class="emoji"
               style="cursor: pointer;width: 50px; height: 50px;border: 1px solid #e0e0e0; margin-right: 20px;"
               :src="`/emoji-date-apple-img-64-15.0.1/${form.avatarEmoji}.png`"
               @click="showEmojiDialog = !showEmojiDialog"
             >
-            <span v-if="showEmojiDialog">
-              <el-button type="primary" plain @click="showEmojiDialog = false">关闭</el-button>
-            </span>
-            <span v-else-if="form.avatarEmoji">
-              <el-button type="primary" plain @click="handleClickClearEmoji">清空</el-button>
-            </span>
-            <span v-else>
-              <el-button type="primary" plain @click="showEmojiDialog = true">选择emoji</el-button>
-            </span>
+            <img
+              v-if="form.avatarFileUuid && form.avatarType"
+              class="emoji"
+              style="cursor: pointer;width: 50px; height: 50px;border: 1px solid #e0e0e0; margin-right: 20px;"
+              :src="`${BASE_URL}/file/${form.avatarFileUuid}`"
+            >
+            <template v-if="!form.avatarType">
+              <span v-if="showEmojiDialog">
+                <el-button type="primary" plain @click="showEmojiDialog = false">关闭</el-button>
+              </span>
+              <span v-else-if="form.avatarEmoji">
+                <el-button type="primary" plain @click="handleClickClearEmoji">清空</el-button>
+              </span>
+              <span v-else>
+                <el-button type="primary" plain @click="showEmojiDialog = true">选择emoji</el-button>
+              </span>
+            </template>
           </div>
           <div>
             <VEmojiPicker
-              v-show="showEmojiDialog"
+              v-show="showEmojiDialog && !form.avatarType"
               :style="{ width: '440px', height: '200' }"
               label-search="搜索"
               lang="pt-BR"
               @select="onSelectEmoji"
             />
+            <el-upload
+              v-if="form.avatarType"
+              ref="upload"
+              class="upload-demo"
+              accept=".png,.jpg,.bmp,.gif"
+              drag
+              :headers="headers"
+              :data="{ usage: 'model' }"
+              :action="BASE_URL + '/file/upload'"
+              :auto-upload="true"
+              :show-file-list="false"
+              :on-change="handleChange"
+              :on-error="handleError"
+              :on-success="handleSuccess"
+            >
+              <i class="el-icon-upload" />
+              <div class="el-upload__text">将图片拖到此处，或<em>点击选择图片</em></div>
+              <div slot="tip" class="el-upload__tip">只能上传不超过500KB的图片</div>
+            </el-upload>
           </div>
         </el-form-item>
         <el-form-item label="名称">
@@ -80,6 +106,8 @@ import { VEmojiPicker, emojisDefault, categoriesDefault } from 'v-emoji-picker'
 
 import { updateDisplayModel } from '@/api/aiModel.js'
 
+import { getToken } from '@/utils/auth'
+
 export default {
   name: '',
   components: { VEmojiPicker },
@@ -111,6 +139,16 @@ export default {
         order: null,
         createTime: null,
         updateTime: null
+      },
+
+      BASE_URL: process.env.VUE_APP_BASE_API || '',
+      fileList: []
+    }
+  },
+  computed: {
+    headers() {
+      return {
+        Authorization: 'Bearer ' + getToken()
       }
     }
   },
@@ -184,6 +222,34 @@ export default {
     },
     handleClickClearEmoji() {
       this.form.avatarEmoji = null
+    },
+    handleSuccess(resp, file, fileList) {
+      // this.$emit('changed')
+      // console.log(resp, file, fileList)
+      this.form.avatarFileUuid = resp.data.uuid
+      this.$message.success('上传成功！')
+      this.$nextTick(() => {
+        this.fileList.splice(0, this.fileList.length)
+        console.log('this.fileList', this.fileList)
+      })
+    },
+    handleError(err, file, fileList) {
+      try {
+        const json = JSON.parse(err.message)
+        if (json.code === 11001) {
+          this.$message.error('上传失败！请先删除原来的logo！')
+          return
+        }
+        this.$message.error('上传失败！原因：' + json.message)
+      } catch (e) {
+        this.$message.error('上传失败！原因：' + err)
+        console.error(err)
+      }
+    },
+    handleChange(file, fileList) {
+      // console.log('handleChange', file, fileList)
+      this.fileList.splice(0, this.fileList.length, ...fileList)
+      // console.log(this.fileList)
     }
   }
 }

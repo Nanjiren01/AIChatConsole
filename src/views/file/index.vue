@@ -13,7 +13,7 @@
 
       <template #filter>
         <div v-if="!loadingConfig && !frontBaseUrl">
-          <el-alert title="请先前往「网站管理」->「页面配置」设置网站基址！" type="warning" :closable="false" />
+          <el-alert title="请先前往「站点管理」->「页面配置」设置网站基址！" type="warning" :closable="false" />
         </div>
       </template>
       <template #topActions>

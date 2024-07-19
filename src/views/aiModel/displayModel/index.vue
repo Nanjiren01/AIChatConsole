@@ -33,8 +33,14 @@
         <img
           v-if="slotProps.row.avatarEmoji"
           class="emoji"
-          style="cursor: pointer;width: 15px; height: 15px;margin-right: 5px;"
+          style="width: 15px; height: 15px;margin-right: 5px;"
           :src="`/emoji-date-apple-img-64-15.0.1/${slotProps.row.avatarEmoji}.png`"
+        >
+        <img
+          v-if="slotProps.row.avatarFileUuid"
+          class="emoji"
+          style="width: 15px; height: 15px;margin-right: 5px;"
+          :src="`${BASE_URL}/file/${slotProps.row.avatarFileUuid}`"
         >
         <span>{{ slotProps.row.name }}</span>
       </template>
@@ -72,6 +78,7 @@ export default {
   },
   data() {
     return {
+      BASE_URL: process.env.VUE_APP_BASE_API || '',
       tableActions: [],
       tableColumns: [{
         label: '#',
@@ -157,11 +164,17 @@ export default {
     handleCreate() {
       this.dialogVisible = true
       this.form.id = null
+      this.form.uuid = null
       this.form.name = ''
       this.form.state = 1
       this.form.order = +new Date()
+      this.form.avatarEmoji = null
+      this.form.avatarFileUuid = null
       this.form.remark = ''
       this.form.desc = ''
+      this.form.contentType = ''
+      this.form.createTime = null
+      this.form.updateTime = null
     },
     handleClose() {
       this.$emit('close')
@@ -191,6 +204,7 @@ export default {
       this.form.name = row.name
       this.form.desc = row.desc
       this.form.avatarEmoji = row.avatarEmoji
+      this.form.avatarFileUuid = row.avatarFileUuid
       this.form.remark = row.remark || ''
       this.form.state = row.state
       this.form.order = row.order
